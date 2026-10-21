@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Tesla Roadster'ın geçmişi, tasarımı, teknolojisi ve performansı." />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="theme-color" content="#E8E9EB" />
     <script>
       // YouTube oynatıcısı file:// sayfalarında güvenlik nedeniyle Hata 153 verebilir.
       // Yerel başlatıcı çalışıyorsa, dosyayı otomatik olarak güvenli localhost adresine al.
@@ -14,284 +15,893 @@
           .then(() => location.replace(localPage))
           .catch(() => {});
       }
+      // Animasyonlar yalnızca JavaScript çalışıyorsa gizli başlangıç durumunu kullanır.
+      // Bir şey ters giderse 3 saniye sonra her şey görünür hale gelir.
+      document.documentElement.classList.add('js');
+      setTimeout(() => document.documentElement.classList.add('is-loaded'), 3000);
     </script>
     <title>Tesla Roadster — Elektriğin Hız Hikâyesi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --ink: #f6f7f8;
-        --muted: #a7adb6;
-        --line: rgba(220, 226, 232, .14);
-        --red: #e82127;
-        --red-bright: #ff4148;
-        --silver: #d5d9de;
-        --night: #07090d;
-        --panel: #11151b;
-        --radius-lg: 30px;
-        --shadow-xl: 0 34px 90px rgba(0,0,0,.42);
+        /* Palet: stüdyo ışığından gece gökyüzüne */
+        --studio: #E8E9EB;
+        --ink: #000000;
+        --graphite: #545A62;
+        --red: #E31937;
+        --space: #060A1A;
+        --frost: #EEF1F6;
+        --aluminium: #8C95A8;
+        --amber: #FFB21A;
+        --green: #31D07A;
+
+        --bg: var(--studio);
+        --fg: var(--ink);
+        --muted: var(--graphite);
+        --line: rgba(0, 0, 0, .14);
+        --soft: rgba(0, 0, 0, .045);
+        --accent: var(--red);
+
+        --gutter: clamp(16px, 4vw, 56px);
+        --maxw: 1320px;
+        --nav-h: 72px;
+        --ease: cubic-bezier(.2, .75, .15, 1);
+        --tone: .9s;
+        color-scheme: light;
       }
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      section { scroll-margin-top: 92px; }
+      :root[data-theme="night"] {
+        --bg: var(--space);
+        --fg: var(--frost);
+        --muted: var(--aluminium);
+        --line: rgba(238, 241, 246, .14);
+        --soft: rgba(238, 241, 246, .05);
+        --accent: #FF3348;
+        color-scheme: dark;
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+      html { background: var(--bg); scroll-behavior: smooth; transition: background-color var(--tone) var(--ease); -webkit-text-size-adjust: 100%; }
       body {
         margin: 0;
-        color: var(--ink);
-        background: var(--night);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.5;
-        overflow-x: hidden;
-        isolation: isolate;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: Archivo, "Helvetica Neue", Arial, sans-serif;
+        font-size: 1.125rem;
+        line-height: 1.6;
+        font-stretch: 100%;
+        overflow-x: clip;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        transition: background-color var(--tone) var(--ease), color var(--tone) var(--ease);
       }
-      body:before { content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.26; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:72px 72px; mask-image:linear-gradient(to bottom,black,transparent 82%); }
-      body:after { content:""; position:fixed; width:38vw; height:38vw; right:-18vw; top:22vh; z-index:-1; pointer-events:none; border-radius:50%; background:rgba(232,33,39,.13); filter:blur(100px); }
-      #cursor-glow { position:fixed; left:0; top:0; width:260px; height:260px; z-index:0; pointer-events:none; border-radius:50%; background:radial-gradient(circle,rgba(232,33,39,.11),transparent 68%); filter:blur(12px); transform:translate(-50%,-50%); opacity:0; transition:opacity .3s ease; }
+      :where(body *) { transition: color var(--tone) var(--ease), border-color var(--tone) var(--ease); }
+      img { max-width: 100%; display: block; }
       a { color: inherit; }
-      .wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
-      nav {
-        position: fixed; inset: 0 0 auto; z-index: 5;
-        height: 76px; display: flex; align-items: center;
-        background: linear-gradient(180deg,rgba(7,9,13,.93),rgba(7,9,13,.72)); backdrop-filter: blur(22px) saturate(1.2);
-        border-bottom: 1px solid rgba(220,226,232,.1);
+      :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 2px; }
+      ::selection { background: var(--red); color: #fff; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+      .wrap { width: min(var(--maxw), 100% - 2 * var(--gutter)); margin-inline: auto; }
+      section[id] { scroll-margin-top: var(--nav-h); }
+
+      /* ---------- Gezinme ---------- */
+      .progress { position: fixed; inset: 0 0 auto; height: 2px; z-index: 60; background: var(--accent); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+      .nav {
+        position: fixed; inset: 0 0 auto; z-index: 50; height: var(--nav-h);
+        display: flex; align-items: center;
+        background: color-mix(in srgb, var(--bg) 82%, transparent);
+        backdrop-filter: blur(16px) saturate(1.3); -webkit-backdrop-filter: blur(16px) saturate(1.3);
+        border-bottom: 1px solid var(--line);
+        transition: transform .55s var(--ease), background-color var(--tone) var(--ease), border-color var(--tone) var(--ease);
       }
-      nav:after { content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px; background:linear-gradient(90deg,transparent,rgba(232,33,39,.7),transparent); opacity:.55; }
-      nav .wrap { display:flex; align-items:center; justify-content:space-between; }
-      .logo { display:inline-flex; align-items:center; gap:11px; text-decoration:none; transition:transform .25s ease; }
-      .logo:hover { transform:translateY(-1px); }
-      .tesla-emblem { width:31px; height:31px; display:grid; place-items:center; border:1px solid rgba(232,33,39,.7); border-radius:50%; background:radial-gradient(circle at 35% 20%,rgba(255,255,255,.12),rgba(232,33,39,.14)); box-shadow:0 0 0 5px rgba(232,33,39,.05),0 0 28px rgba(232,33,39,.25); }
-      .tesla-emblem img { width:17px; height:17px; display:block; filter:brightness(0) invert(1); }
-      .brand-copy { display:flex; align-items:baseline; gap:8px; font-weight:800; letter-spacing:.14em; font-size:.82rem; }
-      .brand-copy strong { color:#f7f7f5; font-weight:800; }
-      .brand-copy span { color:var(--red); }
-      .nav-links { display:flex; gap:5px; list-style:none; margin:0; padding:0; }
-      .nav-links a { display:block; padding:9px 12px; border-radius:99px; text-decoration:none; color:#bfc5ce; font-size:.76rem; letter-spacing:.02em; transition:color .2s ease,background .2s ease; }
-      .nav-links a:hover { color:#fff; background:rgba(255,255,255,.07); }
-      .nav-links a.active { color:#fff; background:rgba(232,33,39,.14); box-shadow:inset 0 0 0 1px rgba(232,33,39,.28),0 5px 18px rgba(232,33,39,.08); }
-      .scroll-progress { position:fixed; left:0; top:75px; z-index:6; width:0; height:2px; background:linear-gradient(90deg,#ff5b61,#e82127); box-shadow:0 0 16px rgba(232,33,39,.8); transition:width .08s linear; }
-      .nav-links a:hover { color:white; }
-      .hero {
-        min-height: min(900px, 100svh); padding: 150px 0 88px; overflow:hidden; position:relative;
-        display:grid; place-items:center;
-        background: radial-gradient(ellipse 65% 52% at 78% 60%, rgba(232,33,39,.24), transparent 64%),
-                    radial-gradient(ellipse 45% 35% at 20% 0%, rgba(160,174,190,.10), transparent 68%),
-                    linear-gradient(135deg,#07090d 0%,#080b10 48%,#12080c 100%);
+      .nav.is-hidden { transform: translateY(-100%); }
+      .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+      .brand { text-decoration: none; font-weight: 800; font-stretch: 125%; font-size: 1.3125rem; letter-spacing: -.02em; line-height: 1; }
+      .nav-links { display: flex; gap: clamp(14px, 2.2vw, 34px); list-style: none; margin: 0; padding: 0; }
+      .nav-links a { position: relative; display: block; padding: 8px 0; text-decoration: none; color: var(--muted); font-size: .9375rem; }
+      .nav-links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform .45s var(--ease); }
+      .nav-links a:hover, .nav-links a.active { color: var(--fg); }
+      .nav-links a.active::after, .nav-links a:hover::after { transform: scaleX(1); }
+      .menu-btn { display: none; font: inherit; font-size: .9375rem; color: var(--fg); background: none; border: 1px solid var(--line); border-radius: 99px; padding: 8px 16px; cursor: pointer; }
+      .menu {
+        position: fixed; inset: 0; z-index: 45; padding: calc(var(--nav-h) + 24px) var(--gutter) 32px;
+        background: var(--bg); display: flex; flex-direction: column; justify-content: space-between;
+        opacity: 0; visibility: hidden; transition: opacity .4s var(--ease), visibility 0s linear .4s, background-color var(--tone) var(--ease);
       }
-      .hero:before { content:""; position:absolute; width:48vw; height:48vw; right:-15vw; top:8%; border-radius:50%; background:radial-gradient(circle,rgba(232,33,39,.18),transparent 67%); filter:blur(12px); animation:heroGlow 8s ease-in-out infinite alternate; }
-      .hero:after { content:""; position:absolute; height:1px; width:150%; left:-20%; bottom:18%; background:linear-gradient(90deg,transparent,rgba(213,217,222,.28),transparent); transform:rotate(-10deg); animation:scanLine 9s linear infinite; }
-      .hero-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; align-items:center; gap:76px; }
-      .eyebrow { display:inline-flex; align-items:center; gap:9px; color:#ff6970; font-weight:800; letter-spacing:.17em; font-size:.67rem; text-transform:uppercase; border:1px solid rgba(255,105,112,.24); border-radius:99px; padding:8px 12px; background:rgba(232,33,39,.07); }
-      .eyebrow:before { content:""; width:6px; height:6px; border-radius:50%; background:var(--red-bright); box-shadow:0 0 14px var(--red-bright); }
-      h1 { margin:14px 0 20px; max-width:680px; font-size:clamp(3.4rem, 8vw, 7.5rem); line-height:.87; letter-spacing:-.075em; }
-      h1 i { color:var(--red); font-style:normal; }
-      .intro { max-width:560px; color:#c5cbd4; font-size:1.02rem; line-height:1.78; }
-      .hero-actions { display:flex; flex-wrap:wrap; gap:11px; margin-top:29px; }
-      .hero-button { display:inline-flex; align-items:center; gap:9px; padding:12px 16px; border-radius:99px; font-size:.78rem; font-weight:800; letter-spacing:.02em; text-decoration:none; transition:transform .25s ease,box-shadow .25s ease,background .25s ease; }
-      .hero-button.primary { color:#fff; background:linear-gradient(135deg,#f13a41,#bd0f16); box-shadow:0 12px 28px rgba(232,33,39,.25); }
-      .hero-button.secondary { color:#e9edf2; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.045); }
-      .hero-button:hover { transform:translateY(-3px); }.hero-button.primary:hover { box-shadow:0 16px 34px rgba(232,33,39,.38); }.hero-button.secondary:hover { background:rgba(255,255,255,.09); }
-      .hero-meta { margin-top:37px; padding-top:20px; border-top:1px solid var(--line); display:flex; gap:12px; }
-      .hero-meta div { min-width:145px; padding:12px 14px; border:1px solid rgba(255,255,255,.1); border-radius:14px; background:rgba(255,255,255,.035); }
-      .hero-meta b { display:block; font-size:.74rem; letter-spacing:.11em; color:#fff; }
-      .hero-meta span { color:var(--muted); font-size:.78rem; }
-      .hero-visual { position:relative; transform:translate3d(0,0,0); transition:transform .25s ease; }
-      .hero-visual:before { content:""; position:absolute; width:82%; aspect-ratio:1; left:9%; top:5%; border:1px solid rgba(232,33,39,.28); border-radius:50%; box-shadow:0 0 70px rgba(232,33,39,.16); animation:orbitPulse 6s ease-in-out infinite; z-index:-1; }
-      .visual-tag { position:absolute; left:-15px; bottom:22px; z-index:2; display:inline-flex; align-items:center; gap:8px; padding:10px 13px; border:1px solid rgba(255,255,255,.16); border-radius:99px; background:rgba(8,10,14,.72); backdrop-filter:blur(14px); color:#e9ecf0; font-size:.68rem; font-weight:750; letter-spacing:.08em; text-transform:uppercase; box-shadow:0 14px 30px rgba(0,0,0,.3); }
-      .visual-tag:before { content:""; width:7px; height:7px; border-radius:50%; background:#48e39b; box-shadow:0 0 12px #48e39b; }
-      .hero-visual:after { content:""; position:absolute; inset:8% -8% -8% 8%; border-radius:40px; border:1px solid rgba(255,255,255,.09); transform:rotate(-4deg); z-index:-1; }
-      .car {
-        position:relative; width:min(100%,490px); aspect-ratio:2.34/1; margin-bottom:42px;
-        border-radius: 48% 52% 15% 13% / 82% 79% 18% 18%;
-        background:linear-gradient(145deg, #ff5556 0%, #c2060d 34%, #6d0307 77%, #170102 100%);
-        box-shadow: inset 0 11px 22px rgba(255,255,255,.25), inset 0 -18px 24px rgba(0,0,0,.5), 0 38px 65px rgba(0,0,0,.55);
-        transform:skewX(-8deg) rotate(-2deg);
+      .menu ol { list-style: none; margin: 0; padding: 0; counter-reset: m; }
+      .menu li { border-top: 1px solid var(--line); }
+      .menu a { display: flex; align-items: baseline; gap: 14px; padding: 14px 0; text-decoration: none; font-weight: 750; font-stretch: 120%; font-size: clamp(2rem, 9vw, 3rem); letter-spacing: -.03em; line-height: 1.05; transform: translateY(16px); opacity: 0; transition: transform .6s var(--ease), opacity .6s var(--ease); }
+      .menu a::before { counter-increment: m; content: counter(m); font-size: .875rem; font-weight: 500; font-stretch: 100%; color: var(--muted); letter-spacing: 0; min-width: 1.2em; }
+      .menu p { margin: 0; color: var(--muted); font-size: .875rem; }
+      .menu-open .menu { opacity: 1; visibility: visible; transition: opacity .4s var(--ease), visibility 0s; }
+      .menu-open .menu a { transform: none; opacity: 1; }
+      .menu-open .menu li:nth-child(2) a { transition-delay: .04s; } .menu-open .menu li:nth-child(3) a { transition-delay: .08s; }
+      .menu-open .menu li:nth-child(4) a { transition-delay: .12s; } .menu-open .menu li:nth-child(5) a { transition-delay: .16s; }
+      .menu-open { overflow: hidden; }
+
+      /* ---------- Ortak tipografi ---------- */
+      .head { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 24px var(--gutter); align-items: start; }
+      .period { margin: 0; padding-top: .9em; color: var(--muted); font-size: .9375rem; font-variant-numeric: tabular-nums; border-top: 2px solid var(--fg); width: fit-content; min-width: 7.5em; }
+      h2 { margin: 0 0 24px; font-weight: 750; font-stretch: 112%; font-size: clamp(2.25rem, 5.2vw, 4.5rem); line-height: .98; letter-spacing: -.035em; max-width: 15em; text-wrap: balance; }
+      h3 { margin: 0; font-weight: 700; font-stretch: 110%; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.15; }
+      .lead { margin: 0; max-width: 36em; color: var(--muted); font-size: clamp(1.125rem, 1.4vw, 1.3125rem); line-height: 1.6; }
+      .num { font-variant-numeric: tabular-nums; }
+      .chapter { padding-block: clamp(104px, 13vw, 184px); position: relative; }
+
+      .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 22px; border-radius: 99px; font: inherit; font-size: 1rem; font-weight: 650; text-decoration: none; cursor: pointer; border: 1px solid var(--fg); transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .3s var(--ease); }
+      .btn-solid { background: var(--fg); color: var(--bg); }
+      .btn-solid:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .btn-line { background: transparent; color: var(--fg); }
+      .btn-line:hover { background: var(--soft); }
+      .btn:active { transform: scale(.97); }
+      .btn[disabled] { opacity: .45; cursor: default; }
+
+      /* ---------- Giriş ---------- */
+      .hero { padding-top: calc(var(--nav-h) + clamp(20px, 3vw, 40px)); padding-bottom: clamp(72px, 9vw, 128px); }
+      .hero-line { display: flex; justify-content: space-between; gap: 16px; color: var(--muted); font-size: .9375rem; }
+      .hero h1 { margin: 0; font-weight: inherit; font-size: inherit; line-height: inherit; }
+      .wordmark { display: block; white-space: nowrap; font-weight: 800; font-stretch: 125%; font-size: 15.5vw; line-height: .78; letter-spacing: -.04em; margin: .1em 0 .06em -.045em; padding-bottom: .06em; }
+      .hero-body { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: clamp(24px, 3.4vw, 56px); align-items: end; margin-top: clamp(14px, 2vw, 28px); }
+      .photo { position: relative; margin: 0; overflow: hidden; border-radius: 4px; background: #CDD0D4; }
+      .photo img { width: 100%; height: 100%; object-fit: cover; }
+      .hero-photo { aspect-ratio: 16 / 9; }
+      .hero-photo img { transform: scale(var(--hs, 1)); transform-origin: 50% 60%; will-change: transform; }
+      .photo figcaption { position: absolute; left: 14px; bottom: 12px; padding: 6px 12px; border-radius: 99px; background: rgba(0, 0, 0, .55); color: #fff; font-size: .8125rem; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+      .hero-aside { display: grid; gap: 22px; }
+      .hero-aside .q { margin: 0; font-weight: 700; font-stretch: 112%; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.15; }
+      .hero-aside .intro { margin: 0; color: var(--muted); font-size: 1.0625rem; line-height: 1.65; }
+      .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0; border-top: 1px solid var(--line); }
+      .stats div { padding: 14px 16px 0 0; }
+      .stats div + div { padding-left: 16px; border-left: 1px solid var(--line); }
+      .stats dt { color: var(--muted); font-size: .875rem; }
+      .stats dd { margin: 2px 0 0; font-weight: 700; font-stretch: 85%; font-size: 1.75rem; letter-spacing: -.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+      .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+      /* Açılış: yazı genişler, far ışığı gibi fotoğraf açılır */
+      .js .wordmark { font-stretch: 62%; transition: font-stretch 1.7s var(--ease) .1s, color var(--tone) var(--ease); }
+      .js.is-loaded .wordmark { font-stretch: 125%; }
+      .js .hero-photo { clip-path: inset(49.6% 0 49.6% 0); }
+      .js.is-loaded .hero-photo { clip-path: inset(0 0 0 0); transition: clip-path 1.25s var(--ease) .75s; }
+      .js .hero-reveal { opacity: 0; transform: translateY(14px); }
+      .js.is-loaded .hero-reveal { opacity: 1; transform: none; transition: opacity .9s var(--ease), transform .9s var(--ease), color var(--tone) var(--ease); }
+      .js.is-loaded .hero-reveal:nth-child(1) { transition-delay: 1s; } .js.is-loaded .hero-reveal:nth-child(2) { transition-delay: 1.08s; }
+      .js.is-loaded .hero-reveal:nth-child(3) { transition-delay: 1.16s; } .js.is-loaded .hero-reveal:nth-child(4) { transition-delay: 1.24s; }
+
+      /* ---------- Tarihçe: yatay zaman çizelgesi ---------- */
+      .history { padding-bottom: 0; }
+      .track-outer { position: relative; margin-top: clamp(48px, 7vw, 96px); }
+      .track { list-style: none; margin: 0 auto; padding: 0; width: min(var(--maxw), 100% - 2 * var(--gutter)); }
+      .milestone { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); gap: 8px var(--gutter); padding: 28px 0 44px; border-top: 1px solid var(--line); }
+      .year { display: block; font-weight: 800; font-stretch: var(--ys, 100%); font-size: clamp(4.5rem, 19vw, 9rem); line-height: .82; letter-spacing: -.045em; font-variant-numeric: tabular-nums; white-space: nowrap; transition: font-stretch .35s ease-out, color var(--tone) var(--ease); }
+      .milestone p { margin: 0; max-width: 24em; font-size: 1.25rem; line-height: 1.5; }
+      .milestone .kind { display: block; margin-bottom: 10px; color: var(--muted); font-size: .9375rem; }
+      .rail { display: none; }
+      .history-end { padding-bottom: clamp(104px, 13vw, 184px); }
+
+      .pin .track-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; display: flex; flex-direction: column; justify-content: center; }
+      .pin .track { display: flex; width: max-content; margin: 0; gap: 0; padding-inline: max(var(--gutter), (100vw - var(--maxw)) / 2); will-change: transform; }
+      .pin .milestone { display: block; width: clamp(420px, 44vw, 640px); padding: 0 clamp(28px, 4vw, 64px) 0 28px; border-top: 0; border-left: 1px solid var(--line); }
+      .pin .milestone:last-child { width: clamp(420px, 40vw, 600px); }
+      .pin .year { font-size: clamp(7rem, 13vw, 13rem); margin-bottom: 28px; }
+      .pin .milestone p { font-size: clamp(1.125rem, 1.4vw, 1.375rem); }
+      .pin .rail { display: block; position: absolute; left: 0; right: 0; bottom: clamp(28px, 6vh, 64px); }
+      .rail-line { position: relative; height: 2px; background: var(--line); }
+      .rail-fill { position: absolute; inset: 0; background: var(--accent); transform-origin: 0 50%; transform: scaleX(var(--tp, 0)); }
+      .rail-ticks { display: flex; justify-content: space-between; margin: 12px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: .875rem; font-variant-numeric: tabular-nums; }
+      .rail-ticks li.on { color: var(--fg); }
+
+      /* ---------- Teknoloji: pil paketi ---------- */
+      .specs-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 6fr); gap: clamp(40px, 6vw, 96px); margin-top: clamp(48px, 7vw, 96px); align-items: start; }
+      .spec-list { margin: 0; }
+      .spec { display: grid; grid-template-columns: minmax(0, 1fr); padding: 26px 0 30px; border-top: 1px solid var(--line); }
+      .spec:last-child { border-bottom: 1px solid var(--line); }
+      .spec dt { color: var(--muted); font-size: .9375rem; }
+      .spec .value { margin: 6px 0 8px; font-weight: 700; font-stretch: 78%; font-size: clamp(3rem, 6.2vw, 5.5rem); line-height: .92; letter-spacing: -.035em; font-variant-numeric: tabular-nums; }
+      .spec .value small { font-size: .42em; font-weight: 600; letter-spacing: -.01em; margin-left: .18em; }
+      .spec .note { margin: 0; color: var(--muted); font-size: 1rem; max-width: 30em; }
+      .pack { position: sticky; top: calc(var(--nav-h) + 40px); }
+      .pack canvas { display: block; width: 100%; aspect-ratio: 99 / 69; }
+      .pack-meta { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+      .pack-meta output { font-weight: 700; font-stretch: 78%; font-size: clamp(2rem, 3.4vw, 3rem); letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+      .pack-meta span { color: var(--muted); font-size: .9375rem; text-align: right; }
+
+      /* ---------- İkinci nesil ---------- */
+      .gen2-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
+      .gen2-photo { aspect-ratio: 3 / 2; background: #10162A; }
+      .js .reveal-beam { clip-path: inset(49.6% 0 49.6% 0); }
+      .js .reveal-beam.is-in { clip-path: inset(0 0 0 0); transition: clip-path 1.3s var(--ease); }
+      .gen2-copy p { margin: 0 0 28px; color: var(--muted); font-size: 1.1875rem; line-height: 1.65; max-width: 30em; }
+      .facts { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin: 0; }
+      .facts div { padding: 16px 16px 18px 0; border-top: 1px solid var(--line); }
+      .facts dt { color: var(--muted); font-size: .9375rem; }
+      .facts dd { margin: 2px 0 0; font-weight: 700; font-stretch: 85%; font-size: 2rem; letter-spacing: -.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+
+      /* ---------- 2026 yapıları ---------- */
+      .builds { padding-top: 0; }
+      .build-table { width: 100%; margin-top: clamp(40px, 6vw, 80px); border-collapse: collapse; }
+      .build-table th, .build-table td { text-align: left; vertical-align: baseline; padding: 22px 24px 22px 0; border-top: 1px solid var(--line); }
+      .build-table thead th { padding-block: 0 12px; border-top: 0; color: var(--muted); font-weight: 500; font-size: .9375rem; }
+      .build-table tbody th { font-weight: 750; font-stretch: 120%; font-size: clamp(1.75rem, 3.4vw, 3rem); letter-spacing: -.035em; line-height: 1; }
+      .build-table .t { font-weight: 700; font-stretch: 78%; font-size: clamp(2.25rem, 4.2vw, 3.75rem); letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .build-table td { color: var(--muted); font-size: 1.0625rem; }
+      .build-table td.t { color: var(--fg); }
+      .build-table tbody tr { transition: background-color .3s var(--ease); }
+      .build-table tbody tr:hover { background: var(--soft); }
+      .build-table tbody tr.rocket th, .build-table tbody tr.rocket .t { color: var(--accent); }
+      .build-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 var(--gutter); max-width: 760px; margin: 40px 0 0; }
+      .build-meta div { padding-top: 14px; border-top: 2px solid var(--fg); }
+      .build-meta dt { color: var(--muted); font-size: .9375rem; }
+      .build-meta dd { margin: 4px 0 0; font-weight: 700; font-stretch: 100%; font-size: 1.5rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+
+      /* ---------- Hızlanma yarışı ---------- */
+      .race { margin-top: clamp(80px, 10vw, 144px); }
+      .race-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px 48px; align-items: end; }
+      .race-top h3 { font-size: clamp(2rem, 3.6vw, 3rem); font-stretch: 115%; letter-spacing: -.035em; line-height: 1; }
+      .race-top p { margin: 14px 0 0; color: var(--muted); max-width: 34em; }
+      .console { display: flex; align-items: center; gap: clamp(16px, 2.4vw, 32px); }
+      .tree { display: flex; gap: 8px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 99px; }
+      .tree i { width: 14px; height: 14px; border-radius: 50%; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); transition: background-color .08s, box-shadow .08s; }
+      .tree i.on { background: var(--amber); box-shadow: 0 0 16px var(--amber); }
+      .tree i.go.on { background: var(--green); box-shadow: 0 0 18px var(--green); }
+      .clock { min-width: 4.2ch; text-align: right; font-weight: 700; font-stretch: 75%; font-size: clamp(2.75rem, 5vw, 4.25rem); line-height: .9; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+      .clock small { font-size: .32em; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: .2em; }
+      .lanes { list-style: none; margin: 40px 0 0; padding: 0; display: grid; gap: 12px; }
+      .lane { display: grid; grid-template-columns: minmax(150px, 220px) minmax(0, 1fr) 96px; gap: 20px; align-items: center; }
+      .lane-name { font-weight: 650; font-size: 1.0625rem; line-height: 1.25; }
+      .lane-name small { display: block; color: var(--muted); font-weight: 400; font-size: .875rem; }
+      .strip { position: relative; height: 48px; border-radius: 4px; overflow: hidden; background: var(--soft); box-shadow: inset 0 0 0 1px var(--line); }
+      .strip::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 calc(10% - 1px), var(--line) calc(10% - 1px) 10%); opacity: .7; }
+      .strip::after { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 8px; background: conic-gradient(var(--fg) 25%, transparent 0 50%, var(--fg) 0 75%, transparent 0) 0 0 / 8px 8px; opacity: .55; }
+      .runner { position: absolute; left: 0; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: var(--fg); color: var(--fg); transform: translate3d(var(--x, 0px), 0, 0); box-shadow: 0 0 14px currentColor; z-index: 1; }
+      .runner::before { content: ""; position: absolute; right: 7px; top: 50%; height: 4px; margin-top: -2px; width: var(--tail, 0px); border-radius: 4px; background: linear-gradient(90deg, transparent, currentColor); opacity: .85; }
+      .lane.is-done .runner::before { transition: width .5s var(--ease); }
+      .lane.rocket .runner { background: var(--accent); color: var(--accent); }
+      .lane-time { text-align: right; font-weight: 700; font-stretch: 80%; font-size: 1.5rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; white-space: nowrap; transition: opacity .3s, color var(--tone) var(--ease); }
+      .lane.rocket .lane-time, .lane.rocket .lane-name { color: var(--accent); }
+      .racing .lane.is-done .lane-time { animation: landed .5s var(--ease); transform-origin: 100% 50%; }
+      @keyframes landed { 0% { transform: scale(1.18); } 100% { transform: scale(1); } }
+      .racing .lane:not(.is-done) .lane-time { opacity: .2; }
+      .race-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px 32px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); }
+      .race-foot p { margin: 0; color: var(--muted); font-size: .9375rem; max-width: 46em; }
+
+      /* ---------- Uçuş ---------- */
+      .flight { padding-bottom: 0; }
+      .flight-pin { margin-top: clamp(40px, 6vw, 72px); }
+      .flight-sticky { display: grid; place-items: center; }
+      .flight-frame { position: relative; width: min(var(--maxw), 100vw - 2 * var(--gutter)); aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; background: #000; box-shadow: 0 50px 140px -40px rgba(227, 25, 55, .32); }
+      .flight-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+      .flight-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; width: min(var(--maxw), 100vw - 2 * var(--gutter)); margin-top: 16px; color: var(--muted); font-size: .9375rem; }
+      .flight-bar a { color: var(--fg); text-underline-offset: 4px; }
+      .pin .flight-pin { height: 175vh; }
+      .pin .flight-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; align-content: center; }
+      .pin .flight-frame { width: min(var(--maxw), 100vw - 2 * var(--gutter), (100svh - 180px) * 16 / 9); transform: scale(var(--fs, 1)); border-radius: var(--fr, 16px); will-change: transform; }
+      .pin .flight-bar { width: min(var(--maxw), 100vw - 2 * var(--gutter), (100svh - 180px) * 16 / 9); opacity: var(--fo, 1); }
+      .flight-copy { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: clamp(32px, 5vw, 80px); padding-block: clamp(72px, 9vw, 128px) 0; }
+      .flight-copy p { margin: 0 0 20px; color: var(--muted); font-size: 1.1875rem; line-height: 1.65; max-width: 32em; }
+      .flight-copy .facts { align-self: start; }
+
+      /* ---------- Karşılaştırma ---------- */
+      .compare-table { width: 100%; margin-top: clamp(40px, 6vw, 80px); border-collapse: collapse; table-layout: fixed; }
+      .compare-table th, .compare-table td { text-align: left; vertical-align: top; padding: 20px 24px 20px 0; border-top: 1px solid var(--line); }
+      .compare-table thead th { border-top: 0; padding-bottom: 18px; font-weight: 750; font-stretch: 115%; font-size: clamp(1.5rem, 2.6vw, 2.25rem); letter-spacing: -.03em; line-height: 1.05; }
+      .compare-table thead th small { display: block; margin-top: 6px; font-weight: 400; font-stretch: 100%; font-size: .9375rem; letter-spacing: 0; color: var(--muted); }
+      .compare-table thead th:first-child { width: 22%; }
+      .compare-table tbody th { color: var(--muted); font-weight: 400; font-size: 1rem; }
+      .compare-table td { font-size: 1.125rem; line-height: 1.45; }
+      .compare-table td b { font-weight: 700; font-stretch: 85%; font-size: 1.5rem; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+      .compare-table td .na { color: var(--muted); }
+      .compare-table tbody tr:last-child > * { border-bottom: 1px solid var(--line); }
+
+      /* ---------- Alt bilgi ---------- */
+      .footer { padding: clamp(96px, 12vw, 168px) 0 32px; overflow: hidden; }
+      .footer .wordmark { margin-top: 0; }
+      .js .footer .wordmark { font-stretch: 62%; transition: font-stretch 1.8s var(--ease), color var(--tone) var(--ease); }
+      .js .footer.is-in .wordmark { font-stretch: 125%; }
+      .footer-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px 40px; margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: .9375rem; }
+      .footer-row p { margin: 0; max-width: 40em; }
+      .footer-row a { text-underline-offset: 3px; }
+
+      /* ---------- Duyarlı ---------- */
+      @media (max-width: 1080px) {
+        .lane { grid-template-columns: minmax(130px, 170px) minmax(0, 1fr) 84px; }
       }
-      .car:before { content:""; position:absolute; left:28%; top:11%; width:41%; height:38%; border-radius:70% 45% 12% 16%; background:linear-gradient(145deg,#dbe5e9,#51636b 15%,#10161b 62%,#243036); border:3px solid #350204; }
-      .car:after { content:""; position:absolute; left:10%; right:7%; bottom:-19px; height:52px; border-radius:50%; background:radial-gradient(ellipse,rgba(0,0,0,.8),transparent 68%); z-index:-1; }
-      .wheel { position:absolute; bottom:-11%; width:22%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 50% 50%, #9da0a2 0 9%,#15181b 10% 21%,#6f7477 22% 27%,#08090a 28% 55%,#343638 56% 61%,#060606 62%); box-shadow:0 0 0 5px #171717; }
-      .wheel.left { left:12%; }.wheel.right { right:8%; }
-      .hero-photo { width:100%; max-width:560px; aspect-ratio:1.42/1; object-fit:cover; border-radius:28px; border:1px solid rgba(213,217,222,.24); box-shadow:var(--shadow-xl); display:block; filter:saturate(1.08) contrast(1.03); transition:transform .7s cubic-bezier(.2,.8,.2,1),filter .7s ease,box-shadow .7s ease; }
-      .hero-visual:hover .hero-photo { transform:scale(1.025) rotate(-.8deg); filter:saturate(1.18) contrast(1.06); box-shadow:0 44px 110px rgba(0,0,0,.58),0 0 0 1px rgba(232,33,39,.18); }
-      section { padding:128px 0; position:relative; }
-      .reveal { opacity:0; transform:translateY(28px); transition:opacity .85s ease,transform .85s cubic-bezier(.2,.8,.2,1); }
-      .reveal.is-visible { opacity:1; transform:translateY(0); }
-      .reveal:nth-child(2) { transition-delay:.08s; }.reveal:nth-child(3) { transition-delay:.16s; }.reveal:nth-child(4) { transition-delay:.24s; }
-      .section-label { color:var(--red-bright); font-size:.73rem; font-weight:800; letter-spacing:.17em; text-transform:uppercase; }
-      h2 { font-size:clamp(2.2rem,4vw,4.2rem); letter-spacing:-.055em; line-height:.98; margin:13px 0 23px; max-width:710px; }
-      .sub { color:var(--muted); max-width:630px; line-height:1.7; }
-      .history { background:linear-gradient(145deg,#f7f8f8,#e9ecee); color:#101318; }
-      .history .section-label { color:#c9161d; }.history .sub { color:#505861; }
-      .timeline { margin-top:62px; border-top:1px solid #c5cbd1; display:grid; grid-template-columns:repeat(4,1fr); }
-      .milestone { padding:23px 26px 0 0; min-height:190px; border-right:1px solid #c5cbd1; transition:transform .5s ease,opacity .7s ease; }
-      .milestone:hover { transform:translateY(-7px); }.milestone:hover .year { color:var(--red); }
-      .milestone:not(:first-child) { padding-left:26px; }.milestone:last-child { border:0; }
-      .year { font-size:2rem; font-weight:800; letter-spacing:-.08em; color:#20252b; }.milestone p { font-size:.9rem; line-height:1.52; color:#555e67; }
-      .specs { background:linear-gradient(130deg,#171b22,#0a0d12); }
-      .spec-grid { margin-top:50px; display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line); }
-      .spec { min-height:180px; padding:28px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); transition:background .35s ease, border-color .35s ease, transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease; }.spec:hover { background:linear-gradient(145deg,rgba(255,255,255,.08),rgba(232,33,39,.04)); border-color:rgba(232,33,39,.38); transform:translateY(-8px) scale(1.01); box-shadow:0 18px 36px rgba(0,0,0,.2); }.spec:nth-child(3n) { border-right:0; }
-      .spec small { display:block; color:#8c908f; text-transform:uppercase; letter-spacing:.13em; font-weight:700; font-size:.66rem; }.spec strong { display:block; margin:13px 0 7px; font-size:2.2rem; letter-spacing:-.07em; }.spec p { margin:0; color:#a4a6a5; font-size:.82rem; line-height:1.45; }
-      .note { margin-top:27px; color:#8f9291; font-size:.82rem; }
-      .future { background:linear-gradient(135deg,#a90e15 0%,#e82127 46%,#b30f17 100%); position:relative; overflow:hidden; }.future:after { content:"02"; position:absolute; right:-.06em; bottom:-.34em; color:rgba(255,255,255,.11); font-size:26rem; font-weight:800; letter-spacing:-.15em; animation:numberFloat 9s ease-in-out infinite; }
-      .future .wrap { position:relative; z-index:1; }.future .section-label { color:rgba(35,4,6,.82); }.future .sub { color:rgba(255,255,255,.82); font-weight:500; }
-      .target-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:48px; }.target { border:1px solid rgba(255,255,255,.15); border-radius:20px; background:linear-gradient(145deg,rgba(30,0,0,.3),rgba(80,0,0,.12)); padding:28px; transition:background .25s ease, transform .25s ease, border-color .25s ease; }.target:hover { background:linear-gradient(145deg,rgba(30,0,0,.48),rgba(80,0,0,.2)); border-color:rgba(255,255,255,.32); transform:translateY(-5px); }.target b { display:block; font-size:clamp(2.1rem,4vw,3.7rem); letter-spacing:-.08em; }.target span { display:block; margin-top:8px; font-size:.84rem; color:rgba(255,255,255,.78); font-weight:650; line-height:1.45; }.future-meta { margin-top:32px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; max-width:650px; }.future-meta div { border-top:1px solid rgba(255,255,255,.36); padding-top:14px; }.future-meta b { display:block; font-size:1.35rem; letter-spacing:-.04em; }.future-meta span { display:block; margin-top:5px; color:rgba(255,255,255,.72); font-size:.78rem; }
-      .second-gen { background:#0d1117; overflow:hidden; }
-      .second-grid { display:grid; grid-template-columns:1.08fr .92fr; gap:70px; align-items:center; }
-      .second-photo-wrap { position:relative; transform:translateY(45px) scale(.96); opacity:0; transition:transform 900ms cubic-bezier(.2,.8,.2,1), opacity 900ms ease; }
-      .second-photo-wrap.in-view { transform:translateY(0) scale(1); opacity:1; }
-      .second-photo { width:100%; aspect-ratio:1.55/1; object-fit:cover; border-radius:28px; display:block; box-shadow:0 28px 60px rgba(0,0,0,.52); filter:saturate(1.08); }
-      .second-photo-wrap.in-view .second-photo { animation: roadsterFloat 4.6s ease-in-out 900ms infinite; }
-      @keyframes roadsterFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-12px) rotate(-1deg); } }
-      .flight-line { position:absolute; left:-8%; right:-8%; bottom:12%; height:1px; background:linear-gradient(90deg,transparent,#f6474c,transparent); transform:rotate(-8deg); opacity:.65; }
-      .second-copy h2 { margin-bottom:18px; }.second-copy p { color:#b3b6b5; line-height:1.72; }
-      .facts { margin-top:26px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }.fact { border-left:2px solid var(--red); padding-left:13px; }.fact strong { display:block; font-size:1.3rem; }.fact span { color:#8e9290; font-size:.75rem; }
-      .compare { background:#090c11; padding-top:90px; padding-bottom:105px; }.compare-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:35px; }.compare-card { border:1px solid var(--line); border-radius:20px; padding:25px; background:linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.015)); transition:transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s ease, background .35s ease,box-shadow .35s ease; }.compare-card:hover { transform:translateY(-8px) rotate(-.4deg); border-color:rgba(232,33,39,.42); background:linear-gradient(145deg,rgba(255,255,255,.09),rgba(255,255,255,.02)); box-shadow:0 20px 50px rgba(0,0,0,.2); }.compare-card h3 { margin:0 0 8px; font-size:1rem; }.compare-card p { margin:0; color:#aab1ba; line-height:1.55; font-size:.84rem; }
-      .flight-showcase { background:linear-gradient(180deg,#07090d 0%,#16090c 100%); overflow:hidden; }
-      .flight-grid { display:grid; grid-template-columns:.95fr 1.05fr; gap:64px; align-items:center; }
-      .flight-stage { position:relative; min-height:450px; display:grid; place-items:center; }
-      .flight-stage:before { content:""; position:absolute; width:84%; height:42%; bottom:7%; border-radius:50%; background:radial-gradient(ellipse,rgba(232,33,39,.28),transparent 66%); filter:blur(10px); }
-      .video-shell { position:relative; z-index:2; width:100%; aspect-ratio:16/10; border:1px solid rgba(255,255,255,.17); border-radius:24px; overflow:hidden; background:#040506; box-shadow:0 28px 70px rgba(0,0,0,.6); transform:translateY(35px) scale(.97); opacity:0; transition:transform 900ms cubic-bezier(.2,.8,.2,1), opacity 700ms ease; }
-      .flight-showcase.in-view .video-shell { transform:translateY(0) scale(1); opacity:1; }
-      .flight-video { width:100%; height:100%; display:block; border:0; }
-      .video-caption { position:absolute; left:18px; bottom:16px; z-index:3; padding:8px 11px; border-radius:99px; background:rgba(0,0,0,.68); color:#e8e8e8; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; }
-      .video-open-button { position:absolute; right:18px; bottom:16px; z-index:3; padding:9px 13px; border-radius:99px; background:#fff; color:#101114; text-decoration:none; font-size:.7rem; font-weight:800; letter-spacing:.05em; }
-      .video-open-button:hover { background:#ff4c52; color:#fff; }
-      .flight-copy h2 { margin-bottom:18px; }.flight-copy p { color:#afb2b0; line-height:1.7; }.flight-badge { display:inline-flex; margin:12px 0 20px; border:1px solid rgba(255,255,255,.2); border-radius:99px; padding:8px 13px; color:#ff8c8e; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; }.flight-note { color:#8a8e8c; font-size:.76rem; margin-top:16px; }
-      footer { padding:30px 0; color:#858887; font-size:.77rem; border-top:1px solid rgba(255,255,255,.08); }.footer-row { display:flex; justify-content:space-between; gap:20px; }.footer-row a { color:#bbb; }
-      @keyframes heroGlow { from { transform:scale(.94) translate3d(0,0,0); opacity:.65; } to { transform:scale(1.08) translate3d(-2%,3%,0); opacity:1; } }
-      @keyframes scanLine { 0%,100% { opacity:.3; transform:rotate(-10deg) translateX(-4%); } 50% { opacity:.85; transform:rotate(-10deg) translateX(4%); } }
-      @keyframes orbitPulse { 0%,100% { transform:scale(.94) rotate(0deg); opacity:.42; } 50% { transform:scale(1.04) rotate(8deg); opacity:.82; } }
-      @keyframes numberFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-18px) rotate(-2deg); } }
-      @media (prefers-reduced-motion: reduce) { *,*:before,*:after { animation-duration:.001ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.001ms !important; } .reveal { opacity:1; transform:none; } #cursor-glow { display:none; } }
-      @media (max-width:760px) { .wrap { width:min(100% - 30px, 560px); }.nav-links { display:none; }.hero { min-height:780px; padding-top:125px; }.hero-grid,.second-grid,.flight-grid { grid-template-columns:1fr; gap:38px; }.hero-grid { align-items:start; }.hero-visual { margin-top:10px; }.visual-tag { left:8px; bottom:14px; }.flight-stage { min-height:350px; }.flight-poster { inset:14px 0 auto; height:220px; }.timeline,.spec-grid,.target-grid,.compare-grid,.future-meta { grid-template-columns:1fr; }.milestone,.milestone:not(:first-child) { border-right:0; border-bottom:1px solid #c4c3be; padding:22px 0; min-height:0; }.spec,.spec:nth-child(3n) { border-right:0; }.hero-meta { gap:8px; }.hero-meta div { min-width:0; flex:1; padding:11px 10px; }.hero-meta b { font-size:.68rem; }.hero-meta span { font-size:.68rem; }.future:after { font-size:15rem; }.second-copy { order:-1; }.facts { gap:10px; } }
+      @media (max-width: 820px) {
+        :root { --nav-h: 64px; }
+        body { font-size: 1.0625rem; }
+        .nav-links { display: none; }
+        .menu-btn { display: inline-flex; }
+        .head { grid-template-columns: 1fr; gap: 20px; }
+        .hero-body, .specs-grid, .gen2-grid, .flight-copy { grid-template-columns: 1fr; }
+        .hero-photo { aspect-ratio: 4 / 3; }
+        .milestone { grid-template-columns: 1fr; gap: 14px; }
+        .pack { position: relative; top: 0; order: -1; }
+        .build-table thead { display: none; }
+        .build-table, .build-table tbody, .build-table tr, .build-table th, .build-table td { display: block; }
+        .build-table tbody tr { display: grid; grid-template-columns: 1fr auto; gap: 6px 16px; padding: 22px 0; border-top: 1px solid var(--line); }
+        .build-table th, .build-table td { padding: 0; border: 0; }
+        .build-table .t { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+        .build-table td:not(.t) { grid-column: 1; }
+        .race-top { grid-template-columns: 1fr; }
+        .console { justify-content: space-between; }
+        .lane { grid-template-columns: minmax(0, 1fr) auto; gap: 8px 16px; }
+        .lane .strip { grid-column: 1 / -1; grid-row: 2; height: 40px; }
+        .compare-table, .compare-table tbody, .compare-table tr { display: block; }
+        .compare-table thead { display: none; }
+        .compare-table tbody tr { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 16px; padding: 18px 0; border-top: 1px solid var(--line); }
+        .compare-table tbody th { grid-column: 1 / -1; }
+        .compare-table th, .compare-table td { padding: 0; border: 0; }
+        .compare-table td::before { content: attr(data-label); display: block; color: var(--muted); font-size: .8125rem; margin-bottom: 2px; }
+        .compare-table tbody tr:last-child > * { border-bottom: 0; }
+        .compare-table tbody tr:last-child { border-bottom: 1px solid var(--line); }
+      }
+      @media (max-width: 480px) {
+        .stats dd, .facts dd { font-size: 1.5rem; }
+        .build-meta { grid-template-columns: 1fr; gap: 16px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+        *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
+        .js .wordmark, .js .footer .wordmark { font-stretch: 125%; }
+        .js .hero-photo, .js .reveal-beam { clip-path: none; }
+        .js .hero-reveal { opacity: 1; transform: none; }
+      }
     </style>
   </head>
   <body>
-    <div id="cursor-glow" aria-hidden="true"></div>
-    <nav><div class="wrap"><a class="logo" href="#baslangic" aria-label="Tesla Roadster bilgi sitesi"><span class="tesla-emblem"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tesla%20Motors.svg" alt="Tesla logosu" /></span><span class="brand-copy"><strong>ROADSTER</strong><span>INFO</span></span></a><ul class="nav-links"><li><a href="#tarihce">Tarihçe</a></li><li><a href="#teknoloji">Teknoloji</a></li><li><a href="#gelecek">2026 Paketleri</a></li><li><a href="#2026">Uçuş</a></li><li><a href="#karsilastir">Karşılaştır</a></li></ul></div></nav><div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+    <div class="progress" aria-hidden="true"></div>
+    <nav class="nav" aria-label="Ana menü">
+      <div class="wrap">
+        <a class="brand" href="#baslangic" aria-label="Tesla Roadster bilgi sitesi, başa dön">Roadster</a>
+        <ul class="nav-links">
+          <li><a href="#tarihce">Tarihçe</a></li>
+          <li><a href="#teknoloji">Teknoloji</a></li>
+          <li><a href="#gelecek">2026 Paketleri</a></li>
+          <li><a href="#2026">Uçuş</a></li>
+          <li><a href="#karsilastir">Karşılaştır</a></li>
+        </ul>
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
+      </div>
+    </nav>
+    <div class="menu" id="menu" aria-label="Bölümler">
+      <ol>
+        <li><a href="#tarihce">Tarihçe</a></li>
+        <li><a href="#teknoloji">Teknoloji</a></li>
+        <li><a href="#gelecek">2026 Paketleri</a></li>
+        <li><a href="#2026">Uçuş</a></li>
+        <li><a href="#karsilastir">Karşılaştır</a></li>
+      </ol>
+      <p>Tesla Roadster, 2006’dan 2028’e.</p>
+    </div>
+
     <main>
-      <section class="hero" id="baslangic"><div class="wrap hero-grid"><div><div class="eyebrow">01 / Roadster’ın başlangıcı</div><h1>Tesla Roadster<br><i>nedir?</i></h1><p class="intro">Roadster, Tesla’nın ilk seri üretim otomobilidir. İki kişilik, tamamen elektrikli ve yüksek performanslı bu model, markanın otomotiv sektöründeki başlangıcını oluşturur. Sayfa; Roadster’ın tarihçesini, teknik özelliklerini ve nesiller arasındaki değişimi kronolojik olarak sunar.</p><div class="hero-actions"><a class="hero-button primary" href="#tarihce">Tarihçeyi keşfet <span>↓</span></a><a class="hero-button secondary" href="#2026">Uçuş gösterisi <span>↗</span></a></div><div class="hero-meta"><div><b>2008—2012</b><span>İlk neslin üretimi</span></div><div><b>≈ 2.450</b><span>Üretilen araç</span></div></div></div><div class="hero-visual"><img class="hero-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg" alt="2008 Tesla Roadster, önden üç çeyrek görünüm" /><div class="visual-tag">İlk seri üretim Tesla</div></div></div></section>
-      <section class="history" id="tarihce"><div class="wrap"><div class="section-label">İlk nesil / 2008–2012</div><h2>İlk nesil Roadster’ın ortaya çıkışı.</h2><p class="sub">2000’li yıllarda elektrikli otomobiller genellikle düşük performans ve sınırlı menzil ile ilişkilendiriliyordu. Roadster, Lotus Elise temelli hafif gövdesi, lityum iyon bataryası ve anında tork üreten elektrik motoru ile bu algıyı değiştirdi. Model, spor otomobil tasarımını tamamen elektrikli aktarma ile birleştirdi.</p><div class="timeline"><article class="milestone"><div class="year">2006</div><p>Prototip, Santa Monica’daki özel bir etkinlikte ilk kez gösterildi.</p></article><article class="milestone"><div class="year">2008</div><p>Normal üretim başladı; ilk seri üretim Roadster müşteriye teslim edildi.</p></article><article class="milestone"><div class="year">2009</div><p>Roadster Sport tanıtıldı; 0–60 mph süresi 3,7 saniyeye indi.</p></article><article class="milestone"><div class="year">2012</div><p>Lotus’tan alınan gövde/şasi stoğu bitince üretim sona erdi.</p></article></div></div></section>
-      <section class="specs" id="teknoloji"><div class="wrap"><div class="section-label">İlk nesil / teknik özet</div><h2>İlk neslin teknik özellikleri.</h2><p class="sub">Motor, batarya, menzil ve üretim verileri.</p><div class="spec-grid"><article class="spec"><small>Motor gücü</small><strong>215 kW</strong><p>288 hp maksimum güç.</p></article><article class="spec"><small>Batarya hücresi</small><strong>6.831</strong><p>Lityum iyon pil paketindeki hücre sayısı.</p></article><article class="spec"><small>0–60 mph</small><strong>3,7 sn</strong><p>Roadster Sport modeli; standart Roadster 3,9 saniye.</p></article><article class="spec"><small>EPA menzili</small><strong>245 mil</strong><p>Yaklaşık 394 km.</p></article><article class="spec"><small>Azami hız</small><strong>201 km/sa</strong><p>Roadster 2.5 için 125 mph elektronik sınır; ilk modellerde yaklaşık 193 km/sa.</p></article><article class="spec"><small>Üretim</small><strong>≈ 2.450</strong><p>2008–2012 arasında üretilen toplam Roadster.</p></article></div></div></section>
-      <section class="future" id="gelecek"><div class="wrap"><div class="section-label">02 / 2026 Roadster duyurusu</div><h2>İkinci nesil Roadster: üç farklı yapı.</h2><p class="sub">Tesla’nın 2026 Roadster sayfasında üç farklı yapı tanımlanıyor: yol kullanıma hazır Performance, yarış odaklı Thrust ve uçuş sistemiyle sunulan davetli Rocket.</p><div class="target-grid"><div class="target"><b>&lt;1,6 sn</b><span>Performance · 0–60 mph · iki koltuk · yol kullanıma hazır</span></div><div class="target"><b>&lt;0,9 sn</b><span>Thrust · 0–60 mph · iki koltuk · yarış odaklı</span></div><div class="target"><b>&lt;0,59 sn</b><span>Rocket · 0–60 mph · tek koltuk · uçuş sistemi</span></div></div><div class="future-meta"><div><b>&gt;300 mil / &gt;480 km</b><span>2026 Roadster sayfasında belirtilen menzil</span></div><div><b>2028</b><span>Planlanan üretim başlangıcı</span></div></div></div></section>
-      <section class="second-gen" id="ikinci-nesil"><div class="wrap second-grid"><div class="second-photo-wrap"><img class="second-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/2017%20Tesla%20Roadster%202.0%20Petersen%20Automotive%20Museum.jpg" alt="2017 Tesla Roadster 2.0" /><div class="flight-line"></div></div><div class="second-copy"><div class="section-label">İkinci nesil / 2017–2026</div><h2>İkinci neslin güncellenen tasarımı.</h2><p>İkinci nesil Roadster, 16 Kasım 2017’de tanıtıldı ve Tesla’nın Ekim 2026 güncellemesiyle Performance, Thrust ve Rocket olmak üzere üç farklı yapı halinde yeniden sunuldu.</p><div class="facts"><div class="fact"><strong>2017</strong><span>İlk tanıtım</span></div><div class="fact"><strong>3 yapı</strong><span>Performance · Thrust · Rocket</span></div><div class="fact"><strong>2028</strong><span>Planlanan üretim</span></div><div class="fact"><strong>&gt;300 mil</strong><span>Belirtilen menzil</span></div></div></div></div></section>
-      <section class="flight-showcase" id="2026"><div class="wrap flight-grid"><div class="flight-stage"><div class="video-shell"><iframe id="roadster-video" class="flight-video" src="https://www.youtube.com/embed/7p5LxFdc-Qg?autoplay=0&mute=1&enablejsapi=1&loop=1&playlist=7p5LxFdc-Qg&controls=1&rel=0&playsinline=1&start=0&end=30" title="Tesla Roadster uçuş gösterisi" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe><span class="video-caption">Uçuş · süzülme · iniş</span></div></div><div class="flight-copy"><div class="section-label">03 / Rocket uçuş gösterisi</div><h2>Rocket paketinin uçuş sistemi.</h2><p>Video, Rocket paketinin havalanma, süzülme ve iniş gösterisini sunar.</p><p>Rocket; tek koltuklu, uçuşa hazır olarak tanımlanan ve kamu yollarında onaylı olmayan bir yapı olarak sunuluyor. Çevresel soğuk gaz iticileri ve elektrikli aktüatörler, kısa süreli havalanma ve yön kontrolü için kullanılıyor.</p><div class="facts"><div class="fact"><strong>&lt;0,59 sn</strong><span>0–60 mph</span></div><div class="fact"><strong>&gt;230 mph</strong><span>Belirtilen azami hız</span></div><div class="fact"><strong>&gt;300 mil</strong><span>Belirtilen menzil</span></div><div class="fact"><strong>1 koltuk</strong><span>Rocket düzeni</span></div></div></div></div></section>
-      <section class="compare" id="karsilastir"><div class="wrap"><div class="section-label">Roadster nesilleri</div><h2>İlk ve güncellenen ikinci nesil arasındaki farklar.</h2><p class="sub">Karşılaştırma, ilk neslin doğrulanmış üretim verileri ile 2026’da tanıtılan ikinci neslin paketlerini yan yana gösterir.</p><div class="compare-grid"><article class="compare-card"><h3>İlk Roadster · 2008–2012</h3><p>İki koltuklu hafif gövde, 215 kW elektrik motoru, 6.831 hücreli lityum iyon batarya, 245 mil EPA menzili, Roadster 2.5 için 201 km/sa azami hız ve yaklaşık 2.450 adet üretim.</p></article><article class="compare-card"><h3>Yeni Roadster · 2028 planlanan</h3><p>Performance (&lt;1,6 sn), Thrust (&lt;0,9 sn) ve Rocket (&lt;0,59 sn) yapıları; &gt;300 mil menzil, 2028 planlanan üretim ve Rocket paketinde tek koltuklu uçuş sistemi.</p></article></div></div></section>
+      <section class="hero" id="baslangic" data-tone="studio">
+        <div class="wrap">
+          <div class="hero-line"><span>Tesla’nın ilk seri üretim otomobili</span><span class="num">2008 / 2028</span></div>
+          <h1><span class="sr-only">Tesla Roadster</span><span class="wordmark" data-fit aria-hidden="true">Roadster</span></h1>
+          <div class="hero-body">
+            <figure class="photo hero-photo">
+              <img src="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg" alt="2008 Tesla Roadster, önden üç çeyrek görünüm" fetchpriority="high" decoding="async" />
+              <figcaption>2008 Tesla Roadster</figcaption>
+            </figure>
+            <div class="hero-aside">
+              <p class="q hero-reveal">Tesla Roadster nedir?</p>
+              <p class="intro hero-reveal">Roadster, Tesla’nın ilk seri üretim otomobilidir. İki kişilik, tamamen elektrikli ve yüksek performanslı bu model, markanın otomotiv sektöründeki başlangıcını oluşturur. Bu sayfa Roadster’ın tarihçesini, teknik özelliklerini ve nesiller arasındaki değişimi kronolojik olarak anlatır.</p>
+              <dl class="stats hero-reveal">
+                <div><dt>İlk neslin üretimi</dt><dd>2008–2012</dd></div>
+                <div><dt>Üretilen araç</dt><dd>≈ 2.450</dd></div>
+              </dl>
+              <div class="actions hero-reveal">
+                <a class="btn btn-solid" href="#tarihce">Tarihçeyi keşfet</a>
+                <a class="btn btn-line" href="#2026">Uçuşu izle</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter history" id="tarihce" data-tone="studio">
+        <div class="wrap head">
+          <p class="period num">2006–2012</p>
+          <div>
+            <h2>İlk nesil Roadster’ın ortaya çıkışı.</h2>
+            <p class="lead">2000’li yıllarda elektrikli otomobiller genellikle düşük performans ve sınırlı menzil ile ilişkilendiriliyordu. Roadster, Lotus Elise temelli hafif gövdesi, lityum iyon bataryası ve anında tork üreten elektrik motoru ile bu algıyı değiştirdi. Model, spor otomobil tasarımını tamamen elektrikli aktarma ile birleştirdi.</p>
+          </div>
+        </div>
+        <div class="track-outer">
+          <div class="track-sticky">
+            <ol class="track">
+              <li class="milestone"><span class="year">2006</span><p><span class="kind">Prototip</span>Prototip, Santa Monica’daki özel bir etkinlikte ilk kez gösterildi.</p></li>
+              <li class="milestone"><span class="year">2008</span><p><span class="kind">Üretim</span>Normal üretim başladı; ilk seri üretim Roadster müşteriye teslim edildi.</p></li>
+              <li class="milestone"><span class="year">2009</span><p><span class="kind">Roadster Sport</span>Roadster Sport tanıtıldı; 0–60 mph süresi 3,7 saniyeye indi.</p></li>
+              <li class="milestone"><span class="year">2012</span><p><span class="kind">Son</span>Lotus’tan alınan gövde ve şasi stoğu bitince üretim sona erdi.</p></li>
+            </ol>
+            <div class="rail wrap" aria-hidden="true">
+              <div class="rail-line"><div class="rail-fill"></div></div>
+              <ol class="rail-ticks"><li>2006</li><li>2008</li><li>2009</li><li>2012</li></ol>
+            </div>
+          </div>
+        </div>
+        <div class="history-end" aria-hidden="true"></div>
+      </section>
+
+      <section class="chapter specs" id="teknoloji" data-tone="studio">
+        <div class="wrap">
+          <div class="head">
+            <p class="period num">2008–2012</p>
+            <div>
+              <h2>İlk neslin teknik özellikleri.</h2>
+              <p class="lead">Motor, batarya, menzil ve üretim verileri. Şemadaki her nokta, pil paketindeki 6.831 hücreden birini gösterir.</p>
+            </div>
+          </div>
+          <div class="specs-grid">
+            <dl class="spec-list">
+              <div class="spec"><dt>Motor gücü</dt><dd class="value">215<small>kW</small></dd><dd class="note">288 hp maksimum güç.</dd></div>
+              <div class="spec"><dt>Batarya hücresi</dt><dd class="value">6.831</dd><dd class="note">Lityum iyon pil paketindeki hücre sayısı.</dd></div>
+              <div class="spec"><dt>0–60 mph</dt><dd class="value">3,7<small>sn</small></dd><dd class="note">Roadster Sport modeli; standart Roadster 3,9 saniye.</dd></div>
+              <div class="spec"><dt>EPA menzili</dt><dd class="value">245<small>mil</small></dd><dd class="note">Yaklaşık 394 km.</dd></div>
+              <div class="spec"><dt>Azami hız</dt><dd class="value">201<small>km/sa</small></dd><dd class="note">Roadster 2.5 için 125 mph elektronik sınır; ilk modellerde yaklaşık 193 km/sa.</dd></div>
+              <div class="spec"><dt>Üretim</dt><dd class="value">≈ 2.450</dd><dd class="note">2008–2012 arasında üretilen toplam Roadster.</dd></div>
+            </dl>
+            <figure class="pack" style="margin:0">
+              <canvas id="pack" role="img" aria-label="6.831 hücreli lityum iyon pil paketinin şeması: 99 sütun, 69 sıra"></canvas>
+              <figcaption class="pack-meta"><output id="pack-count" aria-hidden="true">0</output><span>/ 6.831 hücre<br />Lityum iyon pil paketi</span></figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter gen2" id="ikinci-nesil" data-tone="night">
+        <div class="wrap gen2-grid">
+          <figure class="photo gen2-photo reveal-beam">
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/2017%20Tesla%20Roadster%202.0%20Petersen%20Automotive%20Museum.jpg" alt="Petersen Otomobil Müzesi’nde sergilenen 2017 Tesla Roadster" loading="lazy" decoding="async" />
+            <figcaption>2017 Roadster, Petersen Otomobil Müzesi</figcaption>
+          </figure>
+          <div class="gen2-copy">
+            <p class="period num" style="margin-bottom:24px">2017–2026</p>
+            <h2>İkinci neslin güncellenen tasarımı.</h2>
+            <p>İkinci nesil Roadster, 16 Kasım 2017’de tanıtıldı ve Tesla’nın Ekim 2026 güncellemesiyle Performance, Thrust ve Rocket olmak üzere üç farklı yapı halinde yeniden sunuldu.</p>
+            <dl class="facts">
+              <div><dt>İlk tanıtım</dt><dd>2017</dd></div>
+              <div><dt>Yapı sayısı</dt><dd>3</dd></div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter builds" id="gelecek" data-tone="night">
+        <div class="wrap">
+          <div class="head">
+            <p class="period num">2026</p>
+            <div>
+              <h2>İkinci nesil Roadster: üç farklı yapı.</h2>
+              <p class="lead">Tesla’nın 2026 Roadster sayfasında üç farklı yapı tanımlanıyor: yol kullanımına hazır Performance, yarış odaklı Thrust ve uçuş sistemiyle sunulan davetli Rocket.</p>
+            </div>
+          </div>
+          <table class="build-table">
+            <caption class="sr-only">2026 Roadster yapıları</caption>
+            <thead><tr><th scope="col">Yapı</th><th scope="col">0–60 mph</th><th scope="col">Koltuk</th><th scope="col">Kullanım</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Performance</th><td class="t">&lt; 1,6 sn</td><td>İki koltuk</td><td>Yol kullanımına hazır</td></tr>
+              <tr><th scope="row">Thrust</th><td class="t">&lt; 0,9 sn</td><td>İki koltuk</td><td>Yarış odaklı</td></tr>
+              <tr class="rocket"><th scope="row">Rocket</th><td class="t">&lt; 0,59 sn</td><td>Tek koltuk</td><td>Davetli, uçuş sistemiyle</td></tr>
+            </tbody>
+          </table>
+          <dl class="build-meta">
+            <div><dt>Belirtilen menzil</dt><dd>&gt; 300 mil / &gt; 480 km</dd></div>
+            <div><dt>Planlanan üretim başlangıcı</dt><dd>2028</dd></div>
+          </dl>
+
+          <div class="race" id="hizlanma">
+            <div class="race-top">
+              <div>
+                <h3>0’dan 60 mph’ye, gerçek zamanlı.</h3>
+                <p>İlk neslin en hızlısı ile üç yeni yapı aynı anda kalkar. Her şerit, aracın 60 mph’ye ulaştığı süre boyunca ilerler.</p>
+              </div>
+              <div class="console">
+                <div class="tree" aria-hidden="true"><i></i><i></i><i></i><i class="go"></i></div>
+                <div class="clock" aria-hidden="true"><span id="race-clock">0,00</span><small>sn</small></div>
+              </div>
+            </div>
+            <ol class="lanes">
+              <li class="lane" data-time="3.7"><span class="lane-name">Roadster Sport<small>İlk nesil, 2009</small></span><div class="strip"><span class="runner"></span></div><span class="lane-time">3,7 sn</span></li>
+              <li class="lane" data-time="1.6"><span class="lane-name">Performance<small>2026</small></span><div class="strip"><span class="runner"></span></div><span class="lane-time">&lt; 1,6 sn</span></li>
+              <li class="lane" data-time="0.9"><span class="lane-name">Thrust<small>2026</small></span><div class="strip"><span class="runner"></span></div><span class="lane-time">&lt; 0,9 sn</span></li>
+              <li class="lane rocket" data-time="0.59"><span class="lane-name">Rocket<small>2026</small></span><div class="strip"><span class="runner"></span></div><span class="lane-time">&lt; 0,59 sn</span></li>
+            </ol>
+            <div class="race-foot">
+              <p id="race-status" aria-live="polite">Rocket için belirtilen süre, 2009 Roadster Sport’un 3,7 saniyesinden altı kattan daha kısa. Yeni nesil süreleri Tesla’nın belirttiği üst sınırlardır.</p>
+              <button class="btn btn-solid" id="race-start" type="button">Yarışı başlat</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="chapter flight" id="2026" data-tone="night">
+        <div class="wrap head">
+          <p class="period num">2026</p>
+          <div>
+            <h2>Rocket paketinin uçuş sistemi.</h2>
+            <p class="lead">Video, Rocket paketinin havalanma, süzülme ve iniş gösterisini sunar.</p>
+          </div>
+        </div>
+        <div class="flight-pin">
+          <div class="flight-sticky">
+            <div class="flight-frame">
+              <iframe id="roadster-video" src="https://www.youtube.com/embed/7p5LxFdc-Qg?autoplay=0&amp;mute=1&amp;enablejsapi=1&amp;loop=1&amp;playlist=7p5LxFdc-Qg&amp;controls=1&amp;rel=0&amp;playsinline=1&amp;start=0&amp;end=30" title="Tesla Roadster uçuş gösterisi" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin" loading="lazy"></iframe>
+            </div>
+            <div class="flight-bar"><span>Havalanma, süzülme ve iniş</span><a href="https://www.youtube.com/watch?v=7p5LxFdc-Qg" target="_blank" rel="noopener">YouTube’da izle</a></div>
+          </div>
+        </div>
+        <div class="wrap flight-copy">
+          <div>
+            <p>Rocket; tek koltuklu, uçuşa hazır olarak tanımlanan ve kamu yollarında onaylı olmayan bir yapı olarak sunuluyor.</p>
+            <p>Çevresel soğuk gaz iticileri ve elektrikli aktüatörler, kısa süreli havalanma ve yön kontrolü için kullanılıyor.</p>
+          </div>
+          <dl class="facts">
+            <div><dt>0–60 mph</dt><dd>&lt; 0,59 sn</dd></div>
+            <div><dt>Belirtilen azami hız</dt><dd>&gt; 230 mph</dd></div>
+            <div><dt>Belirtilen menzil</dt><dd>&gt; 300 mil</dd></div>
+            <div><dt>Rocket düzeni</dt><dd>1 koltuk</dd></div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="chapter compare" id="karsilastir" data-tone="night">
+        <div class="wrap">
+          <div class="head">
+            <p class="period num">2008 / 2028</p>
+            <div>
+              <h2>İlk ve güncellenen ikinci nesil arasındaki farklar.</h2>
+              <p class="lead">Karşılaştırma, ilk neslin doğrulanmış üretim verileri ile 2026’da tanıtılan ikinci neslin paketlerini yan yana gösterir.</p>
+            </div>
+          </div>
+          <table class="compare-table">
+            <caption class="sr-only">İlk nesil ve yeni nesil Roadster karşılaştırması</caption>
+            <thead>
+              <tr><th scope="col"><span class="sr-only">Özellik</span></th><th scope="col">İlk Roadster<small>2008–2012</small></th><th scope="col">Yeni Roadster<small>2028 planlanan</small></th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Koltuk</th><td data-label="İlk Roadster">İki koltuk, hafif gövde</td><td data-label="Yeni Roadster">İki koltuk; Rocket’te tek koltuk</td></tr>
+              <tr><th scope="row">Elektrik motoru</th><td data-label="İlk Roadster"><b>215 kW</b></td><td data-label="Yeni Roadster"><span class="na">Belirtilmedi</span></td></tr>
+              <tr><th scope="row">Batarya</th><td data-label="İlk Roadster">6.831 hücreli lityum iyon</td><td data-label="Yeni Roadster"><span class="na">Belirtilmedi</span></td></tr>
+              <tr><th scope="row">0–60 mph</th><td data-label="İlk Roadster"><b>3,7 sn</b> (Sport)</td><td data-label="Yeni Roadster"><b>&lt; 1,6 sn</b> Performance<br /><b>&lt; 0,9 sn</b> Thrust<br /><b>&lt; 0,59 sn</b> Rocket</td></tr>
+              <tr><th scope="row">Menzil</th><td data-label="İlk Roadster"><b>245 mil</b> EPA</td><td data-label="Yeni Roadster"><b>&gt; 300 mil</b></td></tr>
+              <tr><th scope="row">Azami hız</th><td data-label="İlk Roadster"><b>201 km/sa</b> (Roadster 2.5)</td><td data-label="Yeni Roadster"><b>&gt; 230 mph</b> (Rocket)</td></tr>
+              <tr><th scope="row">Uçuş sistemi</th><td data-label="İlk Roadster"><span class="na">Yok</span></td><td data-label="Yeni Roadster">Rocket paketinde</td></tr>
+              <tr><th scope="row">Üretim</th><td data-label="İlk Roadster">Yaklaşık <b>2.450</b> adet</td><td data-label="Yeni Roadster"><b>2028</b>’de başlaması planlanıyor</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
-    <footer><div class="wrap footer-row"><span>TESLA ROADSTER / BİLGİ PLATFORMU</span></div></footer>
+
+    <footer class="footer" data-tone="night">
+      <div class="wrap">
+        <p class="wordmark" data-fit aria-hidden="true">Roadster</p>
+        <div class="footer-row">
+          <p>Tesla Roadster bilgi platformu. Bağımsız bir bilgi projesidir; Tesla, Inc. ile bağlantılı değildir. Fotoğraflar: <a href="https://commons.wikimedia.org/wiki/File:2008_Tesla_Roadster_front.jpg" target="_blank" rel="noopener">2008 Roadster</a> ve <a href="https://commons.wikimedia.org/wiki/File:2017_Tesla_Roadster_2.0_Petersen_Automotive_Museum.jpg" target="_blank" rel="noopener">2017 Roadster</a>, Wikimedia Commons.</p>
+          <a class="btn btn-line" href="#baslangic">Başa dön</a>
+        </div>
+      </div>
+    </footer>
+
     <script>
-      const cursorGlow = document.querySelector('#cursor-glow');
-      const finePointer = window.matchMedia('(pointer:fine)').matches;
-      if (cursorGlow && finePointer) {
-        window.addEventListener('pointermove', (event) => {
-          cursorGlow.style.left = `${event.clientX}px`;
-          cursorGlow.style.top = `${event.clientY}px`;
-          cursorGlow.style.opacity = '1';
-        }, { passive: true });
-      }
+      (() => {
+        const root = document.documentElement;
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const wide = window.matchMedia('(min-width: 821px)');
+        const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+        const easeInOut = (t) => (t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+        const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 
-      const progressBar = document.querySelector('#scroll-progress');
-      const updateProgress = () => {
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        if (progressBar) progressBar.style.width = `${maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0}%`;
-      };
-      window.addEventListener('scroll', updateProgress, { passive: true });
-      updateProgress();
+        /* ---------- Yazı ölçüsü: kelimeyi satır genişliğine sığdır ---------- */
+        const fitWordmarks = () => {
+          document.querySelectorAll('[data-fit]').forEach((el) => {
+            const probe = el.cloneNode(true);
+            probe.removeAttribute('data-fit');
+            probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden;display:inline-block;font-size:100px;font-stretch:125%;transition:none;margin:0;padding:0;';
+            document.body.appendChild(probe);
+            const natural = probe.getBoundingClientRect().width;
+            probe.remove();
+            const available = el.parentElement.clientWidth;
+            if (natural > 0) el.style.fontSize = `${Math.floor((available / natural) * 100 * 0.995 * 10) / 10}px`;
+          });
+        };
 
-      // Bazı Safari/WebView sürümlerinde IntersectionObserver bulunmayabilir.
-      // Bu küçük geri dönüş, görünürlük kontrolünü kaydırma ile sürdürür.
-      if (typeof IntersectionObserver === 'undefined') {
-        window.IntersectionObserver = class BasicIntersectionObserver {
-          constructor(callback, options = {}) {
-            this.callback = callback;
-            this.threshold = Array.isArray(options.threshold) ? Math.max(...options.threshold) : (options.threshold || 0);
-            this.targets = new Set();
-            this.check = this.check.bind(this);
-            window.addEventListener('scroll', this.check, { passive: true });
-            window.addEventListener('resize', this.check, { passive: true });
+        let started = false;
+        const start = () => {
+          if (started) return;
+          started = true;
+          fitWordmarks();
+          requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-loaded')));
+        };
+        const fontReady = document.fonts && document.fonts.load ? document.fonts.load('800 100px Archivo').catch(() => {}) : Promise.resolve();
+        Promise.race([fontReady, new Promise((r) => setTimeout(r, 1800))]).then(start);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => started && fitWordmarks());
+
+        /* ---------- Mobil menü ---------- */
+        const menuBtn = document.querySelector('.menu-btn');
+        const menu = document.getElementById('menu');
+        const setMenu = (open) => {
+          root.classList.toggle('menu-open', open);
+          menuBtn.setAttribute('aria-expanded', String(open));
+          menuBtn.textContent = open ? 'Kapat' : 'Menü';
+          if (open) menu.querySelector('a').focus({ preventScroll: true });
+        };
+        menuBtn.addEventListener('click', () => setMenu(!root.classList.contains('menu-open')));
+        menu.addEventListener('click', (e) => { if (e.target.closest('a')) setMenu(false); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && root.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
+
+        /* ---------- Bölüm tonu: stüdyodan geceye ---------- */
+        const toned = [...document.querySelectorAll('[data-tone]')];
+        const themeMeta = document.querySelector('meta[name="theme-color"]');
+        let tone = 'studio';
+        const updateTone = () => {
+          const mid = window.innerHeight * 0.55;
+          let next = tone;
+          for (const el of toned) {
+            const r = el.getBoundingClientRect();
+            if (r.top <= mid && r.bottom > mid) { next = el.dataset.tone; break; }
           }
-          observe(target) {
-            this.targets.add(target);
-            this.check();
-          }
-          unobserve(target) { this.targets.delete(target); }
-          disconnect() {
-            this.targets.clear();
-            window.removeEventListener('scroll', this.check);
-            window.removeEventListener('resize', this.check);
-          }
-          check() {
-            const viewport = window.innerHeight || document.documentElement.clientHeight;
-            const entries = [...this.targets].map((target) => {
-              const rect = target.getBoundingClientRect();
-              const visible = Math.max(0, Math.min(rect.bottom, viewport) - Math.max(rect.top, 0));
-              const ratio = rect.height ? visible / rect.height : 0;
-              return { target, isIntersecting: ratio >= this.threshold && ratio > 0, intersectionRatio: ratio };
-            });
-            if (entries.length) this.callback(entries, this);
+          if (next !== tone) {
+            tone = next;
+            root.dataset.theme = tone;
+            themeMeta.setAttribute('content', tone === 'night' ? '#060A1A' : '#E8E9EB');
+            drawPack(true);
           }
         };
-      }
 
-      const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
-        if (entry.isIntersecting) { entry.target.classList.add('in-view'); revealObserver.unobserve(entry.target); }
-      }), { threshold: 0.28 });
-      document.querySelectorAll('.second-photo-wrap').forEach((element) => revealObserver.observe(element));
+        /* ---------- Sabitlenen bölümler (yalnızca geniş ekran, hareket açıkken) ---------- */
+        const trackOuter = document.querySelector('.track-outer');
+        const track = document.querySelector('.track');
+        const ticks = [...document.querySelectorAll('.rail-ticks li')];
+        const flightPin = document.querySelector('.flight-pin');
+        const flightFrame = document.querySelector('.flight-frame');
+        const flightSticky = document.querySelector('.flight-sticky');
+        let trackDistance = 0;
+        const usePin = () => wide.matches && !reduceMotion;
+        const layoutPins = () => {
+          root.classList.toggle('pin', usePin());
+          if (usePin()) {
+            track.style.transform = 'translate3d(0,0,0)';
+            trackDistance = Math.max(0, track.scrollWidth - window.innerWidth);
+            trackOuter.style.height = `${trackDistance + window.innerHeight}px`;
+          } else {
+            trackOuter.style.height = '';
+            track.style.transform = '';
+            flightSticky.style.removeProperty('--fo');
+            flightFrame.style.removeProperty('--fs');
+            flightFrame.style.removeProperty('--fr');
+          }
+        };
 
-      const animatedElements = document.querySelectorAll('.history .milestone, .spec, .target, .second-copy, .compare-card, .flight-copy, .video-shell');
-      animatedElements.forEach((element) => element.classList.add('reveal'));
-      const contentRevealObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('is-visible');
-          contentRevealObserver.unobserve(entry.target);
-        });
-      }, { threshold: 0.16 });
-      animatedElements.forEach((element) => contentRevealObserver.observe(element));
-
-      const heroVisual = document.querySelector('.hero-visual');
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (heroVisual && !reducedMotion) {
-        let parallaxFrame = 0;
-        window.addEventListener('scroll', () => {
-          if (parallaxFrame) return;
-          parallaxFrame = requestAnimationFrame(() => {
-            const offset = Math.min(window.scrollY * -0.04, 0);
-            heroVisual.style.transform = `translate3d(0, ${offset}px, 0)`;
-            parallaxFrame = 0;
-          });
-        }, { passive: true });
-      }
-
-      const navLinks = [...document.querySelectorAll('.nav-links a')];
-      const navSections = navLinks.map((link) => document.getElementById(link.getAttribute('href').slice(1))).filter(Boolean);
-      const activeNavObserver = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
-        });
-      }, { rootMargin: '-30% 0px -55% 0px', threshold: 0 });
-      navSections.forEach((section) => activeNavObserver.observe(section));
-
-      const flightSection = document.querySelector('.flight-showcase');
-      const videoFrame = document.querySelector('#roadster-video');
-      const videoBaseSrc = 'https://www.youtube.com/embed/7p5LxFdc-Qg?mute=1&enablejsapi=1&loop=1&playlist=7p5LxFdc-Qg&controls=1&rel=0&playsinline=1&start=0&end=30';
-      let videoActive = false;
-      const flightRevealObserver = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('in-view');
-          flightRevealObserver.unobserve(entry.target);
+        /* ---------- Pil paketi: 99 × 69 = 6.831 hücre ---------- */
+        const COLS = 99, ROWS = 69, CELLS = COLS * ROWS;
+        const canvas = document.getElementById('pack');
+        const ctx = canvas.getContext('2d');
+        const countEl = document.getElementById('pack-count');
+        const specsGrid = document.querySelector('.specs-grid');
+        let lit = reduceMotion ? CELLS : 0, drawnLit = -1, pitch = 0, cssW = 0, cssH = 0;
+        const sizePack = () => {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          cssW = canvas.clientWidth;
+          pitch = cssW / COLS;
+          cssH = pitch * ROWS;
+          canvas.width = Math.round(cssW * dpr);
+          canvas.height = Math.round(cssH * dpr);
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          drawPack(true);
+        };
+        function drawPack(force) {
+          if (!pitch || (!force && lit === drawnLit)) return;
+          drawnLit = lit;
+          const night = tone === 'night';
+          const r = pitch * 0.36;
+          ctx.clearRect(0, 0, cssW, cssH);
+          const paths = [new Path2D(), new Path2D(), new Path2D()];
+          for (let i = 0; i < CELLS; i++) {
+            const row = ROWS - 1 - Math.floor(i / COLS);
+            const col = i % COLS;
+            const x = (col + 0.5) * pitch;
+            const y = (row + 0.5) * pitch;
+            const p = i < lit - COLS ? 1 : i < lit ? 2 : 0;
+            paths[p].moveTo(x + r, y);
+            paths[p].arc(x, y, r, 0, Math.PI * 2);
+          }
+          ctx.fillStyle = night ? 'rgba(238,241,246,.12)' : 'rgba(0,0,0,.11)';
+          ctx.fill(paths[0]);
+          ctx.fillStyle = '#E31937';
+          ctx.fill(paths[1]);
+          ctx.fillStyle = '#FF7A86';
+          ctx.fill(paths[2]);
+          countEl.textContent = lit.toLocaleString('tr-TR');
         }
-      }, { threshold: 0.12 });
-      if (flightSection) flightRevealObserver.observe(flightSection);
-      const resetVideo = (autoplay) => {
-        if (!videoFrame) return;
-        // Recreating the iframe is more reliable than relying only on
-        // postMessage: every visit starts a fresh YouTube player at 0:00.
-        videoFrame.src = `${videoBaseSrc}&autoplay=${autoplay ? '1' : '0'}`;
-      };
-      const flightObserver = new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting === videoActive) return;
-        videoActive = entry.isIntersecting;
-        resetVideo(videoActive);
-      }, { threshold: 0.42 });
-      if (flightSection) flightObserver.observe(flightSection);
+        const updatePack = () => {
+          if (reduceMotion) return;
+          const r = specsGrid.getBoundingClientRect();
+          const vh = window.innerHeight;
+          const p = clamp((vh * 0.85 - r.top) / Math.max(1, r.height + vh * 0.1));
+          lit = Math.round(easeInOut(p) * CELLS);
+          drawPack(false);
+        };
+
+        /* ---------- Kaydırma döngüsü ---------- */
+        const progressEl = document.querySelector('.progress');
+        const nav = document.querySelector('.nav');
+        const heroPhoto = document.querySelector('.hero-photo');
+        let lastY = window.scrollY, velocity = 0, ticking = false, lastTick = -1;
+
+        const update = () => {
+          const y = window.scrollY;
+          const vh = window.innerHeight;
+          const dy = y - lastY;
+          lastY = y;
+          velocity += (dy - velocity) * 0.22;
+
+          const max = document.documentElement.scrollHeight - vh;
+          progressEl.style.setProperty('--p', max > 0 ? (y / max).toFixed(4) : 0);
+
+          if (!root.classList.contains('menu-open')) {
+            if (y > 160 && dy > 3) nav.classList.add('is-hidden');
+            else if (dy < -3 || y <= 160) nav.classList.remove('is-hidden');
+          }
+
+          updateTone();
+
+          if (!reduceMotion) heroPhoto.style.setProperty('--hs', (1 + 0.08 * clamp(y / vh)).toFixed(4));
+
+          if (root.classList.contains('pin')) {
+            const r = trackOuter.getBoundingClientRect();
+            if (r.top < vh && r.bottom > 0) {
+              const p = trackDistance ? clamp(-r.top / trackDistance) : 0;
+              track.style.transform = `translate3d(${(-p * trackDistance).toFixed(1)}px,0,0)`;
+              trackOuter.style.setProperty('--tp', p.toFixed(4));
+              const stretch = 100 + clamp(Math.abs(velocity) * 0.8, 0, 18);
+              track.style.setProperty('--ys', `${stretch.toFixed(1)}%`);
+              const tick = Math.min(ticks.length - 1, Math.floor(p * ticks.length * 0.999));
+              if (tick !== lastTick) { ticks.forEach((t, i) => t.classList.toggle('on', i <= tick)); lastTick = tick; }
+            }
+            const f = flightPin.getBoundingClientRect();
+            if (f.top < vh && f.bottom > 0) {
+              const p = easeInOut(clamp((vh - f.top) / (vh * 1.5)));
+              flightFrame.style.setProperty('--fs', (0.7 + 0.3 * p).toFixed(4));
+              flightFrame.style.setProperty('--fr', `${(28 - 22 * p).toFixed(1)}px`);
+              flightSticky.style.setProperty('--fo', clamp((p - 0.7) / 0.3).toFixed(3));
+            }
+          }
+
+          updatePack();
+
+          if (Math.abs(velocity) > 0.15) { requestAnimationFrame(update); }
+          else { velocity = 0; ticking = false; if (root.classList.contains('pin')) track.style.setProperty('--ys', '100%'); }
+        };
+        const requestUpdate = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+        window.addEventListener('scroll', requestUpdate, { passive: true });
+
+        const relayout = () => { layoutPins(); sizePack(); if (started) fitWordmarks(); lastY = window.scrollY; requestUpdate(); };
+        let resizeTimer = 0;
+        window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(relayout, 120); });
+        wide.addEventListener('change', relayout);
+
+        /* ---------- Görünür olunca açılanlar ---------- */
+        const once = new IntersectionObserver((entries) => entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add('is-in');
+          if ('beam' in entry.target.dataset) entry.target.querySelectorAll(':scope > .reveal-beam').forEach((el) => el.classList.add('is-in'));
+          once.unobserve(entry.target);
+        }), { threshold: 0.3 });
+        // Kırpılmış öğe yerine kapsayıcısı izlenir; clip-path görünürlük ölçümünü etkileyebilir.
+        document.querySelectorAll('.reveal-beam').forEach((el) => { el.parentElement.dataset.beam = ''; once.observe(el.parentElement); });
+        once.observe(document.querySelector('.footer'));
+
+        /* ---------- Aktif menü bağlantısı ---------- */
+        const navLinks = [...document.querySelectorAll('.nav-links a')];
+        const navSections = navLinks.map((link) => document.getElementById(link.getAttribute('href').slice(1))).filter(Boolean);
+        const activeObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`));
+          });
+        }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+        navSections.forEach((section) => activeObserver.observe(section));
+
+        /* ---------- Hızlanma yarışı ---------- */
+        const race = document.querySelector('.race');
+        const raceBtn = document.getElementById('race-start');
+        const raceClock = document.getElementById('race-clock');
+        const raceStatus = document.getElementById('race-status');
+        const lights = [...document.querySelectorAll('.tree i')];
+        const lanes = [...document.querySelectorAll('.lane')].map((li) => ({
+          li, T: parseFloat(li.dataset.time), runner: li.querySelector('.runner'), strip: li.querySelector('.strip'), done: false, w: 0,
+        }));
+        const longest = Math.max(...lanes.map((l) => l.T));
+        const fmt = (s) => s.toFixed(2).replace('.', ',');
+        const statusText = raceStatus.textContent;
+        let raceTimers = [];
+        let raceState = reduceMotion ? 'done' : 'idle';
+
+        const placeRunners = (p) => lanes.forEach((l) => {
+          l.w = l.strip.clientWidth - 14;
+          l.runner.style.setProperty('--x', `${(p * l.w).toFixed(1)}px`);
+          l.runner.style.setProperty('--tail', '0px');
+        });
+
+        const finish = () => {
+          race.classList.remove('racing');
+          lanes.forEach((l) => { l.li.classList.add('is-done'); l.runner.style.setProperty('--tail', '0px'); });
+          raceClock.textContent = fmt(longest);
+          raceBtn.disabled = false;
+          raceBtn.textContent = 'Tekrar başlat';
+          raceStatus.textContent = statusText;
+          raceState = 'done';
+        };
+
+        const run = () => {
+          const t0 = performance.now();
+          const step = (now) => {
+            const t = (now - t0) / 1000;
+            raceClock.textContent = fmt(Math.min(t, longest));
+            lanes.forEach((l) => {
+              const p = Math.min(t / l.T, 1);
+              const x = p * p * l.w;
+              const speed = p < 1 ? (2 * t * l.w) / (l.T * l.T) : 0;
+              l.runner.style.setProperty('--x', `${x.toFixed(1)}px`);
+              l.runner.style.setProperty('--tail', `${Math.min(speed * 0.07, 320).toFixed(1)}px`);
+              if (p >= 1 && !l.done) { l.done = true; l.li.classList.add('is-done'); }
+            });
+            if (t < longest) requestAnimationFrame(step); else finish();
+          };
+          requestAnimationFrame(step);
+        };
+
+        raceBtn.addEventListener('click', () => {
+          raceTimers.forEach(clearTimeout);
+          raceTimers = [];
+          lanes.forEach((l) => { l.done = false; l.li.classList.remove('is-done'); });
+          lights.forEach((i) => i.classList.remove('on'));
+          raceClock.textContent = fmt(0);
+          if (reduceMotion) { placeRunners(1); finish(); return; }
+          placeRunners(0);
+          raceState = 'racing';
+          race.classList.add('racing');
+          raceBtn.disabled = true;
+          raceStatus.textContent = 'Yarış başlıyor.';
+          [0, 1, 2].forEach((n) => raceTimers.push(setTimeout(() => lights[n].classList.add('on'), 250 + n * 500)));
+          raceTimers.push(setTimeout(() => {
+            lights.forEach((i) => i.classList.remove('on'));
+            lights[3].classList.add('on');
+            run();
+          }, 1750));
+        });
+        placeRunners(raceState === 'done' ? 1 : 0);
+        window.addEventListener('resize', () => { if (raceState !== 'racing') placeRunners(raceState === 'done' ? 1 : 0); });
+
+        /* ---------- Uçuş videosu: her girişte baştan başlar ---------- */
+        const videoFrame = document.getElementById('roadster-video');
+        const videoBaseSrc = 'https://www.youtube.com/embed/7p5LxFdc-Qg?mute=1&enablejsapi=1&loop=1&playlist=7p5LxFdc-Qg&controls=1&rel=0&playsinline=1&start=0&end=30';
+        let videoActive = false;
+        const resetVideo = (autoplay) => {
+          // iframe'i yeniden kurmak, yalnızca postMessage'a güvenmekten daha güvenilir:
+          // her ziyarette YouTube oynatıcısı 0:00'dan başlar.
+          videoFrame.src = `${videoBaseSrc}&autoplay=${autoplay ? '1' : '0'}`;
+        };
+        const videoObserver = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting === videoActive) return;
+          videoActive = entry.isIntersecting;
+          resetVideo(videoActive);
+        }, { threshold: 0.5 });
+        videoObserver.observe(flightFrame);
+
+        relayout();
+        window.addEventListener('load', () => {
+          relayout();
+          // Sabitlenen bölümler sayfa yüksekliğini değiştirdiği için #2026 gibi bağlantılar yeniden hizalanır.
+          const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+          if (target) target.scrollIntoView({ behavior: 'instant', block: 'start' });
+        });
+      })();
     </script>
   </body>
 </html>
