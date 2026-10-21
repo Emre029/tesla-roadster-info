@@ -224,7 +224,7 @@
       }
 
       const navLinks = [...document.querySelectorAll('.nav-links a')];
-      const navSections = navLinks.map((link) => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+      const navSections = navLinks.map((link) => document.getElementById(link.getAttribute('href').slice(1))).filter(Boolean);
       const activeNavObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
