@@ -43,7 +43,7 @@
       }
       body:before { content:""; position:fixed; inset:0; z-index:-2; pointer-events:none; opacity:.26; background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px); background-size:72px 72px; mask-image:linear-gradient(to bottom,black,transparent 82%); }
       body:after { content:""; position:fixed; width:38vw; height:38vw; right:-18vw; top:22vh; z-index:-1; pointer-events:none; border-radius:50%; background:rgba(232,33,39,.13); filter:blur(100px); }
-      #cursor-glow { position:fixed; left:0; top:0; width:260px; height:260px; z-index:-1; pointer-events:none; border-radius:50%; background:radial-gradient(circle,rgba(232,33,39,.11),transparent 68%); filter:blur(12px); transform:translate(-50%,-50%); opacity:0; transition:opacity .3s ease; }
+      #cursor-glow { position:fixed; left:0; top:0; width:260px; height:260px; z-index:0; pointer-events:none; border-radius:50%; background:radial-gradient(circle,rgba(232,33,39,.11),transparent 68%); filter:blur(12px); transform:translate(-50%,-50%); opacity:0; transition:opacity .3s ease; }
       a { color: inherit; }
       .wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
       nav {
