@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Tesla Roadster'ın geçmişi, tasarımı, teknolojisi ve performansı." />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <script>
+      // YouTube oynatıcısı file:// sayfalarında güvenlik nedeniyle Hata 153 verebilir.
+      // Yerel başlatıcı çalışıyorsa, dosyayı otomatik olarak güvenli localhost adresine al.
+      if (location.protocol === 'file:') {
+        const localPage = `http://localhost:8765/index.html${location.hash || ''}`;
+        fetch(localPage, { mode: 'no-cors', cache: 'no-store' })
+          .then(() => location.replace(localPage))
+          .catch(() => {});
+      }
+    </script>
+    <title>Tesla Roadster — Elektriğin Hız Hikâyesi</title>
+    <style>
+      :root {
+        --ink: #f6f7f8;
+        --muted: #a7adb6;
+        --line: rgba(220, 226, 232, .14);
+        --red: #e82127;
+        --red-bright: #ff4148;
+        --silver: #d5d9de;
+        --night: #07090d;
+        --panel: #11151b;
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--night);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      a { color: inherit; }
+      .wrap { width: min(1140px, calc(100% - 40px)); margin: 0 auto; }
+      nav {
+        position: fixed; inset: 0 0 auto; z-index: 5;
+        height: 70px; display: flex; align-items: center;
+        background: rgba(7,9,13,.82); backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(220,226,232,.08);
+      }
+      nav .wrap { display:flex; align-items:center; justify-content:space-between; }
+      .logo { display:inline-flex; align-items:center; gap:11px; text-decoration:none; }
+      .tesla-emblem { width:27px; height:27px; display:grid; place-items:center; border:1px solid rgba(232,33,39,.55); border-radius:50%; background:rgba(232,33,39,.12); box-shadow:0 0 22px rgba(232,33,39,.18); }
+      .tesla-emblem img { width:17px; height:17px; display:block; filter:brightness(0) invert(1); }
+      .brand-copy { display:flex; align-items:baseline; gap:8px; font-weight:800; letter-spacing:.14em; font-size:.82rem; }
+      .brand-copy strong { color:#f7f7f5; font-weight:800; }
+      .brand-copy span { color:var(--red); }
+      .nav-links { display:flex; gap:24px; list-style:none; margin:0; padding:0; }
+      .nav-links a { text-decoration:none; color:#d5d9de; font-size:.83rem; transition:color .2s ease; }
+      .nav-links a:hover { color:white; }
+      .hero {
+        min-height: 780px; padding: 150px 0 72px; overflow:hidden; position:relative;
+        display:grid; place-items:center;
+        background: radial-gradient(ellipse 65% 52% at 78% 60%, rgba(232,33,39,.24), transparent 64%),
+                    radial-gradient(ellipse 45% 35% at 20% 0%, rgba(160,174,190,.10), transparent 68%);
+      }
+      .hero:after { content:""; position:absolute; height:1px; width:150%; left:-20%; bottom:18%; background:linear-gradient(90deg,transparent,rgba(213,217,222,.28),transparent); transform:rotate(-10deg); }
+      .hero-grid { position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr; align-items:end; gap:48px; }
+      .eyebrow { color:var(--red-bright); font-weight:750; letter-spacing:.17em; font-size:.72rem; text-transform:uppercase; }
+      h1 { margin:14px 0 20px; max-width:680px; font-size:clamp(3.4rem, 8vw, 7.5rem); line-height:.87; letter-spacing:-.075em; }
+      h1 i { color:var(--red); font-style:normal; }
+      .intro { max-width:515px; color:#d0d4da; font-size:1.08rem; line-height:1.65; }
+      .hero-meta { margin-top:35px; padding-top:18px; border-top:1px solid var(--line); display:flex; gap:32px; }
+      .hero-meta b { display:block; font-size:.74rem; letter-spacing:.11em; color:#fff; }
+      .hero-meta span { color:var(--muted); font-size:.78rem; }
+      .car-stage { min-height:330px; display:flex; align-items:end; justify-content:center; }
+      .car {
+        position:relative; width:min(100%,490px); aspect-ratio:2.34/1; margin-bottom:42px;
+        border-radius: 48% 52% 15% 13% / 82% 79% 18% 18%;
+        background:linear-gradient(145deg, #ff5556 0%, #c2060d 34%, #6d0307 77%, #170102 100%);
+        box-shadow: inset 0 11px 22px rgba(255,255,255,.25), inset 0 -18px 24px rgba(0,0,0,.5), 0 38px 65px rgba(0,0,0,.55);
+        transform:skewX(-8deg) rotate(-2deg);
+      }
+      .car:before { content:""; position:absolute; left:28%; top:11%; width:41%; height:38%; border-radius:70% 45% 12% 16%; background:linear-gradient(145deg,#dbe5e9,#51636b 15%,#10161b 62%,#243036); border:3px solid #350204; }
+      .car:after { content:""; position:absolute; left:10%; right:7%; bottom:-19px; height:52px; border-radius:50%; background:radial-gradient(ellipse,rgba(0,0,0,.8),transparent 68%); z-index:-1; }
+      .wheel { position:absolute; bottom:-11%; width:22%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle at 50% 50%, #9da0a2 0 9%,#15181b 10% 21%,#6f7477 22% 27%,#08090a 28% 55%,#343638 56% 61%,#060606 62%); box-shadow:0 0 0 5px #171717; }
+      .wheel.left { left:12%; }.wheel.right { right:8%; }
+      .hero-photo { width:100%; max-width:560px; aspect-ratio:1.42/1; object-fit:cover; border-radius:22px; border:1px solid rgba(213,217,222,.22); box-shadow:0 30px 70px rgba(0,0,0,.55); display:block; }
+      section { padding:115px 0; }
+      .section-label { color:var(--red-bright); font-size:.73rem; font-weight:800; letter-spacing:.17em; text-transform:uppercase; }
+      h2 { font-size:clamp(2.2rem,4vw,4.2rem); letter-spacing:-.055em; line-height:.98; margin:13px 0 23px; max-width:710px; }
+      .sub { color:var(--muted); max-width:630px; line-height:1.7; }
+      .history { background:#f3f4f4; color:#101318; }
+      .history .section-label { color:#c9161d; }.history .sub { color:#505861; }
+      .timeline { margin-top:62px; border-top:1px solid #c5cbd1; display:grid; grid-template-columns:repeat(4,1fr); }
+      .milestone { padding:23px 26px 0 0; min-height:190px; border-right:1px solid #c5cbd1; }
+      .milestone:not(:first-child) { padding-left:26px; }.milestone:last-child { border:0; }
+      .year { font-size:2rem; font-weight:800; letter-spacing:-.08em; color:#20252b; }.milestone p { font-size:.9rem; line-height:1.52; color:#555e67; }
+      .specs { background:linear-gradient(130deg,#171b22,#0a0d12); }
+      .spec-grid { margin-top:50px; display:grid; grid-template-columns:repeat(3,1fr); border-top:1px solid var(--line); }
+      .spec { min-height:180px; padding:28px; border-right:1px solid var(--line); border-bottom:1px solid var(--line); transition:background .25s ease, border-color .25s ease, transform .25s ease; }.spec:hover { background:rgba(255,255,255,.035); border-color:rgba(232,33,39,.38); transform:translateY(-3px); }.spec:nth-child(3n) { border-right:0; }
+      .spec small { display:block; color:#8c908f; text-transform:uppercase; letter-spacing:.13em; font-weight:700; font-size:.66rem; }.spec strong { display:block; margin:13px 0 7px; font-size:2.2rem; letter-spacing:-.07em; }.spec p { margin:0; color:#a4a6a5; font-size:.82rem; line-height:1.45; }
+      .note { margin-top:27px; color:#8f9291; font-size:.82rem; }
+      .future { background:linear-gradient(135deg,#a90e15 0%,#e82127 46%,#b30f17 100%); position:relative; overflow:hidden; }.future:after { content:"02"; position:absolute; right:-.06em; bottom:-.34em; color:rgba(255,255,255,.11); font-size:26rem; font-weight:800; letter-spacing:-.15em; }
+      .future .wrap { position:relative; z-index:1; }.future .section-label { color:rgba(35,4,6,.82); }.future .sub { color:rgba(255,255,255,.82); font-weight:500; }
+      .target-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(55,0,0,.32); margin-top:48px; }.target { background:rgba(20,0,0,.16); padding:30px; transition:background .25s ease, transform .25s ease; }.target:hover { background:rgba(20,0,0,.28); transform:translateY(-4px); }.target b { display:block; font-size:clamp(2.1rem,4vw,3.7rem); letter-spacing:-.08em; }.target span { display:block; margin-top:8px; font-size:.84rem; color:rgba(255,255,255,.78); font-weight:650; line-height:1.45; }.future-meta { margin-top:32px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; max-width:650px; }.future-meta div { border-top:1px solid rgba(255,255,255,.36); padding-top:14px; }.future-meta b { display:block; font-size:1.35rem; letter-spacing:-.04em; }.future-meta span { display:block; margin-top:5px; color:rgba(255,255,255,.72); font-size:.78rem; }
+      .second-gen { background:#0d1117; overflow:hidden; }
+      .second-grid { display:grid; grid-template-columns:1.08fr .92fr; gap:70px; align-items:center; }
+      .second-photo-wrap { position:relative; transform:translateY(45px) scale(.96); opacity:0; transition:transform 900ms cubic-bezier(.2,.8,.2,1), opacity 900ms ease; }
+      .second-photo-wrap.in-view { transform:translateY(0) scale(1); opacity:1; }
+      .second-photo { width:100%; aspect-ratio:1.55/1; object-fit:cover; border-radius:24px; display:block; box-shadow:0 28px 60px rgba(0,0,0,.52); }
+      .second-photo-wrap.in-view .second-photo { animation: roadsterFloat 4.6s ease-in-out 900ms infinite; }
+      @keyframes roadsterFloat { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-12px) rotate(-1deg); } }
+      .flight-line { position:absolute; left:-8%; right:-8%; bottom:12%; height:1px; background:linear-gradient(90deg,transparent,#f6474c,transparent); transform:rotate(-8deg); opacity:.65; }
+      .second-copy h2 { margin-bottom:18px; }.second-copy p { color:#b3b6b5; line-height:1.72; }
+      .facts { margin-top:26px; display:grid; grid-template-columns:1fr 1fr; gap:14px; }.fact { border-left:2px solid var(--red); padding-left:13px; }.fact strong { display:block; font-size:1.3rem; }.fact span { color:#8e9290; font-size:.75rem; }
+      .compare { background:#090c11; padding-top:75px; padding-bottom:90px; }.compare-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; margin-top:35px; }.compare-card { border:1px solid var(--line); border-radius:16px; padding:22px; background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015)); transition:transform .25s ease, border-color .25s ease, background .25s ease; }.compare-card:hover { transform:translateY(-4px); border-color:rgba(232,33,39,.42); background:linear-gradient(145deg,rgba(255,255,255,.07),rgba(255,255,255,.02)); }.compare-card h3 { margin:0 0 8px; font-size:1rem; }.compare-card p { margin:0; color:#aab1ba; line-height:1.55; font-size:.84rem; }
+      .flight-showcase { background:linear-gradient(180deg,#07090d 0%,#16090c 100%); overflow:hidden; }
+      .flight-grid { display:grid; grid-template-columns:.95fr 1.05fr; gap:64px; align-items:center; }
+      .flight-stage { position:relative; min-height:450px; display:grid; place-items:center; }
+      .flight-stage:before { content:""; position:absolute; width:84%; height:42%; bottom:7%; border-radius:50%; background:radial-gradient(ellipse,rgba(232,33,39,.28),transparent 66%); filter:blur(10px); }
+      .video-shell { position:relative; z-index:2; width:100%; aspect-ratio:16/10; border:1px solid rgba(255,255,255,.17); border-radius:24px; overflow:hidden; background:#040506; box-shadow:0 28px 70px rgba(0,0,0,.6); transform:translateY(35px) scale(.97); opacity:0; transition:transform 900ms cubic-bezier(.2,.8,.2,1), opacity 700ms ease; }
+      .flight-showcase.in-view .video-shell { transform:translateY(0) scale(1); opacity:1; }
+      .flight-video { width:100%; height:100%; display:block; border:0; }
+      .video-caption { position:absolute; left:18px; bottom:16px; z-index:3; padding:8px 11px; border-radius:99px; background:rgba(0,0,0,.68); color:#e8e8e8; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; }
+      .video-open-button { position:absolute; right:18px; bottom:16px; z-index:3; padding:9px 13px; border-radius:99px; background:#fff; color:#101114; text-decoration:none; font-size:.7rem; font-weight:800; letter-spacing:.05em; }
+      .video-open-button:hover { background:#ff4c52; color:#fff; }
+      .flight-copy h2 { margin-bottom:18px; }.flight-copy p { color:#afb2b0; line-height:1.7; }.flight-badge { display:inline-flex; margin:12px 0 20px; border:1px solid rgba(255,255,255,.2); border-radius:99px; padding:8px 13px; color:#ff8c8e; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; }.flight-note { color:#8a8e8c; font-size:.76rem; margin-top:16px; }
+      footer { padding:27px 0; color:#858887; font-size:.77rem; }.footer-row { display:flex; justify-content:space-between; gap:20px; }.footer-row a { color:#bbb; }
+      @media (max-width:760px) { .nav-links { display:none; }.hero { min-height:720px; }.hero-grid,.second-grid,.flight-grid { grid-template-columns:1fr; gap:28px; }.car-stage { min-height:210px; }.flight-stage { min-height:350px; }.flight-poster { inset:14px 0 auto; height:220px; }.timeline,.spec-grid,.target-grid,.compare-grid,.future-meta { grid-template-columns:1fr; }.milestone,.milestone:not(:first-child) { border-right:0; border-bottom:1px solid #c4c3be; padding:22px 0; min-height:0; }.spec,.spec:nth-child(3n) { border-right:0; }.hero-meta { gap:18px; }.future:after { font-size:15rem; }.second-copy { order:-1; }.facts { gap:10px; } }
+    </style>
+  </head>
+  <body>
+    <nav><div class="wrap"><a class="logo" href="#baslangic" aria-label="Tesla Roadster bilgi sitesi"><span class="tesla-emblem"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tesla%20Motors.svg" alt="Tesla logosu" /></span><span class="brand-copy"><strong>ROADSTER</strong><span>INFO</span></span></a><ul class="nav-links"><li><a href="#tarihce">Tarihçe</a></li><li><a href="#teknoloji">Teknoloji</a></li><li><a href="#gelecek">2026 Paketleri</a></li><li><a href="#2026">Uçuş</a></li><li><a href="#karsilastir">Karşılaştır</a></li></ul></div></nav>
+    <main>
+      <section class="hero" id="baslangic"><div class="wrap hero-grid"><div><div class="eyebrow">01 / Roadster’ın başlangıcı</div><h1>Tesla Roadster<br><i>nedir?</i></h1><p class="intro">Roadster, Tesla’nın ilk seri üretim otomobilidir. İki kişilik, tamamen elektrikli ve yüksek performanslı bu model, markanın otomotiv sektöründeki başlangıcını oluşturur. Sayfa; Roadster’ın tarihçesini, teknik özelliklerini ve nesiller arasındaki değişimi kronolojik olarak sunar.</p><div class="hero-meta"><div><b>2008—2012</b><span>İlk neslin üretimi</span></div><div><b>≈ 2.450</b><span>Üretilen araç</span></div></div></div><div><img class="hero-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg" alt="2008 Tesla Roadster, önden üç çeyrek görünüm" /></div></div></section>
+      <section class="history" id="tarihce"><div class="wrap"><div class="section-label">İlk nesil / 2008–2012</div><h2>İlk nesil Roadster’ın ortaya çıkışı.</h2><p class="sub">2000’li yıllarda elektrikli otomobiller genellikle düşük performans ve sınırlı menzil ile ilişkilendiriliyordu. Roadster, Lotus Elise temelli hafif gövdesi, lityum iyon bataryası ve anında tork üreten elektrik motoru ile bu algıyı değiştirdi. Model, spor otomobil tasarımını tamamen elektrikli aktarma ile birleştirdi.</p><div class="timeline"><article class="milestone"><div class="year">2006</div><p>Prototip, Santa Monica’daki özel bir etkinlikte ilk kez gösterildi.</p></article><article class="milestone"><div class="year">2008</div><p>Normal üretim başladı; ilk seri üretim Roadster müşteriye teslim edildi.</p></article><article class="milestone"><div class="year">2009</div><p>Roadster Sport tanıtıldı; 0–60 mph süresi 3,7 saniyeye indi.</p></article><article class="milestone"><div class="year">2012</div><p>Lotus’tan alınan gövde/şasi stoğu bitince üretim sona erdi.</p></article></div></div></section>
+      <section class="specs" id="teknoloji"><div class="wrap"><div class="section-label">İlk nesil / teknik özet</div><h2>İlk neslin teknik özellikleri.</h2><p class="sub">Motor, batarya, menzil ve üretim verileri.</p><div class="spec-grid"><article class="spec"><small>Motor gücü</small><strong>215 kW</strong><p>288 hp maksimum güç.</p></article><article class="spec"><small>Batarya hücresi</small><strong>6.831</strong><p>Lityum iyon pil paketindeki hücre sayısı.</p></article><article class="spec"><small>0–60 mph</small><strong>3,7 sn</strong><p>Roadster Sport modeli; standart Roadster 3,9 saniye.</p></article><article class="spec"><small>EPA menzili</small><strong>245 mil</strong><p>Yaklaşık 394 km.</p></article><article class="spec"><small>Azami hız</small><strong>201 km/sa</strong><p>Roadster 2.5 için 125 mph elektronik sınır; ilk modellerde yaklaşık 193 km/sa.</p></article><article class="spec"><small>Üretim</small><strong>≈ 2.450</strong><p>2008–2012 arasında üretilen toplam Roadster.</p></article></div></div></section>
+      <section class="future" id="gelecek"><div class="wrap"><div class="section-label">02 / 2026 Roadster duyurusu</div><h2>İkinci nesil Roadster: üç farklı yapı.</h2><p class="sub">Tesla’nın 2026 Roadster sayfasında üç farklı yapı tanımlanıyor: yol kullanıma hazır Performance, yarış odaklı Thrust ve uçuş sistemiyle sunulan davetli Rocket.</p><div class="target-grid"><div class="target"><b>&lt;1,6 sn</b><span>Performance · 0–60 mph · iki koltuk · yol kullanıma hazır</span></div><div class="target"><b>&lt;0,9 sn</b><span>Thrust · 0–60 mph · iki koltuk · yarış odaklı</span></div><div class="target"><b>&lt;0,59 sn</b><span>Rocket · 0–60 mph · tek koltuk · uçuş sistemi</span></div></div><div class="future-meta"><div><b>&gt;300 mil / &gt;480 km</b><span>2026 Roadster sayfasında belirtilen menzil</span></div><div><b>2028</b><span>Planlanan üretim başlangıcı</span></div></div></div></section>
+      <section class="second-gen" id="ikinci-nesil"><div class="wrap second-grid"><div class="second-photo-wrap"><img class="second-photo" src="https://commons.wikimedia.org/wiki/Special:FilePath/2017%20Tesla%20Roadster%202.0%20Petersen%20Automotive%20Museum.jpg" alt="2017 Tesla Roadster 2.0" /><div class="flight-line"></div></div><div class="second-copy"><div class="section-label">İkinci nesil / 2017–2026</div><h2>İkinci neslin güncellenen tasarımı.</h2><p>İkinci nesil Roadster, 16 Kasım 2017’de tanıtıldı ve Tesla’nın Ekim 2026 güncellemesiyle Performance, Thrust ve Rocket olmak üzere üç farklı yapı halinde yeniden sunuldu.</p><div class="facts"><div class="fact"><strong>2017</strong><span>İlk tanıtım</span></div><div class="fact"><strong>3 yapı</strong><span>Performance · Thrust · Rocket</span></div><div class="fact"><strong>2028</strong><span>Planlanan üretim</span></div><div class="fact"><strong>&gt;300 mil</strong><span>Belirtilen menzil</span></div></div></div></div></section>
+      <section class="flight-showcase" id="2026"><div class="wrap flight-grid"><div class="flight-stage"><div class="video-shell"><iframe id="roadster-video" class="flight-video" src="https://www.youtube.com/embed/7p5LxFdc-Qg?autoplay=1&mute=1&enablejsapi=1&loop=1&playlist=7p5LxFdc-Qg&controls=1&rel=0&playsinline=1&start=0&end=30" title="Tesla Roadster uçuş gösterisi" allow="autoplay; fullscreen; picture-in-picture" referrerpolicy="strict-origin-when-cross-origin"></iframe><span class="video-caption">Uçuş · süzülme · iniş</span></div></div><div class="flight-copy"><div class="section-label">03 / Rocket uçuş gösterisi</div><h2>Rocket paketinin uçuş sistemi.</h2><p>Video, Rocket paketinin havalanma, süzülme ve iniş gösterisini sunar.</p><p>Rocket; tek koltuklu, uçuşa hazır olarak tanımlanan ve kamu yollarında onaylı olmayan bir yapı olarak sunuluyor. Çevresel soğuk gaz iticileri ve elektrikli aktüatörler, kısa süreli havalanma ve yön kontrolü için kullanılıyor.</p><div class="facts"><div class="fact"><strong>&lt;0,59 sn</strong><span>0–60 mph</span></div><div class="fact"><strong>&gt;230 mph</strong><span>Belirtilen azami hız</span></div><div class="fact"><strong>&gt;300 mil</strong><span>Belirtilen menzil</span></div><div class="fact"><strong>1 koltuk</strong><span>Rocket düzeni</span></div></div></div></div></section>
+      <section class="compare" id="karsilastir"><div class="wrap"><div class="section-label">Roadster nesilleri</div><h2>İlk ve güncellenen ikinci nesil arasındaki farklar.</h2><p class="sub">Karşılaştırma, ilk neslin doğrulanmış üretim verileri ile 2026’da tanıtılan ikinci neslin paketlerini yan yana gösterir.</p><div class="compare-grid"><article class="compare-card"><h3>İlk Roadster · 2008–2012</h3><p>İki koltuklu hafif gövde, 215 kW elektrik motoru, 6.831 hücreli lityum iyon batarya, 245 mil EPA menzili, Roadster 2.5 için 201 km/sa azami hız ve yaklaşık 2.450 adet üretim.</p></article><article class="compare-card"><h3>Yeni Roadster · 2028 planlanan</h3><p>Performance (&lt;1,6 sn), Thrust (&lt;0,9 sn) ve Rocket (&lt;0,59 sn) yapıları; &gt;300 mil menzil, 2028 planlanan üretim ve Rocket paketinde tek koltuklu uçuş sistemi.</p></article></div></div></section>
+    </main>
+    <footer><div class="wrap footer-row"><span>TESLA ROADSTER / BİLGİ PLATFORMU</span></div></footer>
+    <script>
+      const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) { entry.target.classList.add('in-view'); revealObserver.unobserve(entry.target); }
+      }), { threshold: 0.28 });
+      document.querySelectorAll('.second-photo-wrap').forEach((element) => revealObserver.observe(element));
+
+      const flightSection = document.querySelector('.flight-showcase');
+      const videoFrame = document.querySelector('#roadster-video');
+      const flightRevealObserver = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          flightRevealObserver.unobserve(entry.target);
+        }
+      }, { threshold: 0.12 });
+      if (flightSection) flightRevealObserver.observe(flightSection);
+      const sendVideoCommand = (func, args = []) => {
+        if (videoFrame?.contentWindow) videoFrame.contentWindow.postMessage(JSON.stringify({ event: 'command', func, args }), '*');
+      };
+      const restartVideo = () => {
+        if (!videoFrame) return;
+        // stopVideo clears the previous position; the delayed commands also
+        // cover the case where YouTube is still finishing iframe startup.
+        sendVideoCommand('stopVideo');
+        sendVideoCommand('seekTo', [0, true]);
+        sendVideoCommand('playVideo');
+        window.setTimeout(() => {
+          sendVideoCommand('seekTo', [0, true]);
+          sendVideoCommand('playVideo');
+        }, 180);
+      };
+      videoFrame?.addEventListener('load', () => {
+        if (flightSection?.getBoundingClientRect().top < window.innerHeight && flightSection?.getBoundingClientRect().bottom > 0) restartVideo();
+      });
+      const flightObserver = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          restartVideo();
+        } else {
+          // Stop instead of pausing so every return starts at the beginning.
+          sendVideoCommand('stopVideo');
+        }
+      }, { threshold: 0.42 });
+      if (flightSection) flightObserver.observe(flightSection);
+    </script>
+  </body>
+</html>
