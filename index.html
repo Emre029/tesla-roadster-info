@@ -193,6 +193,42 @@
       };
       window.addEventListener('scroll', updateProgress, { passive: true });
       updateProgress();
+
+      // Bazı Safari/WebView sürümlerinde IntersectionObserver bulunmayabilir.
+      // Bu küçük geri dönüş, görünürlük kontrolünü kaydırma ile sürdürür.
+      if (typeof IntersectionObserver === 'undefined') {
+        window.IntersectionObserver = class BasicIntersectionObserver {
+          constructor(callback, options = {}) {
+            this.callback = callback;
+            this.threshold = Array.isArray(options.threshold) ? Math.max(...options.threshold) : (options.threshold || 0);
+            this.targets = new Set();
+            this.check = this.check.bind(this);
+            window.addEventListener('scroll', this.check, { passive: true });
+            window.addEventListener('resize', this.check, { passive: true });
+          }
+          observe(target) {
+            this.targets.add(target);
+            this.check();
+          }
+          unobserve(target) { this.targets.delete(target); }
+          disconnect() {
+            this.targets.clear();
+            window.removeEventListener('scroll', this.check);
+            window.removeEventListener('resize', this.check);
+          }
+          check() {
+            const viewport = window.innerHeight || document.documentElement.clientHeight;
+            const entries = [...this.targets].map((target) => {
+              const rect = target.getBoundingClientRect();
+              const visible = Math.max(0, Math.min(rect.bottom, viewport) - Math.max(rect.top, 0));
+              const ratio = rect.height ? visible / rect.height : 0;
+              return { target, isIntersecting: ratio >= this.threshold && ratio > 0, intersectionRatio: ratio };
+            });
+            if (entries.length) this.callback(entries, this);
+          }
+        };
+      }
+
       const revealObserver = new IntersectionObserver((entries) => entries.forEach((entry) => {
         if (entry.isIntersecting) { entry.target.classList.add('in-view'); revealObserver.unobserve(entry.target); }
       }), { threshold: 0.28 });
