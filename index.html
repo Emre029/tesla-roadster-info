@@ -572,22 +572,117 @@
           }, { rootMargin: '-45% 0px -50% 0px' });
           sections.forEach((s) => activeObserver.observe(s));
 
-          /* Uçuş videosu: önce kapak görseli görünür; tıklayınca YouTube oynatıcısı açılır */
+          /* Uçuş videosu
+             - Video alanına gelince kendiliğinden (sessiz) oynamaya başlar.
+             - Ekrandan çıkınca ya da sekme arka plana geçince duraklar.
+             - Geri gelince kaldığı yerden devam eder; kullanıcı kendisi durdurduysa dokunulmaz. */
+          const VIDEO_ID = '7p5LxFdc-Qg';
           const videoBox = document.querySelector('.video-frame');
           const poster = videoBox.querySelector('.video-poster');
-          const playVideo = () => {
-            if (videoBox.querySelector('iframe')) return;
+          let player = null;        // null: kurulmadı, 'loading': kuruluyor, nesne: hazır
+          let apiPromise = null;
+          let inView = false;
+          let userPaused = false;   // kullanıcı videoyu kendisi durdurdu mu?
+          let pausedByScroll = false;
+          let wantSound = false;
+          let rewindOnReturn = false;
+
+          const loadApi = () => apiPromise || (apiPromise = new Promise((resolve, reject) => {
+            if (window.YT && window.YT.Player) { resolve(window.YT); return; }
+            const previous = window.onYouTubeIframeAPIReady;
+            window.onYouTubeIframeAPIReady = () => { if (previous) previous(); resolve(window.YT); };
+            const script = document.createElement('script');
+            script.src = 'https://www.youtube.com/iframe_api';
+            script.onerror = reject;
+            document.head.appendChild(script);
+          }));
+
+          // YouTube API yüklenemezse basit oynatıcıya dön: tıklayınca açılır.
+          const fallbackPlayer = () => {
             const frame = document.createElement('iframe');
-            frame.src = 'https://www.youtube-nocookie.com/embed/7p5LxFdc-Qg?autoplay=1&rel=0&playsinline=1&modestbranding=1';
+            frame.src = 'https://www.youtube-nocookie.com/embed/' + VIDEO_ID + '?autoplay=1&rel=0&playsinline=1';
             frame.title = 'Tesla Roadster uçuş gösterisi';
             frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
             frame.allowFullscreen = true;
-            frame.referrerPolicy = 'strict-origin-when-cross-origin';
             videoBox.appendChild(frame);
             videoBox.classList.add('playing');
-            frame.focus();
           };
-          poster.addEventListener('click', playVideo);
+
+          const isPlaying = () => player && typeof player.getPlayerState === 'function' && [1, 3].includes(player.getPlayerState());
+
+          const pauseVideo = () => {
+            // Tam ekranda izlerken sayfa konumu önemli değil; durdurma.
+            if (document.fullscreenElement || !isPlaying()) return;
+            pausedByScroll = true;
+            player.pauseVideo();
+          };
+
+          const resumeVideo = () => {
+            if (!player || typeof player.playVideo !== 'function' || userPaused) return;
+            if (rewindOnReturn) { player.seekTo(0, true); rewindOnReturn = false; }
+            player.playVideo();
+          };
+
+          const createPlayer = (withSound) => {
+            if (player) return;
+            player = 'loading';
+            wantSound = withSound;
+            const mount = document.createElement('div');
+            videoBox.appendChild(mount);
+            loadApi().then((YT) => {
+              player = new YT.Player(mount, {
+                host: 'https://www.youtube-nocookie.com',
+                videoId: VIDEO_ID,
+                playerVars: { autoplay: inView || withSound ? 1 : 0, mute: withSound ? 0 : 1, rel: 0, playsinline: 1, modestbranding: 1, origin: location.origin },
+                events: {
+                  onReady: (event) => {
+                    event.target.getIframe().title = 'Tesla Roadster uçuş gösterisi';
+                    videoBox.classList.add('playing');
+                    if (wantSound) event.target.unMute();
+                    if (inView || wantSound) event.target.playVideo();
+                  },
+                  onStateChange: (event) => {
+                    const state = event.data;
+                    if (state === YT.PlayerState.PLAYING) {
+                      userPaused = false;
+                      // Yüklenirken ekrandan çıkıldıysa arka planda oynamasın.
+                      if (!inView || document.hidden) pauseVideo();
+                    } else if (state === YT.PlayerState.PAUSED) {
+                      if (!pausedByScroll) userPaused = true;
+                      pausedByScroll = false;
+                    } else if (state === YT.PlayerState.ENDED) {
+                      // Video bitince başa sar; ekrandaysa tekrar oynat.
+                      if (inView) { event.target.seekTo(0, true); event.target.playVideo(); }
+                      else rewindOnReturn = true;
+                    }
+                  },
+                },
+              });
+            }).catch(() => { player = null; mount.remove(); fallbackPlayer(); });
+          };
+
+          poster.addEventListener('click', () => {
+            if (!player) createPlayer(true);
+            else if (player === 'loading') wantSound = true;
+          });
+
+          const videoObserver = new IntersectionObserver(([entry]) => {
+            const visible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+            if (visible === inView) return;
+            inView = visible;
+            if (inView) {
+              if (!player) { if (!reduceMotion) createPlayer(false); }
+              else if (!document.hidden) resumeVideo();
+            } else {
+              pauseVideo();
+            }
+          }, { threshold: [0, 0.5, 1] });
+          videoObserver.observe(videoBox);
+
+          document.addEventListener('visibilitychange', () => {
+            if (document.hidden) pauseVideo();
+            else if (inView) resumeVideo();
+          });
         } catch (error) {
           root.classList.add('reveal-all');
           console.error(error);
