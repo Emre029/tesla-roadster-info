@@ -575,7 +575,8 @@
           /* Uçuş videosu
              - Video alanına gelince kendiliğinden (sessiz) oynamaya başlar.
              - Ekrandan çıkınca ya da sekme arka plana geçince duraklar.
-             - Geri gelince kaldığı yerden devam eder; kullanıcı kendisi durdurduysa dokunulmaz. */
+             - Video alanına her geri dönüşte en baştan (0:00) başlar.
+             - Sekmeye geri dönünce kaldığı yerden devam eder; kullanıcı kendisi durdurduysa dokunulmaz. */
           const VIDEO_ID = '7p5LxFdc-Qg';
           const videoBox = document.querySelector('.video-frame');
           const poster = videoBox.querySelector('.video-poster');
@@ -617,9 +618,10 @@
             player.pauseVideo();
           };
 
-          const resumeVideo = () => {
-            if (!player || typeof player.playVideo !== 'function' || userPaused) return;
-            if (rewindOnReturn) { player.seekTo(0, true); rewindOnReturn = false; }
+          const resumeVideo = (fromStart) => {
+            if (!player || typeof player.playVideo !== 'function') return;
+            if (!fromStart && userPaused) return;
+            if (fromStart || rewindOnReturn) { player.seekTo(0, true); rewindOnReturn = false; }
             player.playVideo();
           };
 
@@ -672,8 +674,9 @@
             inView = visible;
             if (inView) {
               if (!player) { if (!reduceMotion) createPlayer(false); }
-              else if (!document.hidden) resumeVideo();
+              else if (!document.hidden) resumeVideo(true);
             } else {
+              userPaused = false;   // her ziyaret yeni başlangıç
               pauseVideo();
             }
           }, { threshold: [0, 0.5, 1] });
@@ -681,7 +684,7 @@
 
           document.addEventListener('visibilitychange', () => {
             if (document.hidden) pauseVideo();
-            else if (inView) resumeVideo();
+            else if (inView) resumeVideo(false);
           });
         } catch (error) {
           root.classList.add('reveal-all');
