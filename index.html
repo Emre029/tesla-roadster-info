@@ -621,7 +621,16 @@
           const resumeVideo = (fromStart) => {
             if (!player || typeof player.playVideo !== 'function') return;
             if (!fromStart && userPaused) return;
-            if (fromStart || rewindOnReturn) { player.seekTo(0, true); rewindOnReturn = false; }
+            if (fromStart || rewindOnReturn) {
+              rewindOnReturn = false;
+              // Videoyu 0:00'dan yeniden yükle. seekTo + playVideo bazı tarayıcılarda
+              // eski konumdan devam edebiliyor; loadVideoById her zaman baştan başlatır.
+              if (typeof player.loadVideoById === 'function') {
+                player.loadVideoById({ videoId: VIDEO_ID, startSeconds: 0 });
+                return;
+              }
+              player.seekTo(0, true);
+            }
             player.playVideo();
           };
 
@@ -654,7 +663,7 @@
                       pausedByScroll = false;
                     } else if (state === YT.PlayerState.ENDED) {
                       // Video bitince başa sar; ekrandaysa tekrar oynat.
-                      if (inView) { event.target.seekTo(0, true); event.target.playVideo(); }
+                      if (inView) event.target.loadVideoById({ videoId: VIDEO_ID, startSeconds: 0 });
                       else rewindOnReturn = true;
                     }
                   },
