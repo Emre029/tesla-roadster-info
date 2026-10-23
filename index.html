@@ -110,6 +110,7 @@
       /* ---------- Giriş ---------- */
       .hero { position: relative; min-height: 100vh; min-height: 100svh; display: grid; grid-template-rows: 1fr auto; overflow: hidden; isolation: isolate; }
       .hero-media { position: absolute; inset: 0; z-index: -2; }
+      .hero-media picture { display: block; width: 100%; height: 100%; }
       .hero-media img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 70%; animation: heroZoom 2.8s var(--ease) both; }
       .hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background:
           radial-gradient(ellipse 75% 60% at 50% 38%, rgba(5, 5, 6, .55), transparent 75%),
@@ -376,10 +377,11 @@
       @media (max-aspect-ratio: 5/4) {
         .hero { display: flex; flex-direction: column; justify-content: center; }
         .hero-top { order: 1; }
-        .hero-media { order: 2; position: relative; inset: auto; z-index: 0; width: min(1200px, 100% - 48px); margin: 28px auto 0; aspect-ratio: 1.45; border-radius: var(--radius); overflow: hidden; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 34px 80px -24px rgba(227, 25, 55, .55), 0 24px 60px rgba(0, 0, 0, .55); }
+        .hero-media { order: 2; position: relative; inset: auto; z-index: 0; width: min(1200px, 100% - 48px); margin: 28px auto 0; aspect-ratio: 3 / 2; border-radius: var(--radius); overflow: hidden; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 34px 80px -24px rgba(227, 25, 55, .55), 0 24px 60px rgba(0, 0, 0, .55); }
         .hero-media img { object-position: 50% 50%; }
         .hero-bottom { order: 3; padding-top: 28px; }
         .hero::before { background: radial-gradient(ellipse 90% 45% at 50% 52%, rgba(227, 25, 55, .2), transparent 70%); }
+        .hero-media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(5, 5, 6, .22), transparent 32%, transparent 68%, rgba(5, 5, 6, .32)); }
       }
       @media (max-aspect-ratio: 5/4) and (max-width: 600px) {
         .hero-media { width: calc(100% - 32px); margin-top: 24px; }
@@ -393,8 +395,9 @@
         .hero-top, .hero-bottom { width: auto; margin: 0; padding: 0; text-align: left; grid-column: 1; }
         .hero-top { grid-row: 1; align-self: end; }
         .hero-bottom { grid-row: 2; align-self: start; padding-top: 18px; }
-        .hero-media { grid-column: 2; grid-row: 1 / span 2; position: relative; inset: auto; z-index: 0; aspect-ratio: 1.45; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 24px 60px -20px rgba(227, 25, 55, .55); }
+        .hero-media { grid-column: 2; grid-row: 1 / span 2; position: relative; inset: auto; z-index: 0; aspect-ratio: 3 / 2; border-radius: 18px; overflow: hidden; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08), 0 24px 60px -20px rgba(227, 25, 55, .55); }
         .hero-media img { object-position: 50% 50%; }
+        .hero-media::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(5, 5, 6, .22), transparent 32%, transparent 68%, rgba(5, 5, 6, .32)); }
         .hero h1 { margin-top: 10px; font-size: clamp(2.25rem, 5.6vw, 3.5rem); }
         .hero-sub { margin: 8px 0 0; font-size: .9375rem; }
         .hero-actions, .hero-stats { justify-content: flex-start; }
@@ -440,7 +443,11 @@
     <main>
       <section class="hero" id="baslangic">
         <div class="hero-media">
-          <img src="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920" srcset="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1280 1280w, https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920 1920w" sizes="100vw" alt="2008 Tesla Roadster, önden üç çeyrek görünüm" fetchpriority="high" decoding="async" />
+          <picture>
+            <!-- Telefon ve dar ekranlar: arabanın baştan sona göründüğü fotoğraf -->
+            <source media="(max-aspect-ratio: 5/4), (orientation: landscape) and (max-height: 520px) and (pointer: coarse)" srcset="https://commons.wikimedia.org/wiki/Special:FilePath/2011-2012%20Tesla%20Roadster%20convertible%20%2824365020656%29.jpg?width=1280 1280w, https://commons.wikimedia.org/wiki/Special:FilePath/2011-2012%20Tesla%20Roadster%20convertible%20%2824365020656%29.jpg?width=1920 1920w" sizes="100vw" />
+            <img src="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920" srcset="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1280 1280w, https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920 1920w" sizes="100vw" alt="İlk nesil Tesla Roadster" fetchpriority="high" decoding="async" />
+          </picture>
         </div>
         <div class="hero-top wrap">
           <span class="pill hero-load d1">Tesla’nın ilk seri üretim otomobili</span>
@@ -619,7 +626,7 @@
       <div class="wrap">
         <div>
           <a class="brand" href="#baslangic"><span class="emblem"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tesla%20Motors.svg" alt="" /></span><span class="wordmark">ROADSTER</span></a>
-          <p>Tesla Roadster bilgi platformu. Bağımsız bir bilgi projesidir; Tesla, Inc. ile bağlantılı değildir. Fotoğraflar: <a class="link" href="https://commons.wikimedia.org/wiki/File:2008_Tesla_Roadster_front.jpg" target="_blank" rel="noopener">2008 Roadster</a> ve <a class="link" href="https://commons.wikimedia.org/wiki/File:2017_Tesla_Roadster_2.0_Petersen_Automotive_Museum.jpg" target="_blank" rel="noopener">2017 Roadster</a>, Wikimedia Commons.</p>
+          <p>Tesla Roadster bilgi platformu. Bağımsız bir bilgi projesidir; Tesla, Inc. ile bağlantılı değildir. Fotoğraflar: <a class="link" href="https://commons.wikimedia.org/wiki/File:2008_Tesla_Roadster_front.jpg" target="_blank" rel="noopener">2008 Roadster</a>, <a class="link" href="https://commons.wikimedia.org/wiki/File:2011-2012_Tesla_Roadster_convertible_(24365020656).jpg" target="_blank" rel="noopener">kırmızı Roadster</a> (Jeremy from Sydney, CC BY 2.0) ve <a class="link" href="https://commons.wikimedia.org/wiki/File:2017_Tesla_Roadster_2.0_Petersen_Automotive_Museum.jpg" target="_blank" rel="noopener">2017 Roadster</a>, Wikimedia Commons.</p>
         </div>
         <a class="btn btn-glass" href="#baslangic">Başa dön</a>
       </div>
