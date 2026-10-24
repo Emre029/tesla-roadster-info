@@ -104,7 +104,7 @@
       .menu-open .menu { opacity: 1; visibility: visible; transition: opacity .35s var(--ease); }
       .menu-open .menu a { transform: none; opacity: 1; }
       .menu-open .menu a:nth-child(2) { transition-delay: .04s; } .menu-open .menu a:nth-child(3) { transition-delay: .08s; }
-      .menu-open .menu a:nth-child(4) { transition-delay: .12s; } .menu-open .menu a:nth-child(5) { transition-delay: .16s; }
+      .menu-open .menu a:nth-child(4) { transition-delay: .12s; } .menu-open .menu a:nth-child(5) { transition-delay: .16s; } .menu-open .menu a:nth-child(6) { transition-delay: .2s; }
       .menu-open { overflow: hidden; }
 
       /* ---------- Giriş ---------- */
@@ -229,6 +229,15 @@
 
       /* ---------- Karşılaştırma ---------- */
       .compare { background: var(--panel); }
+
+      /* ---------- Akademik kaynak ---------- */
+      .academic { background: radial-gradient(ellipse 50% 60% at 0% 100%, rgba(227, 25, 55, .12), transparent 70%), var(--black); }
+      .paper { max-width: 880px; }
+      .paper dd a { color: var(--red-bright); text-underline-offset: 3px; overflow-wrap: anywhere; }
+      .paper-note { margin: 22px 0 0; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); line-height: 1.7; }
+      .paper-cite { margin: 16px 0 0; padding: 14px 16px; border-radius: 14px; background: rgba(255, 255, 255, .04); box-shadow: inset 0 0 0 1px var(--line); color: var(--silver); font-size: .9375rem; line-height: 1.6; overflow-wrap: anywhere; }
+      .paper-cite small { display: block; margin-bottom: 4px; color: var(--muted); font-size: .8125rem; }
+      .paper-cite a { color: var(--red-bright); text-underline-offset: 3px; }
       .vs { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
       .vs::after { content: "VS"; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 56px; height: 56px; display: grid; place-items: center; border-radius: 50%; background: var(--red); color: #fff; font-weight: 700; font-stretch: 115%; font-size: .9375rem; letter-spacing: .04em; box-shadow: 0 0 0 8px var(--panel), 0 0 30px rgba(227, 25, 55, .6); z-index: 2; }
       .gen-card { padding: clamp(24px, 3.4vw, 40px); }
@@ -422,6 +431,7 @@
           <li><a href="#gelecek">2026 Paketleri</a></li>
           <li><a href="#2026">Uçuş</a></li>
           <li><a href="#karsilastir">Karşılaştır</a></li>
+          <li><a href="#akademik">Akademik</a></li>
         </ul>
         <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
       </div>
@@ -432,6 +442,7 @@
       <a href="#gelecek">2026 Paketleri</a>
       <a href="#2026">Uçuş</a>
       <a href="#karsilastir">Karşılaştır</a>
+      <a href="#akademik">Akademik</a>
     </div>
 
     <main>
@@ -608,6 +619,28 @@
               </dl>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section class="section academic" id="akademik">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="kicker reveal">Akademik kaynak</p>
+            <h2 class="reveal" style="--d:.05s">Uçan otomobiller bilimde nasıl ele alınıyor?</h2>
+            <p class="lead reveal" style="--d:.1s">Rocket’in uçuş gösterisi bir tanıtım etkinliğiydi. Uçan otomobillerin şehir içi ulaşımı gerçekten değiştirip değiştirmeyeceği ise hakemli dergilerde tartışılıyor. Aşağıdaki makale bu konudaki çalışmalardan biri.</p>
+          </div>
+          <article class="card gen-card paper reveal" style="--d:.1s">
+            <header><h3>Reinventing Mobility Paradigms: Flying Car Scenarios and Challenges for Urban Mobility</h3><span>Hakemli makale · 2020</span></header>
+            <dl>
+              <div><dt>Yazarlar</dt><dd>Maria Nadia Postorino, Giuseppe M. L. Sarné</dd></div>
+              <div><dt>Dergi</dt><dd>Sustainability, cilt 12, sayı 9, makale 3581</dd></div>
+              <div><dt>Yayın tarihi</dt><dd>28 Nisan 2020</dd></div>
+              <div><dt>DOI</dt><dd><a href="https://doi.org/10.3390/su12093581" target="_blank" rel="noopener">10.3390/su12093581</a></dd></div>
+              <div><dt>Dizinleme</dt><dd>Yayıncıya göre Scopus, SCIE ve SSCI (Web of Science)</dd></div>
+            </dl>
+            <p class="paper-note">Yazarlar, uçan otomobillerin kentsel ulaşımda yeni bir model oluşturup oluşturamayacağını inceliyor. Hava ve kara ulaşımını birleştiren senaryolar, birkaç deneme ağında etmen tabanlı simülasyonla karşılaştırılıyor. Ön bulgulara göre fayda; yolculuğun başlangıç ve bitiş noktalarına, tipik yolculuk uzunluğuna ve aktarma noktalarının yerine bağlı. Makale 2020’de yayımlandı ve Tesla Roadster’ı ele almıyor; uçan otomobil kavramına bilimsel bir çerçeve sağlıyor.</p>
+            <p class="paper-cite"><small>Kaynak gösterimi (APA)</small>Postorino, M. N., &amp; Sarné, G. M. L. (2020). Reinventing mobility paradigms: Flying car scenarios and challenges for urban mobility. <em>Sustainability, 12</em>(9), 3581. <a href="https://doi.org/10.3390/su12093581" target="_blank" rel="noopener">https://doi.org/10.3390/su12093581</a></p>
+          </article>
         </div>
       </section>
     </main>
