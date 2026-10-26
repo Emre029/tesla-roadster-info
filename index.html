@@ -107,6 +107,18 @@
       .menu-open .menu a:nth-child(4) { transition-delay: .12s; } .menu-open .menu a:nth-child(5) { transition-delay: .16s; } .menu-open .menu a:nth-child(6) { transition-delay: .2s; }
       .menu-open { overflow: hidden; }
 
+      /* ---------- Dil seçici ---------- */
+      .nav-right { display: flex; align-items: center; gap: 10px; }
+      .lang { display: inline-flex; padding: 3px; border-radius: 99px; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
+      .lang button { min-height: 32px; padding: 4px 12px; border: 0; border-radius: 99px; background: transparent; color: rgba(244, 244, 244, .75); font: inherit; font-size: .8125rem; font-weight: 700; letter-spacing: .06em; cursor: pointer; transition: background-color .25s, color .25s; }
+      .lang button:hover { color: #fff; }
+      .lang button[aria-pressed="true"] { background: var(--red); color: #fff; }
+      .tr-only { display: block; }
+      html[lang="en"] .tr-only { display: none; }
+      .paper-tr { margin: 8px 0 0; color: var(--silver); font-size: .9375rem; font-style: italic; line-height: 1.5; }
+      .paper-tr b { font-style: normal; font-weight: 600; color: var(--muted); }
+      @media (pointer: coarse) { .lang button { min-height: 40px; padding: 6px 14px; } }
+
       /* ---------- Giriş ---------- */
       .hero { position: relative; min-height: 100vh; min-height: 100svh; display: grid; grid-template-rows: 1fr auto; overflow: hidden; isolation: isolate; }
       .hero-media { position: absolute; inset: 0; z-index: -2; }
@@ -434,7 +446,13 @@
           <li><a href="#karsilastir">Karşılaştır</a></li>
           <li><a href="#akademik">Akademik</a></li>
         </ul>
-        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
+        <div class="nav-right">
+          <div class="lang" role="group" aria-label="Dil / Language">
+            <button type="button" data-lang="tr" aria-pressed="true" lang="tr" title="Türkçe">TR</button>
+            <button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">EN</button>
+          </div>
+          <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
+        </div>
       </div>
     </nav>
     <div class="menu" id="menu">
@@ -631,7 +649,7 @@
             <p class="lead reveal" style="--d:.1s">Rocket’in uçuş gösterisi bir tanıtım etkinliğiydi. Uçan otomobillerin şehir içi ulaşımı gerçekten değiştirip değiştirmeyeceği ise hakemli dergilerde tartışılıyor. Aşağıdaki makaleler bu konudaki çalışmalardan ikisi.</p>
           </div>
           <article class="card gen-card paper reveal" style="--d:.1s">
-            <header><h3>Reinventing Mobility Paradigms: Flying Car Scenarios and Challenges for Urban Mobility</h3><span>Hakemli makale · 2020</span></header>
+            <header><h3>Reinventing Mobility Paradigms: Flying Car Scenarios and Challenges for Urban Mobility</h3><p class="paper-tr tr-only"><b>Türkçe çevirisi (gayriresmî):</b> Hareketlilik paradigmalarını yeniden düşünmek: Uçan otomobil senaryoları ve kentsel hareketlilik için zorluklar</p><span>Hakemli makale · 2020</span></header>
             <dl>
               <div><dt>Yazarlar</dt><dd>Maria Nadia Postorino, Giuseppe M. L. Sarné</dd></div>
               <div><dt>Dergi</dt><dd>Sustainability, cilt 12, sayı 9, makale 3581</dd></div>
@@ -643,7 +661,7 @@
             <p class="paper-cite"><small>Kaynak gösterimi (APA)</small>Postorino, M. N., &amp; Sarné, G. M. L. (2020). Reinventing mobility paradigms: Flying car scenarios and challenges for urban mobility. <em>Sustainability, 12</em>(9), 3581. <a href="https://doi.org/10.3390/su12093581" target="_blank" rel="noopener">https://doi.org/10.3390/su12093581</a></p>
           </article>
           <article class="card gen-card paper reveal" style="--d:.1s">
-            <header><h3>Flying cars and urban air mobility: Redefining cities in three dimensions</h3><span>Hakemli makale · 2025</span></header>
+            <header><h3>Flying cars and urban air mobility: Redefining cities in three dimensions</h3><p class="paper-tr tr-only"><b>Türkçe çevirisi (gayriresmî):</b> Uçan otomobiller ve kentsel hava hareketliliği: Şehirleri üç boyutta yeniden tanımlamak</p><span>Hakemli makale · 2025</span></header>
             <dl>
               <div><dt>Yazarlar</dt><dd>Di Lv, Kai Wang, Shulu Chen, Xiaobo Qu</dd></div>
               <div><dt>Dergi</dt><dd>Communications in Transportation Research, cilt 5, sayı 4, makale 100213</dd></div>
@@ -669,6 +687,227 @@
       </div>
     </footer>
 
+    <script>
+      /* Dil seçeneği (TR / EN)
+         - Sayfa Türkçe yazılmıştır; İngilizce görünümde metinler aşağıdaki sözlükten değiştirilir.
+         - Seçim tarayıcıda hatırlanır. ?lang=en ile doğrudan İngilizce açılır.
+         - Özel adlar, makale başlıkları ve kaynak gösterimleri her iki dilde de özgün haliyle kalır. */
+      (() => {
+        const EN = {
+  "Tarihçe": "History",
+  "Teknoloji": "Technology",
+  "2026 Paketleri": "2026 Trims",
+  "Uçuş": "Flight",
+  "Karşılaştır": "Compare",
+  "Akademik": "Academic",
+  "Tesla’nın ilk seri üretim otomobili": "Tesla’s first production car",
+  "Elektriğin hız hikâyesi: 2008’deki ilk nesilden 2028’de üretimi planlanan yeni nesle.": "The story of electric speed: from the first generation in 2008 to the new generation planned for production in 2028.",
+  "Tarihçeyi keşfet": "Explore the history",
+  "Uçuşu izle": "Watch the flight",
+  "İlk neslin üretimi": "First-generation production",
+  "≈ 2.450": "≈ 2,450",
+  "Üretilen araç": "Cars built",
+  "3,7 sn": "3.7 s",
+  "Tesla Roadster nedir?": "What is the Tesla Roadster?",
+  "Roadster, Tesla’nın ilk seri üretim otomobilidir. İki kişilik, tamamen elektrikli ve yüksek performanslı bu model, markanın otomotiv sektöründeki başlangıcını oluşturur. Bu sayfa Roadster’ın tarihçesini, teknik özelliklerini ve nesiller arasındaki değişimi kronolojik olarak anlatır.": "The Roadster is Tesla’s first production car. This two-seat, fully electric, high-performance model marks the brand’s start in the auto industry. This page tells the story of the Roadster’s history, technical specifications and the change between generations in chronological order.",
+  "İlk nesil, 2008–2012": "First generation, 2008–2012",
+  "İlk nesil Roadster’ın ortaya çıkışı.": "How the first-generation Roadster came about.",
+  "2000’li yıllarda elektrikli otomobiller genellikle düşük performans ve sınırlı menzil ile ilişkilendiriliyordu. Roadster, Lotus Elise temelli hafif gövdesi, lityum iyon bataryası ve anında tork üreten elektrik motoru ile bu algıyı değiştirdi. Model, spor otomobil tasarımını tamamen elektrikli aktarma ile birleştirdi.": "In the 2000s, electric cars were generally associated with low performance and limited range. With its light body based on the Lotus Elise, a lithium-ion battery and an electric motor that delivers instant torque, the Roadster changed that perception. The model combined sports-car design with a fully electric drivetrain.",
+  "Prototip": "Prototype",
+  "Prototip, Santa Monica’daki özel bir etkinlikte ilk kez gösterildi.": "The prototype was shown for the first time at a private event in Santa Monica.",
+  "Üretim": "Production",
+  "Normal üretim başladı; ilk seri üretim Roadster müşteriye teslim edildi.": "Regular production began; the first production Roadster was delivered to a customer.",
+  "Roadster Sport tanıtıldı; 0–60 mph süresi 3,7 saniyeye indi.": "The Roadster Sport was introduced; the 0–60 mph time dropped to 3.7 seconds.",
+  "Üretimin sonu": "End of production",
+  "Lotus’tan alınan gövde ve şasi stoğu bitince üretim sona erdi.": "Production ended when the stock of bodies and chassis from Lotus ran out.",
+  "Teknik özet": "Technical summary",
+  "İlk neslin teknik özellikleri.": "First-generation technical specifications.",
+  "Motor, batarya, menzil ve üretim verileri.": "Motor, battery, range and production figures.",
+  "Motor gücü": "Motor power",
+  "288 hp maksimum güç.": "288 hp maximum power.",
+  "Batarya hücresi": "Battery cells",
+  "Lityum iyon pil paketindeki hücre sayısı.": "Number of cells in the lithium-ion battery pack.",
+  "sn": "s",
+  "Roadster Sport modeli; standart Roadster 3,9 saniye.": "Roadster Sport model; the standard Roadster takes 3.9 seconds.",
+  "EPA menzili": "EPA range",
+  "mil": "mi",
+  "Yaklaşık 394 km.": "About 394 km.",
+  "Azami hız": "Top speed",
+  "km/sa": "km/h",
+  "Roadster 2.5 için 125 mph elektronik sınır; ilk modellerde yaklaşık 193 km/sa.": "125 mph electronic limit for the Roadster 2.5; about 193 km/h on the earliest models.",
+  "2008–2012 arasında üretilen toplam Roadster.": "Total Roadsters built between 2008 and 2012.",
+  "2017 Roadster, Petersen Otomobil Müzesi": "2017 Roadster, Petersen Automotive Museum",
+  "İkinci nesil, 2017–2026": "Second generation, 2017–2026",
+  "İkinci neslin güncellenen tasarımı.": "The second generation’s updated design.",
+  "İkinci nesil Roadster, 16 Kasım 2017’de tanıtıldı ve Tesla’nın Ekim 2026 güncellemesiyle Performance, Thrust ve Rocket olmak üzere üç farklı yapı halinde yeniden sunuldu.": "The second-generation Roadster was unveiled on 16 November 2017 and was presented again with Tesla’s October 2026 update in three trims: Performance, Thrust and Rocket.",
+  "İlk tanıtım": "First unveiling",
+  "Yapı": "Trims",
+  "3 yapı": "3 trims",
+  "Planlanan üretim": "Planned production",
+  "Belirtilen menzil": "Stated range",
+  "> 300 mil": "> 300 mi",
+  "2026 Roadster duyurusu": "2026 Roadster announcement",
+  "İkinci nesil Roadster: üç farklı yapı.": "Second-generation Roadster: three trims.",
+  "Tesla’nın 2026 Roadster sayfasında üç farklı yapı tanımlanıyor: yol kullanımına hazır Performance, yarış odaklı Thrust ve uçuş sistemiyle sunulan davetli Rocket.": "Tesla’s 2026 Roadster page describes three trims: the road-ready Performance, the race-oriented Thrust and the invitation-only Rocket with its flight system.",
+  "<1,6 sn": "<1.6 s",
+  "İki koltuk": "Two seats",
+  "Yol kullanımına hazır": "Road ready",
+  "<0,9 sn": "<0.9 s",
+  "Yarış odaklı": "Race-oriented",
+  "<0,59 sn": "<0.59 s",
+  "Tek koltuk": "One seat",
+  "Uçuş sistemi, davetli": "Flight system, invitation only",
+  "> 300 mil / > 480 km": "> 300 mi / > 480 km",
+  "2026 Roadster sayfasında belirtilen menzil": "Range stated on the 2026 Roadster page",
+  "Planlanan üretim başlangıcı": "Planned start of production",
+  "0–60 mph hızlanma karşılaştırması": "0–60 mph acceleration comparison",
+  "Kısa çubuk, daha hızlı kalkış demek.": "A shorter bar means a quicker launch.",
+  "İlk nesil, 2009": "First generation, 2009",
+  "Rocket için belirtilen süre, 2009 Roadster Sport’un 3,7 saniyesinden altı kattan daha kısa.": "The time stated for the Rocket is more than six times shorter than the 2009 Roadster Sport’s 3.7 seconds.",
+  "Havalanma, süzülme ve iniş": "Takeoff, glide and landing",
+  "YouTube’da izle": "Watch on YouTube",
+  "Rocket uçuş gösterisi": "Rocket flight demo",
+  "Rocket paketinin uçuş sistemi.": "The Rocket trim’s flight system.",
+  "Video, Rocket paketinin havalanma, süzülme ve iniş gösterisini sunar. Rocket; tek koltuklu, uçuşa hazır olarak tanımlanan ve kamu yollarında onaylı olmayan bir yapı olarak sunuluyor. Çevresel soğuk gaz iticileri ve elektrikli aktüatörler, kısa süreli havalanma ve yön kontrolü için kullanılıyor.": "The video shows the Rocket trim’s takeoff, glide and landing demonstration. The Rocket is presented as a single-seat trim, described as flight-ready and not approved for public roads. Peripheral cold-gas thrusters and electric actuators are used for brief takeoff and directional control.",
+  "Belirtilen azami hız": "Stated top speed",
+  ">300 mil": ">300 mi",
+  "Rocket düzeni": "Rocket layout",
+  "1 koltuk": "1 seat",
+  "Roadster nesilleri": "Roadster generations",
+  "İlk ve güncellenen ikinci nesil arasındaki farklar.": "Differences between the first and the updated second generation.",
+  "Karşılaştırma, ilk neslin doğrulanmış üretim verileri ile 2026’da tanıtılan ikinci neslin paketlerini yan yana gösterir.": "The comparison places the first generation’s verified production data side by side with the trims unveiled for the second generation in 2026.",
+  "İlk Roadster": "First Roadster",
+  "Koltuk": "Seats",
+  "İki koltuk, hafif gövde": "Two seats, light body",
+  "Güç": "Power",
+  "215 kW elektrik motoru": "215 kW electric motor",
+  "Batarya": "Battery",
+  "6.831 hücreli lityum iyon": "6,831-cell lithium-ion",
+  "3,7 sn (Roadster Sport)": "3.7 s (Roadster Sport)",
+  "Menzil": "Range",
+  "245 mil (EPA)": "245 mi (EPA)",
+  "201 km/sa (Roadster 2.5)": "201 km/h (Roadster 2.5)",
+  "Yaklaşık 2.450 adet": "About 2,450 units",
+  "Yeni Roadster": "New Roadster",
+  "2028 planlanan": "2028 planned",
+  "Yapılar": "Trims",
+  "Performance, Thrust ve Rocket": "Performance, Thrust and Rocket",
+  "İki koltuk; Rocket’te tek koltuk": "Two seats; one seat in the Rocket",
+  "<1,6 sn, <0,9 sn ve <0,59 sn": "<1.6 s, <0.9 s and <0.59 s",
+  "Rocket paketinde uçuş sistemi": "Flight system in the Rocket trim",
+  "2028’de başlaması planlanıyor": "Production is planned to start in 2028",
+  "Akademik kaynak": "Academic source",
+  "Uçan otomobiller bilimde nasıl ele alınıyor?": "How is academic research approaching flying cars?",
+  "Rocket’in uçuş gösterisi bir tanıtım etkinliğiydi. Uçan otomobillerin şehir içi ulaşımı gerçekten değiştirip değiştirmeyeceği ise hakemli dergilerde tartışılıyor. Aşağıdaki makaleler bu konudaki çalışmalardan ikisi.": "The Rocket’s flight demo was a promotional event. Whether flying cars will really change urban transport is debated in peer-reviewed journals. The articles below are two of the studies on this topic.",
+  "Hakemli makale · 2020": "Peer-reviewed article · 2020",
+  "Yazarlar": "Authors",
+  "Dergi": "Journal",
+  "Sustainability, cilt 12, sayı 9, makale 3581": "Sustainability, vol. 12, no. 9, article 3581",
+  "Yayın tarihi": "Publication date",
+  "28 Nisan 2020": "28 April 2020",
+  "Dizinleme": "Indexing",
+  "Yayıncıya göre Scopus, SCIE ve SSCI (Web of Science)": "According to the publisher: Scopus, SCIE and SSCI (Web of Science)",
+  "Yazarlar, uçan otomobillerin kentsel ulaşımda yeni bir model oluşturup oluşturamayacağını inceliyor. Hava ve kara ulaşımını birleştiren senaryolar, birkaç deneme ağında etmen tabanlı simülasyonla karşılaştırılıyor. Ön bulgulara göre fayda; yolculuğun başlangıç ve bitiş noktalarına, tipik yolculuk uzunluğuna ve aktarma noktalarının yerine bağlı. Makale 2020’de yayımlandı ve Tesla Roadster’ı ele almıyor; uçan otomobil kavramına bilimsel bir çerçeve sağlıyor.": "The authors examine whether flying cars could create a new model of urban transport. Scenarios combining air and ground travel are compared through agent-based simulation on several test networks. According to the preliminary findings, the benefit depends on the trip’s start and end points, the typical trip length, and the location of the transfer points. The article was published in 2020 and does not discuss the Tesla Roadster; it provides a scientific framework for the flying-car concept.",
+  "Kaynak gösterimi (APA)": "Citation (APA)",
+  "Hakemli makale · 2025": "Peer-reviewed article · 2025",
+  "Communications in Transportation Research, cilt 5, sayı 4, makale 100213": "Communications in Transportation Research, vol. 5, no. 4, article 100213",
+  "1 Ekim 2025 (çevrimiçi), Aralık 2025 sayısı": "1 October 2025 (online), December 2025 issue",
+  "Alıntı sayısı": "Citations",
+  "Web of Science: 17, Scopus: 16 (SciOpen kaydında, 26 Ekim 2026 itibarıyla)": "Web of Science: 17, Scopus: 16 (per the SciOpen record, as of 26 October 2026)",
+  "Kayıt": "Record",
+  "Makalenin başlığına göre konu, uçan otomobiller ve kentsel hava hareketliliği (urban air mobility) ile şehirlerin üç boyutlu yeniden düşünülmesi. Tesla Roadster’ı özel olarak incelemiyor; Rocket gibi uçuş yetenekli araçların şehir ulaşımındaki olası yerini değerlendirirken bu alandaki güncel bir akademik çalışma olarak okunabilir.": "According to its title, the article’s subject is flying cars and urban air mobility, and rethinking cities in three dimensions. It does not specifically study the Tesla Roadster; it can be read as a recent academic work in this field when assessing the possible place of flight-capable vehicles such as the Rocket in urban transport.",
+  "Tesla Roadster bilgi platformu. Bağımsız bir bilgi projesidir; Tesla, Inc. ile bağlantılı değildir. Fotoğraflar:": "Tesla Roadster information platform. An independent information project; not affiliated with Tesla, Inc. Photos:",
+  "ve": "and",
+  "Başa dön": "Back to top"
+};
+        const ATTR_EN = {
+  "Ana menü": "Main menu",
+  "Tesla Roadster bilgi sitesi, başa dön": "Tesla Roadster information site, back to top",
+  "2008 Tesla Roadster, önden üç çeyrek görünüm": "2008 Tesla Roadster, front three-quarter view",
+  "Petersen Otomobil Müzesi’nde sergilenen 2017 Tesla Roadster": "2017 Tesla Roadster on display at the Petersen Automotive Museum",
+  "Rocket uçuş videosunu oynat": "Play the Rocket flight video"
+};
+        const TITLE = { tr: document.title, en: "Tesla Roadster — The Story of Electric Speed" };
+        const metaDesc = document.querySelector('meta[name="description"]');
+        const DESC = { tr: metaDesc ? metaDesc.content : '', en: "The history, design, technology and performance of the Tesla Roadster." };
+        const root = document.documentElement;
+        const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+        const textOrig = new WeakMap();
+        const attrOrig = new WeakMap();
+
+        const translateText = (lang) => {
+          const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+          const nodes = [];
+          let n;
+          while ((n = walker.nextNode())) {
+            const p = n.parentNode;
+            if (!p || /^(SCRIPT|STYLE)$/.test(p.nodeName)) continue;
+            if (p.closest && p.closest('.menu-btn, [data-count]')) continue;
+            nodes.push(n);
+          }
+          nodes.forEach((node) => {
+            if (!textOrig.has(node)) textOrig.set(node, node.data);
+            const orig = textOrig.get(node);
+            const key = orig.replace(/\s+/g, ' ').trim();
+            if (lang === 'en' && key && has(EN, key)) {
+              const lead = orig.match(/^\s*/)[0];
+              const trail = orig.match(/\s*$/)[0];
+              node.data = lead + EN[key] + trail;
+            } else if (node.data !== orig) {
+              node.data = orig;
+            }
+          });
+        };
+
+        const translateAttrs = (lang) => {
+          document.querySelectorAll('[aria-label],[alt],[title]').forEach((el) => {
+            if (el.tagName === 'IFRAME' || el.closest('.lang')) return;
+            let rec = attrOrig.get(el);
+            if (!rec) { rec = {}; attrOrig.set(el, rec); }
+            ['aria-label', 'alt', 'title'].forEach((a) => {
+              if (!el.hasAttribute(a)) return;
+              if (!(a in rec)) rec[a] = el.getAttribute(a);
+              const orig = rec[a];
+              el.setAttribute(a, lang === 'en' && has(ATTR_EN, orig) ? ATTR_EN[orig] : orig);
+            });
+          });
+        };
+
+        const renderNumbers = (lang) => {
+          const locale = lang === 'en' ? 'en-US' : 'tr-TR';
+          document.querySelectorAll('[data-count]').forEach((el) => {
+            const dec = parseInt(el.dataset.dec || '0', 10);
+            el.textContent = parseFloat(el.dataset.count).toLocaleString(locale, { minimumFractionDigits: dec, maximumFractionDigits: dec });
+          });
+        };
+
+        const apply = (lang, persist) => {
+          root.lang = lang;
+          translateText(lang);
+          translateAttrs(lang);
+          renderNumbers(lang);
+          document.title = TITLE[lang];
+          if (metaDesc) metaDesc.setAttribute('content', DESC[lang]);
+          const menuBtn = document.querySelector('.menu-btn');
+          if (menuBtn) {
+            const open = root.classList.contains('menu-open');
+            menuBtn.textContent = lang === 'en' ? (open ? 'Close' : 'Menu') : (open ? 'Kapat' : 'Menü');
+          }
+          const frame = document.querySelector('.video-frame iframe');
+          if (frame) frame.title = lang === 'en' ? 'Tesla Roadster flight demo' : 'Tesla Roadster uçuş gösterisi';
+          document.querySelectorAll('.lang [data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+          if (persist) { try { localStorage.setItem('roadster-lang', lang); } catch (e) { /* kayıt yapılamazsa sorun değil */ } }
+        };
+
+        document.querySelectorAll('.lang [data-lang]').forEach((b) => b.addEventListener('click', () => apply(b.dataset.lang, true)));
+
+        let initial = 'tr';
+        try { if (localStorage.getItem('roadster-lang') === 'en') initial = 'en'; } catch (e) { /* yoksay */ }
+        const q = /[?&]lang=(en|tr)\b/.exec(location.search);
+        if (q) initial = q[1];
+        if (initial === 'en') apply('en', false);
+      })();
+    </script>
     <script>
       (() => {
         const root = document.documentElement;
@@ -702,7 +941,7 @@
           const setMenu = (open) => {
             root.classList.toggle('menu-open', open);
             menuBtn.setAttribute('aria-expanded', String(open));
-            menuBtn.textContent = open ? 'Kapat' : 'Menü';
+            menuBtn.textContent = root.lang === 'en' ? (open ? 'Close' : 'Menu') : (open ? 'Kapat' : 'Menü');
             onScroll();
           };
           menuBtn.addEventListener('click', () => setMenu(!root.classList.contains('menu-open')));
@@ -710,7 +949,7 @@
           document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
           /* Sayılar: görününce sıfırdan yukarı sayar */
-          const formatNumber = (value, dec) => value.toLocaleString('tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+          const formatNumber = (value, dec) => value.toLocaleString(root.lang === 'en' ? 'en-US' : 'tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
           const countUp = (el) => {
             const to = parseFloat(el.dataset.count);
             const dec = parseInt(el.dataset.dec || '0', 10);
@@ -778,7 +1017,7 @@
           const fallbackPlayer = () => {
             const frame = document.createElement('iframe');
             frame.src = 'https://www.youtube-nocookie.com/embed/' + VIDEO_ID + '?autoplay=1&rel=0&playsinline=1';
-            frame.title = 'Tesla Roadster uçuş gösterisi';
+            frame.title = root.lang === 'en' ? 'Tesla Roadster flight demo' : 'Tesla Roadster uçuş gösterisi';
             frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
             frame.allowFullscreen = true;
             videoBox.appendChild(frame);
@@ -823,7 +1062,7 @@
                 playerVars: { autoplay: inView || withSound ? 1 : 0, mute: withSound ? 0 : 1, rel: 0, playsinline: 1, modestbranding: 1, origin: location.origin },
                 events: {
                   onReady: (event) => {
-                    event.target.getIframe().title = 'Tesla Roadster uçuş gösterisi';
+                    event.target.getIframe().title = root.lang === 'en' ? 'Tesla Roadster flight demo' : 'Tesla Roadster uçuş gösterisi';
                     videoBox.classList.add('playing');
                     if (wantSound) event.target.unMute();
                     if (inView || wantSound) event.target.playVideo();
