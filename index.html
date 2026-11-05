@@ -150,6 +150,9 @@
       html:lang(ko) body { font-family: Archivo, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Helvetica Neue", Arial, sans-serif; }
       html:lang(zh) body { font-family: Archivo, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif; }
       html:lang(ar) body { font-family: Archivo, "Segoe UI", Tahoma, "Noto Sans Arabic", "Helvetica Neue", Arial, sans-serif; }
+      /* Google Çeviri bağlantısıyla açılan sayfada Google'ın beyaz üst çubuğunu gizle ve sayfayı yukarı al */
+      #gt-nvframe { display: none !important; }
+      html[class*="translated-"] body { margin-top: 0 !important; }
       /* Japonca/Çince satır sonu kuralları (ör. "ー" satır başına gelmesin), Korece kelime bütünlüğü */
       html:lang(ja), html:lang(zh) { line-break: strict; }
       html:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
