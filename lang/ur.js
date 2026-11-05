@@ -143,6 +143,7 @@ window.RL=window.RL||{};window.RL["ur"]={
   ">230 mph (üç yapı)": "⁦>230⁩ mph (تینوں ویریئنٹس)",
   "Diller": "زبانیں",
   "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "یہ ترجمہ مصنوعی ذہانت کی مدد سے تیار کیا گیا ہے اور کسی مادری زبان بولنے والے نے اس کی جانچ نہیں کی؛ ترکی زبان کا ورژن ہی مستند ہے۔",
+  "İçeriğe geç": "مواد پر جائیں",
   "0–60 mph": "‎0–60 mph‎",
   "> 230 mph": "⁦> 230 mph⁩",
   ">230 mph": "⁦>230 mph⁩"

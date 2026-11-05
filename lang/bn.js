@@ -142,7 +142,8 @@ window.RL=window.RL||{};window.RL["bn"]={
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Performance / Thrust-এর জন্য বুকিং ডিপোজিট; Rocket কেবল আমন্ত্রণে। চূড়ান্ত দাম ঘোষণা করা হয়নি।",
   ">230 mph (üç yapı)": ">230 mph (তিনটি ভেরিয়েন্ট)",
   "Diller": "ভাষা",
-  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "এই অনুবাদ কৃত্রিম বুদ্ধিমত্তার সহায়তায় তৈরি এবং কোনো মাতৃভাষী এটি যাচাই করেননি; তুর্কি সংস্করণটিই প্রামাণ্য।"
+  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "এই অনুবাদ কৃত্রিম বুদ্ধিমত্তার সহায়তায় তৈরি এবং কোনো মাতৃভাষী এটি যাচাই করেননি; তুর্কি সংস্করণটিই প্রামাণ্য।",
+  "İçeriğe geç": "মূল বিষয়বস্তুতে যান"
  },
  "attr": {
   "Ana menü": "মূল মেনু",

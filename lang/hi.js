@@ -142,7 +142,8 @@ window.RL=window.RL||{};window.RL["hi"]={
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Performance / Thrust के लिए आरक्षण राशि; Rocket केवल आमंत्रण पर। अंतिम कीमत की घोषणा नहीं हुई है।",
   ">230 mph (üç yapı)": ">230 mph (तीनों वेरिएंट)",
   "Diller": "भाषाएँ",
-  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "यह अनुवाद कृत्रिम बुद्धिमत्ता की सहायता से तैयार किया गया है और किसी मूल भाषी ने इसकी जाँच नहीं की है; तुर्की संस्करण ही मान्य है।"
+  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "यह अनुवाद कृत्रिम बुद्धिमत्ता की सहायता से तैयार किया गया है और किसी मूल भाषी ने इसकी जाँच नहीं की है; तुर्की संस्करण ही मान्य है।",
+  "İçeriğe geç": "मुख्य सामग्री पर जाएँ"
  },
  "attr": {
   "Ana menü": "मुख्य मेन्यू",

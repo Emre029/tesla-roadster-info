@@ -1,4 +1,4 @@
-window.RL=window.RL||{};window.RL.ar={
+window.RL=window.RL||{};window.RL["ar"]={
  "locale": "ar-u-nu-latn",
  "htmlLang": "ar",
  "dir": "rtl",
@@ -143,6 +143,7 @@ window.RL=window.RL||{};window.RL.ar={
   ">230 mph (üç yapı)": "⁦>230⁩ ميل/ساعة (الفئات الثلاث)",
   "Diller": "اللغات",
   "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "أُعدّت هذه الترجمة بمساعدة الذكاء الاصطناعي ولم يراجعها ناطق أصلي باللغة؛ والنسخة التركية هي المرجع.",
+  "İçeriğe geç": "انتقل إلى المحتوى",
   "0–60 mph": "‎0–60 mph‎",
   "> 230 mph": "⁦> 230 mph⁩",
   ">230 mph": "⁦>230 mph⁩"

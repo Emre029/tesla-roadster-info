@@ -1,4 +1,4 @@
-window.RL=window.RL||{};window.RL.pt={
+window.RL=window.RL||{};window.RL["pt"]={
  "locale": "pt-BR",
  "htmlLang": "pt",
  "dir": "ltr",
@@ -142,7 +142,8 @@ window.RL=window.RL||{};window.RL.pt={
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Depósito de reserva para Performance / Thrust; Rocket somente por convite. Preço final não anunciado.",
   ">230 mph (üç yapı)": ">230 mph (as três versões)",
   "Diller": "Idiomas",
-  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "Esta tradução foi preparada com auxílio de IA e não foi revisada por um falante nativo; a versão em turco é a de referência."
+  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "Esta tradução foi preparada com auxílio de IA e não foi revisada por um falante nativo; a versão em turco é a de referência.",
+  "İçeriğe geç": "Ir para o conteúdo"
  },
  "attr": {
   "Ana menü": "Menu principal",

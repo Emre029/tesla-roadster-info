@@ -142,7 +142,8 @@ window.RL=window.RL||{};window.RL["id"]={
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Uang muka reservasi untuk Performance / Thrust; Rocket khusus undangan. Harga akhir belum diumumkan.",
   ">230 mph (üç yapı)": ">230 mph (ketiga varian)",
   "Diller": "Bahasa",
-  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "Terjemahan ini disiapkan dengan bantuan kecerdasan buatan dan belum diperiksa oleh penutur asli; versi bahasa Turki adalah versi yang berlaku."
+  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "Terjemahan ini disiapkan dengan bantuan kecerdasan buatan dan belum diperiksa oleh penutur asli; versi bahasa Turki adalah versi yang berlaku.",
+  "İçeriğe geç": "Lompat ke konten"
  },
  "attr": {
   "Ana menü": "Menu utama",

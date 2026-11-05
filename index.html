@@ -34,8 +34,26 @@
           .catch(() => {});
       }
       document.documentElement.classList.add('js');
+      // Türkçe dışında bir dille açılacaksa, çeviri uygulanana kadar sayfa kısa süre gizlenir (Türkçe metnin yanıp sönmesini önler).
+      try {
+        var rl = null, tz = '';
+        try { rl = localStorage.getItem('roadster-lang'); } catch (e) {}
+        try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) {}
+        var m = /[?&]lang=([a-z]{2}(?:-[a-z]{2})?)\b/.exec(location.search);
+        var target = m ? m[1] : rl;
+        var first = String((navigator.languages && navigator.languages[0]) || navigator.language || 'tr').toLowerCase().split('-')[0];
+        var foreign = target ? target !== 'tr' : (tz !== 'Europe/Istanbul' && first !== 'tr');
+        if (foreign) {
+          document.documentElement.classList.add('lang-pending');
+          setTimeout(function () { document.documentElement.classList.remove('lang-pending'); }, 2500);
+        }
+      } catch (e) {}
     </script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Tesla Roadster — Elektriğin Hız Hikâyesi","url":"https://emre029.github.io/tesla-roadster-info/","inLanguage":"tr","description":"Tesla Roadster'ın geçmişi, tasarımı, teknolojisi ve performansı. Bağımsız bilgi projesi."}</script>
     <title>Tesla Roadster — Elektriğin Hız Hikâyesi</title>
+    <link rel="preconnect" href="https://commons.wikimedia.org" />
+    <link rel="preconnect" href="https://upload.wikimedia.org" />
+    <link rel="preload" as="image" href="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920" imagesrcset="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1280 1280w, https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920 1920w" imagesizes="100vw" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,300..800&display=swap" rel="stylesheet" />
@@ -75,6 +93,10 @@
       a { color: inherit; }
       :focus-visible { outline: 2px solid var(--red-bright); outline-offset: 4px; border-radius: 6px; }
       ::selection { background: var(--red); color: #fff; }
+      html.lang-pending body { visibility: hidden; }
+      .skip-link { position: absolute; left: 16px; top: -64px; z-index: 1000; padding: 12px 18px; border-radius: 999px; background: var(--red); color: #fff; font-weight: 700; text-decoration: none; transition: top .15s var(--ease); }
+      .skip-link:focus { top: 16px; }
+      main:focus { outline: none; }
       .wrap { width: min(1200px, 100% - 48px); margin-inline: auto; }
       section[id] { scroll-margin-top: var(--nav-h); }
 
@@ -490,6 +512,7 @@
     </style>
   </head>
   <body>
+    <a class="skip-link" href="#icerik">İçeriğe geç</a>
     <div class="progress" aria-hidden="true"></div>
     <nav class="nav" aria-label="Ana menü">
       <div class="wrap">
@@ -545,7 +568,7 @@
       <a href="#akademik">Akademik</a>
     </div>
 
-    <main>
+    <main id="icerik" tabindex="-1">
       <section class="hero" id="baslangic">
         <div class="hero-media">
           <img src="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920" srcset="https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1280 1280w, https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1920 1920w" sizes="100vw" alt="2008 Tesla Roadster, önden üç çeyrek görünüm" fetchpriority="high" decoding="async" />
@@ -912,6 +935,7 @@
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Reservation deposit for Performance / Thrust; Rocket by invitation only. No final price announced.",
   ">230 mph (üç yapı)": ">230 mph (all three trims)",
   "Diller": "Languages",
+  "İçeriğe geç": "Skip to content",
   "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "This translation was prepared with AI assistance and has not been checked by a native speaker; the Turkish version is authoritative."
 };
         const ATTR_EN = {
@@ -1083,7 +1107,8 @@
         }
         const q = /[?&]lang=([a-z]{2}(?:-[a-z]{2})?)\b/.exec(location.search);
         if (q && CODES.indexOf(q[1]) !== -1) initial = q[1];
-        if (initial !== 'tr') apply(initial, false);
+        const ready = () => root.classList.remove('lang-pending');
+        if (initial !== 'tr') apply(initial, false).then(ready, ready); else ready();
       })();
     </script>
     <script>

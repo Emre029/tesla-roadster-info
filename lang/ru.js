@@ -1,4 +1,4 @@
-window.RL=window.RL||{};window.RL.ru={
+window.RL=window.RL||{};window.RL["ru"]={
  "locale": "ru-RU",
  "htmlLang": "ru",
  "dir": "ltr",
@@ -142,7 +142,8 @@ window.RL=window.RL||{};window.RL.ru={
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Залог за бронирование Performance / Thrust; Rocket только по приглашениям. Окончательная цена не объявлена.",
   ">230 mph (üç yapı)": ">230 миль/ч (все три версии)",
   "Diller": "Языки",
-  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "Этот перевод подготовлен с помощью ИИ и не проверялся носителем языка; приоритетной является турецкая версия."
+  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "Этот перевод подготовлен с помощью ИИ и не проверялся носителем языка; приоритетной является турецкая версия.",
+  "İçeriğe geç": "Перейти к содержимому"
  },
  "attr": {
   "Ana menü": "Главное меню",
