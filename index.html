@@ -4,6 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="Tesla Roadster'ın geçmişi, tasarımı, teknolojisi ve performansı." />
+    <link rel="canonical" href="https://emre029.github.io/tesla-roadster-info/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Tesla Roadster" />
+    <meta property="og:title" content="Tesla Roadster — Elektriğin Hız Hikâyesi" />
+    <meta property="og:description" content="Tesla Roadster'ın 2008'den 2028'e hikâyesi: tarih, teknoloji, 2026 versiyonları ve uçuş sistemi. 16 dilde, bağımsız bilgi projesi. · The Roadster story, 2008–2028." />
+    <meta property="og:url" content="https://emre029.github.io/tesla-roadster-info/" />
+    <meta property="og:image" content="https://emre029.github.io/tesla-roadster-info/og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Tesla Roadster — Elektriğin Hız Hikâyesi; 0–60 mph sürelerinin karşılaştırması" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Tesla Roadster — Elektriğin Hız Hikâyesi" />
+    <meta name="twitter:description" content="The Tesla Roadster story, 2008–2028 — history, technology, 2026 trims and the flight system. In 16 languages." />
+    <meta name="twitter:image" content="https://emre029.github.io/tesla-roadster-info/og.png" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta name="theme-color" content="#050506" />
     <meta name="format-detection" content="telephone=no" />
@@ -1048,7 +1064,23 @@
         }));
 
         let initial = 'tr';
-        try { const saved = localStorage.getItem('roadster-lang'); if (saved && CODES.indexOf(saved) !== -1) initial = saved; } catch (e) { /* yoksay */ }
+        let saved = null;
+        try { saved = localStorage.getItem('roadster-lang'); } catch (e) { /* yoksay */ }
+        if (saved && CODES.indexOf(saved) !== -1) {
+          initial = saved;
+        } else {
+          /* İlk ziyaret: tarayıcı dilini seç; desteklenmiyorsa İngilizce. Türkiye saat dilimi ve Türkçe tarayıcı Türkçe kalır. */
+          try {
+            const tz = (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+            const prefs = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'tr']);
+            let pick = null;
+            for (let i = 0; i < prefs.length && !pick; i++) {
+              const base = String(prefs[i]).toLowerCase().split('-')[0];
+              if (base === 'tr' || CODES.indexOf(base) !== -1) pick = base;
+            }
+            initial = (tz === 'Europe/Istanbul') ? 'tr' : (pick || 'en');
+          } catch (e) { /* yoksay */ }
+        }
         const q = /[?&]lang=([a-z]{2}(?:-[a-z]{2})?)\b/.exec(location.search);
         if (q && CODES.indexOf(q[1]) !== -1) initial = q[1];
         if (initial !== 'tr') apply(initial, false);
