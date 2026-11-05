@@ -109,15 +109,53 @@
 
       /* ---------- Dil seçici ---------- */
       .nav-right { display: flex; align-items: center; gap: 10px; }
-      .lang { display: inline-flex; padding: 3px; border-radius: 99px; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
-      .lang button { min-height: 32px; padding: 4px 12px; border: 0; border-radius: 99px; background: transparent; color: rgba(244, 244, 244, .75); font: inherit; font-size: .8125rem; font-weight: 700; letter-spacing: .06em; cursor: pointer; transition: background-color .25s, color .25s; }
-      .lang button:hover { color: #fff; }
-      .lang button[aria-pressed="true"] { background: var(--red); color: #fff; }
+      .lang { position: relative; display: inline-flex; padding: 3px; border-radius: 99px; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
+      .lang > button { min-height: 32px; padding: 4px 12px; border: 0; border-radius: 99px; background: transparent; color: rgba(244, 244, 244, .75); font: inherit; font-size: .8125rem; font-weight: 700; letter-spacing: .06em; cursor: pointer; transition: background-color .25s, color .25s; }
+      .lang > button:hover { color: #fff; }
+      .lang > button[aria-pressed="true"] { background: var(--red); color: #fff; }
       .tr-only { display: block; }
-      html[lang="en"] .tr-only { display: none; }
+      html:not([lang="tr"]) .tr-only { display: none; }
+      /* Diğer diller menüsü */
+      .lang-more { display: inline-flex; align-items: center; gap: 6px; }
+      .lang-more svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+      .lang-code[data-core] { display: none; }
+      .lm-core { display: none; }
+      .lang-menu { position: absolute; right: 0; top: calc(100% + 14px); z-index: 80; width: min(440px, calc(100vw - 32px)); max-height: min(72vh, 600px); overflow-y: auto; overscroll-behavior: contain; padding: 18px; border-radius: 20px; background: rgba(8, 8, 10, .96); backdrop-filter: blur(20px) saturate(1.3); -webkit-backdrop-filter: blur(20px) saturate(1.3); box-shadow: inset 0 0 0 1px var(--line-strong), 0 28px 70px rgba(0, 0, 0, .65); text-align: start; animation: lmIn .25s var(--ease) both; }
+      .lang-menu[hidden] { display: none; }
+      .lm-title { margin: 0 0 10px; color: var(--muted); font-size: .6875rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+      .lm-title:not(:first-child) { margin-top: 20px; }
+      #lm-google-wrap { margin-top: 20px; }
+      .lm-note { margin: -4px 0 10px; color: var(--muted); font-size: .75rem; line-height: 1.5; }
+      .lm-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+      .lm-list button, .lm-list a { display: block; width: 100%; padding: 9px 12px; border: 0; border-radius: 12px; background: transparent; color: rgba(244, 244, 244, .85); font: inherit; font-size: .875rem; font-weight: 500; text-align: start; text-decoration: none; cursor: pointer; transition: background-color .2s, color .2s; }
+      .lm-list button:hover, .lm-list a:hover { background: rgba(255, 255, 255, .1); color: #fff; }
+      .lm-list button[aria-current="true"] { background: rgba(227, 25, 55, .18); color: #fff; box-shadow: inset 0 0 0 1px rgba(227, 25, 55, .45); }
+      @keyframes lmIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) { .lang-menu { animation: none; } }
+      @media (max-width: 480px) {
+        .lang > [data-lang] { display: none; }
+        .lang-code[data-core] { display: inline; }
+        .lm-core { display: block; }
+      }
+      @media (max-width: 820px) {
+        .lang { position: static; }
+        .lang-menu { left: 16px; right: 16px; top: calc(100% + 8px); width: auto; }
+      }
+      .footer .mt-note { display: none; }
+      html:not([lang="tr"]) .footer .mt-note { display: block; }
+      /* Sağdan sola yazılan ve harf aralığı kullanmayan yazılar */
+      html:lang(ar) *, html:lang(ja) *, html:lang(ko) *, html:lang(zh) * { letter-spacing: normal !important; }
+      html:lang(ar) .wordmark, html:lang(ja) .wordmark, html:lang(ko) .wordmark, html:lang(zh) .wordmark { letter-spacing: .32em !important; }
+      html:lang(ja) body { font-family: Archivo, "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", "Helvetica Neue", Arial, sans-serif; }
+      html:lang(ko) body { font-family: Archivo, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Helvetica Neue", Arial, sans-serif; }
+      html:lang(zh) body { font-family: Archivo, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif; }
+      html:lang(ar) body { font-family: Archivo, "Segoe UI", Tahoma, "Noto Sans Arabic", "Helvetica Neue", Arial, sans-serif; }
+      /* Japonca/Çince satır sonu kuralları (ör. "ー" satır başına gelmesin), Korece kelime bütünlüğü */
+      html:lang(ja), html:lang(zh) { line-break: strict; }
+      html:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
       .paper-tr { margin: 8px 0 0; color: var(--silver); font-size: .9375rem; font-style: italic; line-height: 1.5; }
       .paper-tr b { font-style: normal; font-weight: 600; color: var(--muted); }
-      @media (pointer: coarse) { .lang button { min-height: 40px; padding: 6px 14px; } }
+      @media (pointer: coarse) { .lang > button { min-height: 40px; padding: 6px 14px; } }
 
       /* ---------- Giriş ---------- */
       .hero { position: relative; min-height: 100vh; min-height: 100svh; display: grid; grid-template-rows: 1fr auto; overflow: hidden; isolation: isolate; }
@@ -452,6 +490,33 @@
           <div class="lang" role="group" aria-label="Dil / Language">
             <button type="button" data-lang="tr" aria-pressed="true" lang="tr" title="Türkçe">TR</button>
             <button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">EN</button>
+            <button type="button" class="lang-more" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-controls="lang-menu" title="Diğer diller" aria-label="Diğer diller"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 3.9 5.8 3.9 9s-1.3 6.2-3.9 9c-2.6-2.8-3.9-5.8-3.9-9S9.4 5.8 12 3z"/></svg><span class="lang-code" data-core>TR</span></button>
+            <div class="lang-menu" id="lang-menu" hidden>
+              <p class="lm-title">Çevrilmiş diller</p>
+              <ul class="lm-list">
+              <li class="lm-core"><button type="button" data-lang="tr" lang="tr">Türkçe</button></li>
+              <li class="lm-core"><button type="button" data-lang="en" lang="en">English</button></li>
+              <li><button type="button" data-lang="de" lang="de">Deutsch</button></li>
+              <li><button type="button" data-lang="es" lang="es">Español</button></li>
+              <li><button type="button" data-lang="fr" lang="fr">Français</button></li>
+              <li><button type="button" data-lang="it" lang="it">Italiano</button></li>
+              <li><button type="button" data-lang="pt" lang="pt">Português</button></li>
+              <li><button type="button" data-lang="nl" lang="nl">Nederlands</button></li>
+              <li><button type="button" data-lang="pl" lang="pl">Polski</button></li>
+              <li><button type="button" data-lang="sv" lang="sv">Svenska</button></li>
+              <li><button type="button" data-lang="ru" lang="ru">Русский</button></li>
+              <li><button type="button" data-lang="el" lang="el">Ελληνικά</button></li>
+              <li><button type="button" data-lang="ja" lang="ja">日本語</button></li>
+              <li><button type="button" data-lang="ko" lang="ko">한국어</button></li>
+              <li><button type="button" data-lang="zh" lang="zh-CN">简体中文</button></li>
+              <li><button type="button" data-lang="ar" lang="ar">العربية</button></li>
+              </ul>
+              <div id="lm-google-wrap">
+                <p class="lm-title">Google Çeviri ile otomatik çeviri</p>
+                <p class="lm-note">Bu bağlantılar sizi Google’a yönlendirir.</p>
+                <ul class="lm-list" id="lm-google"></ul>
+              </div>
+            </div>
           </div>
           <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
         </div>
@@ -690,6 +755,7 @@
         <a class="btn btn-glass" href="#baslangic">Başa dön</a>
         <p class="legal">Bu site resmî bir Tesla sitesi değildir ve Tesla, Inc. tarafından onaylanmamıştır. Tesla adı ve logosu Tesla, Inc.’in ticari markalarıdır; burada yalnızca bilgi vermek amacıyla kullanılmıştır.</p>
         <p class="legal credit">Fotoğraflar: <a class="link" href="https://commons.wikimedia.org/wiki/File:2008_Tesla_Roadster_front.jpg" target="_blank" rel="noopener">2008 Roadster</a>, Rutger van der Maar, <a class="link" href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>; <a class="link" href="https://commons.wikimedia.org/wiki/File:2017_Tesla_Roadster_2.0_Petersen_Automotive_Museum.jpg" target="_blank" rel="noopener">2017 Roadster</a>, TaurusEmerald, <a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>. Kaynak: Wikimedia Commons.</p>
+        <p class="legal credit mt-note">Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.</p>
       </div>
     </footer>
 
@@ -830,94 +896,207 @@
   "Üç yapı için belirtilen azami hız (> 370 km/sa)": "Stated top speed for all three trims (> 370 km/h)",
   "$50.000 / $250.000": "$50,000 / $250,000",
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Reservation deposit for Performance / Thrust; Rocket by invitation only. No final price announced.",
-  ">230 mph (üç yapı)": ">230 mph (all three trims)"
+  ">230 mph (üç yapı)": ">230 mph (all three trims)",
+  "Çevrilmiş diller": "Translated languages",
+  "Google Çeviri ile otomatik çeviri": "Automatic translation with Google Translate",
+  "Bu bağlantılar sizi Google’a yönlendirir.": "These links take you to Google.",
+  "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "This translation was prepared with AI assistance and has not been checked by a native speaker; the Turkish version is authoritative."
 };
         const ATTR_EN = {
   "Ana menü": "Main menu",
   "Tesla Roadster bilgi sitesi, başa dön": "Tesla Roadster information site, back to top",
   "2008 Tesla Roadster, önden üç çeyrek görünüm": "2008 Tesla Roadster, front three-quarter view",
   "Petersen Otomobil Müzesi’nde sergilenen 2017 Tesla Roadster": "2017 Tesla Roadster on display at the Petersen Automotive Museum",
-  "Roadster canlı gösteri videosunu oynat": "Play the Roadster live demo video"
+  "Roadster canlı gösteri videosunu oynat": "Play the Roadster live demo video",
+  "Diğer diller": "More languages"
 };
-        const TITLE = { tr: document.title, en: "Tesla Roadster — The Story of Electric Speed" };
         const metaDesc = document.querySelector('meta[name="description"]');
-        const DESC = { tr: metaDesc ? metaDesc.content : '', en: "The history, design, technology and performance of the Tesla Roadster." };
         const root = document.documentElement;
         const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
         const textOrig = new WeakMap();
         const attrOrig = new WeakMap();
 
-        const translateText = (lang) => {
+        /* Dil verileri. Türkçe sayfanın kendisidir; İngilizce yukarıda hazır durur;
+           diğer diller seçilince lang/<kod>.js dosyası yüklenir. */
+        const DATA = {
+          tr: { text: null, attr: null, locale: 'tr-TR', htmlLang: 'tr', dir: 'ltr', title: document.title, description: metaDesc ? metaDesc.content : '',
+                ui: { menu: 'Menü', close: 'Kapat', frame: 'Tesla Roadster canlı gösterisi' } },
+          en: { text: EN, attr: ATTR_EN, locale: 'en-US', htmlLang: 'en', dir: 'ltr', title: 'Tesla Roadster — The Story of Electric Speed',
+                description: 'The history, design, technology and performance of the Tesla Roadster.',
+                ui: { menu: 'Menu', close: 'Close', frame: 'Tesla Roadster live demo' } },
+        };
+        const CODES = [...document.querySelectorAll('.lang [data-lang]')].map((b) => b.dataset.lang);
+        const RL = (window.RL = window.RL || {});
+        let current = DATA.tr;
+        window.roadsterI18n = { ui: (k) => current.ui[k], locale: () => current.locale };
+
+        const loadLang = (code) => new Promise((resolve, reject) => {
+          if (RL[code]) { resolve(RL[code]); return; }
+          const el = document.createElement('script');
+          el.src = 'lang/' + code + '.js?v=1';
+          el.async = true;
+          el.onload = () => (RL[code] ? resolve(RL[code]) : reject(new Error('empty')));
+          el.onerror = () => reject(new Error('load'));
+          document.head.appendChild(el);
+        });
+
+        const translateText = (d) => {
+          const dict = d.text;
           const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
           const nodes = [];
           let n;
           while ((n = walker.nextNode())) {
             const p = n.parentNode;
             if (!p || /^(SCRIPT|STYLE)$/.test(p.nodeName)) continue;
-            if (p.closest && p.closest('.menu-btn, [data-count]')) continue;
+            if (p.closest && p.closest('.menu-btn, [data-count], [data-lang]')) continue;
             nodes.push(n);
           }
           nodes.forEach((node) => {
             if (!textOrig.has(node)) textOrig.set(node, node.data);
             const orig = textOrig.get(node);
             const key = orig.replace(/\s+/g, ' ').trim();
-            if (lang === 'en' && key && has(EN, key)) {
+            if (dict && key && has(dict, key)) {
               const lead = orig.match(/^\s*/)[0];
               const trail = orig.match(/\s*$/)[0];
-              node.data = lead + EN[key] + trail;
+              node.data = lead + dict[key] + trail;
             } else if (node.data !== orig) {
               node.data = orig;
             }
           });
         };
 
-        const translateAttrs = (lang) => {
+        const translateAttrs = (d) => {
+          const dict = d.attr;
           document.querySelectorAll('[aria-label],[alt],[title]').forEach((el) => {
-            if (el.tagName === 'IFRAME' || el.closest('.lang')) return;
+            if (el.tagName === 'IFRAME' || el.hasAttribute('data-lang')) return;
             let rec = attrOrig.get(el);
             if (!rec) { rec = {}; attrOrig.set(el, rec); }
             ['aria-label', 'alt', 'title'].forEach((a) => {
               if (!el.hasAttribute(a)) return;
               if (!(a in rec)) rec[a] = el.getAttribute(a);
               const orig = rec[a];
-              el.setAttribute(a, lang === 'en' && has(ATTR_EN, orig) ? ATTR_EN[orig] : orig);
+              el.setAttribute(a, dict && has(dict, orig) ? dict[orig] : orig);
             });
           });
         };
 
-        const renderNumbers = (lang) => {
-          const locale = lang === 'en' ? 'en-US' : 'tr-TR';
+        const renderNumbers = (locale) => {
           document.querySelectorAll('[data-count]').forEach((el) => {
             const dec = parseInt(el.dataset.dec || '0', 10);
             el.textContent = parseFloat(el.dataset.count).toLocaleString(locale, { minimumFractionDigits: dec, maximumFractionDigits: dec });
           });
         };
 
-        const apply = (lang, persist) => {
-          root.lang = lang;
-          translateText(lang);
-          translateAttrs(lang);
-          renderNumbers(lang);
-          document.title = TITLE[lang];
-          if (metaDesc) metaDesc.setAttribute('content', DESC[lang]);
-          const menuBtn = document.querySelector('.menu-btn');
-          if (menuBtn) {
-            const open = root.classList.contains('menu-open');
-            menuBtn.textContent = lang === 'en' ? (open ? 'Close' : 'Menu') : (open ? 'Kapat' : 'Menü');
+        const markActive = (lang) => {
+          document.querySelectorAll('.lang > [data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+          const more = document.querySelector('.lang-more');
+          const extra = lang !== 'tr' && lang !== 'en';
+          if (more) {
+            more.setAttribute('aria-pressed', String(extra));
+            const code = more.querySelector('.lang-code');
+            if (code) {
+              code.textContent = lang.toUpperCase();
+              if (extra) code.removeAttribute('data-core'); else code.setAttribute('data-core', '');
+            }
           }
+          document.querySelectorAll('.lang-menu [data-lang]').forEach((b) => {
+            if (b.dataset.lang === lang) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current');
+          });
+        };
+
+        const show = (lang, d, persist) => {
+          current = d;
+          root.lang = d.htmlLang || lang;
+          root.dir = d.dir || 'ltr';
+          translateText(d);
+          translateAttrs(d);
+          renderNumbers(d.locale);
+          document.title = d.title;
+          if (metaDesc) metaDesc.setAttribute('content', d.description);
+          const menuBtn = document.querySelector('.menu-btn');
+          if (menuBtn) menuBtn.textContent = root.classList.contains('menu-open') ? d.ui.close : d.ui.menu;
           const frame = document.querySelector('.video-frame iframe');
-          if (frame) frame.title = lang === 'en' ? 'Tesla Roadster flight demo' : 'Tesla Roadster uçuş gösterisi';
-          document.querySelectorAll('.lang [data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+          if (frame) frame.title = d.ui.frame;
+          markActive(lang);
           if (persist) { try { localStorage.setItem('roadster-lang', lang); } catch (e) { /* kayıt yapılamazsa sorun değil */ } }
         };
 
-        document.querySelectorAll('.lang [data-lang]').forEach((b) => b.addEventListener('click', () => apply(b.dataset.lang, true)));
+        let seq = 0;
+        const apply = (lang, persist) => {
+          const mine = ++seq;
+          if (DATA[lang]) { show(lang, DATA[lang], persist); return Promise.resolve(); }
+          return loadLang(lang).then((d) => {
+            DATA[lang] = d;
+            if (mine === seq) show(lang, d, persist);
+          }).catch(() => { /* dosya yüklenemezse mevcut dil kalır */ });
+        };
+
+        /* Diğer diller menüsü */
+        const more = document.querySelector('.lang-more');
+        const langMenu = document.getElementById('lang-menu');
+        const setLangMenu = (open) => {
+          if (!langMenu || !more) return;
+          langMenu.hidden = !open;
+          more.setAttribute('aria-expanded', String(open));
+        };
+        if (more && langMenu) {
+          more.addEventListener('click', () => setLangMenu(langMenu.hidden));
+          document.addEventListener('click', (e) => { if (!langMenu.hidden && !e.target.closest('.lang')) setLangMenu(false); });
+          document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !langMenu.hidden) { setLangMenu(false); more.focus(); } });
+          window.addEventListener('scroll', () => { if (!langMenu.hidden) setLangMenu(false); }, { passive: true });
+        }
+        document.querySelectorAll('.lang [data-lang]').forEach((b) => b.addEventListener('click', () => {
+          apply(b.dataset.lang, true);
+          setLangMenu(false);
+        }));
+
+        /* Çevirisi sitede bulunmayan diller: Google Çeviri bağlantıları */
+        const GOOGLE = [
+          ['uk', 'Українська'], ['hi', 'हिन्दी'], ['bn', 'বাংলা'], ['ur', 'اردو'], ['fa', 'فارسی'], ['he', 'עברית'],
+          ['zh-TW', '繁體中文'], ['id', 'Bahasa Indonesia'], ['ms', 'Bahasa Melayu'], ['tl', 'Filipino'], ['vi', 'Tiếng Việt'], ['th', 'ไทย'],
+          ['da', 'Dansk'], ['no', 'Norsk'], ['fi', 'Suomi'], ['is', 'Íslenska'], ['et', 'Eesti'], ['lv', 'Latviešu'], ['lt', 'Lietuvių'],
+          ['cs', 'Čeština'], ['sk', 'Slovenčina'], ['hu', 'Magyar'], ['ro', 'Română'], ['bg', 'Български'], ['sr', 'Српски'], ['hr', 'Hrvatski'],
+          ['bs', 'Bosanski'], ['sl', 'Slovenščina'], ['sq', 'Shqip'], ['mk', 'Македонски'], ['be', 'Беларуская'], ['ka', 'ქართული'], ['hy', 'Հայերեն'],
+          ['az', 'Azərbaycanca'], ['kk', 'Қазақша'], ['uz', 'Oʻzbekcha'], ['ky', 'Кыргызча'], ['tg', 'Тоҷикӣ'], ['tk', 'Türkmençe'], ['mn', 'Монгол'],
+          ['ga', 'Gaeilge'], ['cy', 'Cymraeg'], ['mt', 'Malti'], ['ca', 'Català'], ['eu', 'Euskara'], ['gl', 'Galego'], ['lb', 'Lëtzebuergesch'], ['eo', 'Esperanto'],
+          ['ne', 'नेपाली'], ['mr', 'मराठी'], ['gu', 'ગુજરાતી'], ['pa', 'ਪੰਜਾਬੀ'], ['ta', 'தமிழ்'], ['te', 'తెలుగు'], ['kn', 'ಕನ್ನಡ'], ['ml', 'മലയാളം'], ['si', 'සිංහල'],
+          ['my', 'မြန်မာ'], ['km', 'ខ្មែរ'], ['lo', 'ລາວ'], ['ps', 'پښتو'], ['sd', 'سنڌي'], ['ku', 'Kurdî'],
+          ['sw', 'Kiswahili'], ['am', 'አማርኛ'], ['so', 'Soomaali'], ['ha', 'Hausa'], ['yo', 'Yorùbá'], ['ig', 'Igbo'], ['zu', 'isiZulu'], ['xh', 'isiXhosa'], ['af', 'Afrikaans'], ['mg', 'Malagasy'],
+          ['jv', 'Basa Jawa'], ['su', 'Basa Sunda'], ['ceb', 'Cebuano'], ['haw', 'ʻŌlelo Hawaiʻi'], ['mi', 'Māori'], ['sm', 'Gagana Samoa'],
+        ];
+        const googleBase = () => {
+          const h = location.hostname;
+          if (/\.translate\.goog$/.test(h)) return null;
+          const local = location.protocol === 'file:' || !h || h === 'localhost' || /^127\./.test(h) || h === '[::1]';
+          const host = local ? 'emre029.github.io' : h;
+          const path = local ? '/tesla-roadster-info/' : location.pathname;
+          return 'https://' + host.replace(/-/g, '--').replace(/\./g, '-') + '.translate.goog' + path;
+        };
+        const gList = document.getElementById('lm-google');
+        const gBase = googleBase();
+        if (gList && gBase) {
+          GOOGLE.forEach(([code, name]) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = gBase + '?lang=en&_x_tr_sl=en&_x_tr_tl=' + encodeURIComponent(code) + '&_x_tr_hl=' + encodeURIComponent(code) + '&_x_tr_pto=wapp';
+            a.target = '_blank';
+            a.rel = 'noopener';
+            a.lang = code;
+            a.dir = 'ltr';
+            a.textContent = name;
+            li.appendChild(a);
+            gList.appendChild(li);
+          });
+        } else {
+          const wrap = document.getElementById('lm-google-wrap');
+          if (wrap) wrap.remove();
+        }
 
         let initial = 'tr';
-        try { if (localStorage.getItem('roadster-lang') === 'en') initial = 'en'; } catch (e) { /* yoksay */ }
-        const q = /[?&]lang=(en|tr)\b/.exec(location.search);
-        if (q) initial = q[1];
-        if (initial === 'en') apply('en', false);
+        try { const saved = localStorage.getItem('roadster-lang'); if (saved && CODES.indexOf(saved) !== -1) initial = saved; } catch (e) { /* yoksay */ }
+        const q = /[?&]lang=([a-z]{2})\b/.exec(location.search);
+        if (q && CODES.indexOf(q[1]) !== -1) initial = q[1];
+        if (initial !== 'tr') apply(initial, false);
       })();
     </script>
     <script>
@@ -953,7 +1132,8 @@
           const setMenu = (open) => {
             root.classList.toggle('menu-open', open);
             menuBtn.setAttribute('aria-expanded', String(open));
-            menuBtn.textContent = root.lang === 'en' ? (open ? 'Close' : 'Menu') : (open ? 'Kapat' : 'Menü');
+            const i18n = window.roadsterI18n;
+            if (i18n) menuBtn.textContent = i18n.ui(open ? 'close' : 'menu');
             onScroll();
           };
           menuBtn.addEventListener('click', () => setMenu(!root.classList.contains('menu-open')));
@@ -961,7 +1141,7 @@
           document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setMenu(false); });
 
           /* Sayılar: görününce sıfırdan yukarı sayar */
-          const formatNumber = (value, dec) => value.toLocaleString(root.lang === 'en' ? 'en-US' : 'tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+          const formatNumber = (value, dec) => value.toLocaleString(window.roadsterI18n ? window.roadsterI18n.locale() : 'tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
           const countUp = (el) => {
             const to = parseFloat(el.dataset.count);
             const dec = parseInt(el.dataset.dec || '0', 10);
@@ -1029,7 +1209,7 @@
           const fallbackPlayer = () => {
             const frame = document.createElement('iframe');
             frame.src = 'https://www.youtube-nocookie.com/embed/' + VIDEO_ID + '?autoplay=1&rel=0&playsinline=1';
-            frame.title = root.lang === 'en' ? 'Tesla Roadster flight demo' : 'Tesla Roadster uçuş gösterisi';
+            frame.title = window.roadsterI18n ? window.roadsterI18n.ui('frame') : 'Tesla Roadster canlı gösterisi';
             frame.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
             frame.allowFullscreen = true;
             videoBox.appendChild(frame);
@@ -1074,7 +1254,7 @@
                 playerVars: { autoplay: inView || withSound ? 1 : 0, mute: withSound ? 0 : 1, rel: 0, playsinline: 1, modestbranding: 1, origin: location.origin },
                 events: {
                   onReady: (event) => {
-                    event.target.getIframe().title = root.lang === 'en' ? 'Tesla Roadster flight demo' : 'Tesla Roadster uçuş gösterisi';
+                    event.target.getIframe().title = window.roadsterI18n ? window.roadsterI18n.ui('frame') : 'Tesla Roadster canlı gösterisi';
                     videoBox.classList.add('playing');
                     if (wantSound) event.target.unMute();
                     if (inView || wantSound) event.target.playVideo();
