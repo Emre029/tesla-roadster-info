@@ -141,9 +141,7 @@ window.RL=window.RL||{};window.RL.it={
   "$50.000 / $250.000": "50.000 $ / 250.000 $",
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Caparra di prenotazione per Performance / Thrust; Rocket solo su invito. Prezzo finale non annunciato.",
   ">230 mph (üç yapı)": ">230 mph (tutte e tre le versioni)",
-  "Çevrilmiş diller": "Lingue tradotte",
-  "Google Çeviri ile otomatik çeviri": "Traduzione automatica con Google Traduttore",
-  "Bu bağlantılar sizi Google’a yönlendirir.": "Questi link ti portano a Google.",
+  "Diller": "Lingue",
   "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "Questa traduzione è stata preparata con l’aiuto dell’IA e non è stata verificata da un madrelingua; fa fede la versione turca."
  },
  "attr": {

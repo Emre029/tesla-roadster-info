@@ -141,9 +141,7 @@ window.RL=window.RL||{};window.RL.zh={
   "$50.000 / $250.000": "$50,000 / $250,000",
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Performance / Thrust的预订定金；Rocket仅限受邀。最终价格尚未公布。",
   ">230 mph (üç yapı)": ">230 mph（三个版本）",
-  "Çevrilmiş diller": "已翻译的语言",
-  "Google Çeviri ile otomatik çeviri": "使用Google翻译自动翻译",
-  "Bu bağlantılar sizi Google’a yönlendirir.": "这些链接会将您带到Google。",
+  "Diller": "语言",
   "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "本翻译在AI辅助下完成，未经母语人士审核；以土耳其语版本为准。"
  },
  "attr": {

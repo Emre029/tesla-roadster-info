@@ -124,10 +124,10 @@
       .lang-menu[hidden] { display: none; }
       .lm-title { margin: 0 0 10px; color: var(--muted); font-size: .6875rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
       .lm-title:not(:first-child) { margin-top: 20px; }
-      #lm-google-wrap { margin-top: 20px; }
-      .lm-note { margin: -4px 0 10px; color: var(--muted); font-size: .75rem; line-height: 1.5; }
       .lm-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
       .lm-list button, .lm-list a { display: block; width: 100%; padding: 9px 12px; border: 0; border-radius: 12px; background: transparent; color: rgba(244, 244, 244, .85); font: inherit; font-size: .875rem; font-weight: 500; text-align: start; text-decoration: none; cursor: pointer; transition: background-color .2s, color .2s; }
+      /* Menüdeki dil adları her dilde aynı yazı tipiyle (Kiril/Yunan harfleri CJK fontuna düşmesin) */
+      .lm-list button { font-family: Archivo, "Helvetica Neue", Arial, sans-serif; }
       .lm-list button:hover, .lm-list a:hover { background: rgba(255, 255, 255, .1); color: #fff; }
       .lm-list button[aria-current="true"] { background: rgba(227, 25, 55, .18); color: #fff; box-shadow: inset 0 0 0 1px rgba(227, 25, 55, .45); }
       @keyframes lmIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
@@ -150,9 +150,6 @@
       html:lang(ko) body { font-family: Archivo, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", "Helvetica Neue", Arial, sans-serif; }
       html:lang(zh) body { font-family: Archivo, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif; }
       html:lang(ar) body { font-family: Archivo, "Segoe UI", Tahoma, "Noto Sans Arabic", "Helvetica Neue", Arial, sans-serif; }
-      /* Google Çeviri bağlantısıyla açılan sayfada Google'ın beyaz üst çubuğunu gizle ve sayfayı yukarı al */
-      #gt-nvframe { display: none !important; }
-      html[class*="translated-"] body { margin-top: 0 !important; }
       /* Japonca/Çince satır sonu kuralları (ör. "ー" satır başına gelmesin), Korece kelime bütünlüğü */
       html:lang(ja), html:lang(zh) { line-break: strict; }
       html:lang(ko) { word-break: keep-all; overflow-wrap: break-word; }
@@ -495,7 +492,7 @@
             <button type="button" data-lang="en" aria-pressed="false" lang="en" title="English">EN</button>
             <button type="button" class="lang-more" aria-pressed="false" aria-expanded="false" aria-haspopup="true" aria-controls="lang-menu" title="Diğer diller" aria-label="Diğer diller"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.8 3.9 5.8 3.9 9s-1.3 6.2-3.9 9c-2.6-2.8-3.9-5.8-3.9-9S9.4 5.8 12 3z"/></svg><span class="lang-code" data-core>TR</span></button>
             <div class="lang-menu" id="lang-menu" hidden>
-              <p class="lm-title">Çevrilmiş diller</p>
+              <p class="lm-title">Diller</p>
               <ul class="lm-list">
               <li class="lm-core"><button type="button" data-lang="tr" lang="tr">Türkçe</button></li>
               <li class="lm-core"><button type="button" data-lang="en" lang="en">English</button></li>
@@ -514,11 +511,6 @@
               <li><button type="button" data-lang="zh" lang="zh-CN">简体中文</button></li>
               <li><button type="button" data-lang="ar" lang="ar">العربية</button></li>
               </ul>
-              <div id="lm-google-wrap">
-                <p class="lm-title">Google Çeviri ile otomatik çeviri</p>
-                <p class="lm-note">Bu bağlantılar sizi Google’a yönlendirir.</p>
-                <ul class="lm-list" id="lm-google"></ul>
-              </div>
             </div>
           </div>
           <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menü</button>
@@ -900,9 +892,7 @@
   "$50.000 / $250.000": "$50,000 / $250,000",
   "Performance / Thrust rezervasyon bedeli; Rocket yalnızca davetle. Nihai fiyat açıklanmadı.": "Reservation deposit for Performance / Thrust; Rocket by invitation only. No final price announced.",
   ">230 mph (üç yapı)": ">230 mph (all three trims)",
-  "Çevrilmiş diller": "Translated languages",
-  "Google Çeviri ile otomatik çeviri": "Automatic translation with Google Translate",
-  "Bu bağlantılar sizi Google’a yönlendirir.": "These links take you to Google.",
+  "Diller": "Languages",
   "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "This translation was prepared with AI assistance and has not been checked by a native speaker; the Turkish version is authoritative."
 };
         const ATTR_EN = {
@@ -1052,48 +1042,6 @@
           apply(b.dataset.lang, true);
           setLangMenu(false);
         }));
-
-        /* Çevirisi sitede bulunmayan diller: Google Çeviri bağlantıları */
-        const GOOGLE = [
-          ['uk', 'Українська'], ['hi', 'हिन्दी'], ['bn', 'বাংলা'], ['ur', 'اردو'], ['fa', 'فارسی'], ['he', 'עברית'],
-          ['zh-TW', '繁體中文'], ['id', 'Bahasa Indonesia'], ['ms', 'Bahasa Melayu'], ['tl', 'Filipino'], ['vi', 'Tiếng Việt'], ['th', 'ไทย'],
-          ['da', 'Dansk'], ['no', 'Norsk'], ['fi', 'Suomi'], ['is', 'Íslenska'], ['et', 'Eesti'], ['lv', 'Latviešu'], ['lt', 'Lietuvių'],
-          ['cs', 'Čeština'], ['sk', 'Slovenčina'], ['hu', 'Magyar'], ['ro', 'Română'], ['bg', 'Български'], ['sr', 'Српски'], ['hr', 'Hrvatski'],
-          ['bs', 'Bosanski'], ['sl', 'Slovenščina'], ['sq', 'Shqip'], ['mk', 'Македонски'], ['be', 'Беларуская'], ['ka', 'ქართული'], ['hy', 'Հայերեն'],
-          ['az', 'Azərbaycanca'], ['kk', 'Қазақша'], ['uz', 'Oʻzbekcha'], ['ky', 'Кыргызча'], ['tg', 'Тоҷикӣ'], ['tk', 'Türkmençe'], ['mn', 'Монгол'],
-          ['ga', 'Gaeilge'], ['cy', 'Cymraeg'], ['mt', 'Malti'], ['ca', 'Català'], ['eu', 'Euskara'], ['gl', 'Galego'], ['lb', 'Lëtzebuergesch'], ['eo', 'Esperanto'],
-          ['ne', 'नेपाली'], ['mr', 'मराठी'], ['gu', 'ગુજરાતી'], ['pa', 'ਪੰਜਾਬੀ'], ['ta', 'தமிழ்'], ['te', 'తెలుగు'], ['kn', 'ಕನ್ನಡ'], ['ml', 'മലയാളം'], ['si', 'සිංහල'],
-          ['my', 'မြန်မာ'], ['km', 'ខ្មែរ'], ['lo', 'ລາວ'], ['ps', 'پښتو'], ['sd', 'سنڌي'], ['ku', 'Kurdî'],
-          ['sw', 'Kiswahili'], ['am', 'አማርኛ'], ['so', 'Soomaali'], ['ha', 'Hausa'], ['yo', 'Yorùbá'], ['ig', 'Igbo'], ['zu', 'isiZulu'], ['xh', 'isiXhosa'], ['af', 'Afrikaans'], ['mg', 'Malagasy'],
-          ['jv', 'Basa Jawa'], ['su', 'Basa Sunda'], ['ceb', 'Cebuano'], ['haw', 'ʻŌlelo Hawaiʻi'], ['mi', 'Māori'], ['sm', 'Gagana Samoa'],
-        ];
-        const googleBase = () => {
-          const h = location.hostname;
-          if (/\.translate\.goog$/.test(h)) return null;
-          const local = location.protocol === 'file:' || !h || h === 'localhost' || /^127\./.test(h) || h === '[::1]';
-          const host = local ? 'emre029.github.io' : h;
-          const path = local ? '/tesla-roadster-info/' : location.pathname;
-          return 'https://' + host.replace(/-/g, '--').replace(/\./g, '-') + '.translate.goog' + path;
-        };
-        const gList = document.getElementById('lm-google');
-        const gBase = googleBase();
-        if (gList && gBase) {
-          GOOGLE.forEach(([code, name]) => {
-            const li = document.createElement('li');
-            const a = document.createElement('a');
-            a.href = gBase + '?lang=en&_x_tr_sl=en&_x_tr_tl=' + encodeURIComponent(code) + '&_x_tr_hl=' + encodeURIComponent(code) + '&_x_tr_pto=wapp';
-            a.target = '_blank';
-            a.rel = 'noopener';
-            a.lang = code;
-            a.dir = 'ltr';
-            a.textContent = name;
-            li.appendChild(a);
-            gList.appendChild(li);
-          });
-        } else {
-          const wrap = document.getElementById('lm-google-wrap');
-          if (wrap) wrap.remove();
-        }
 
         let initial = 'tr';
         try { const saved = localStorage.getItem('roadster-lang'); if (saved && CODES.indexOf(saved) !== -1) initial = saved; } catch (e) { /* yoksay */ }
