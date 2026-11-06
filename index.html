@@ -503,6 +503,221 @@
         .hero-bottom { order: 3; }
         .hero::before { inset: -60px; z-index: -2; background: linear-gradient(180deg, rgba(5, 5, 6, .6) 0%, rgba(5, 5, 6, .35) 45%, rgba(5, 5, 6, .8) 100%), url("https://commons.wikimedia.org/wiki/Special:FilePath/2008%20Tesla%20Roadster%20front.jpg?width=1280") 50% 60% / cover; filter: blur(30px) brightness(.55) saturate(1.15); }
       }
+
+      /* =====================================================================
+         YENİ BÖLÜMLER: birim seçici, kalkış yarışı, hedefler tablosu,
+         bilgi yarışması, sık sorulan sorular, kaynaklar, paylaşım, yazdırma
+         ===================================================================== */
+      .sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+      .emblem b { font-size: .9375rem; font-weight: 800; font-stretch: 125%; line-height: 1; letter-spacing: 0; color: #fff; }
+
+      /* Birim seçici */
+      .unit-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 26px; }
+      .unit-bar > span { color: var(--muted); font-size: .9375rem; }
+      .seg { display: inline-flex; flex-wrap: wrap; padding: 3px; border-radius: 99px; background: rgba(255, 255, 255, .1); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .2); }
+      .seg button { min-height: 34px; padding: 4px 16px; border: 0; border-radius: 99px; background: transparent; color: rgba(244, 244, 244, .78); font: inherit; font-size: .8125rem; font-weight: 600; cursor: pointer; transition: background-color .25s, color .25s; }
+      .seg button:hover { color: #fff; }
+      .seg button[aria-pressed="true"] { background: var(--red); color: #fff; }
+      @media (pointer: coarse) { .seg button { min-height: 42px; padding: 6px 18px; } }
+
+      /* Kalkış yarışı */
+      .race { margin-top: 16px; padding: clamp(24px, 4vw, 40px); border-radius: var(--radius); background: rgba(5, 5, 6, .32); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); }
+      .race-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 16px 28px; margin-bottom: 22px; }
+      .race-head h3 { font-size: clamp(1.375rem, 2.4vw, 1.75rem); }
+      .race-head p { margin: 6px 0 0; color: rgba(255, 255, 255, .78); font-size: .9375rem; max-width: 52ch; }
+      .race-ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+      .race-slow { display: inline-flex; align-items: center; gap: 8px; font-size: .9375rem; cursor: pointer; }
+      .race-slow input { width: 18px; height: 18px; accent-color: #fff; }
+      .race-go { min-width: 170px; }
+      .race-go[disabled] { opacity: .6; cursor: default; box-shadow: none; }
+      .race-go .s-again, .race.is-done .race-go .s-start { display: none; }
+      .race.is-done .race-go .s-again { display: inline; }
+      .race-clock { display: inline-flex; align-items: baseline; gap: 6px; min-width: 7.5ch; justify-content: flex-end; font-size: 1.5rem; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+      .race-clock span { font-size: .875rem; font-weight: 500; color: rgba(255, 255, 255, .78); letter-spacing: 0; }
+      .race-lane { display: grid; grid-template-columns: 190px 1fr 110px; gap: 18px; align-items: center; padding: 10px 0; }
+      .race-lane + .race-lane { border-top: 1px solid rgba(255, 255, 255, .12); }
+      .race-name { font-weight: 600; line-height: 1.25; }
+      .race-name small { display: block; color: rgba(255, 255, 255, .7); font-weight: 400; font-size: .8125rem; }
+      .race-track { position: relative; height: 12px; border-radius: 99px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+      .race-fill { height: 100%; width: 100%; border-radius: 99px; background: linear-gradient(90deg, rgba(255, 255, 255, .7), #fff); box-shadow: 0 0 16px rgba(255, 255, 255, .5); transform-origin: 0 50%; transform: scaleX(0); will-change: transform; }
+      .race-lane.rocket .race-fill { background: linear-gradient(90deg, #1a1a1a, #000); box-shadow: 0 0 0 1px rgba(255, 255, 255, .5); }
+      .race-lane.done .race-fill { box-shadow: 0 0 24px rgba(255, 255, 255, .95); }
+      .race-lane.rocket.done .race-fill { box-shadow: 0 0 0 1px #fff, 0 0 16px rgba(255, 255, 255, .6); }
+      html[dir="rtl"] .race-fill { transform-origin: 100% 50%; }
+      .race-val { text-align: end; font-weight: 650; font-size: 1.125rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+      .race-val small { margin-inline-start: 4px; color: rgba(255, 255, 255, .7); font-size: .8125rem; font-weight: 400; }
+      .race-t { display: none; }
+      .race-lane.done .race-live { display: none; }
+      .race-lane.done .race-t { display: inline; }
+      .race-note { margin: 18px 0 0; color: rgba(255, 255, 255, .78); font-size: .875rem; }
+      @media (max-width: 600px) {
+        .race-lane { grid-template-columns: 1fr auto; gap: 8px 12px; }
+        .race-track { grid-column: 1 / -1; grid-row: 2; }
+        .race-go { flex: 1 1 100%; }
+      }
+
+      /* Hedefler tablosu */
+      .promise { background: radial-gradient(ellipse 55% 60% at 100% 0%, rgba(227, 25, 55, .14), transparent 70%), var(--black); }
+      .pt { width: 100%; border-collapse: separate; border-spacing: 0; border-radius: var(--radius); overflow: hidden; background: linear-gradient(160deg, var(--panel-2), var(--panel)); box-shadow: inset 0 0 0 1px var(--line); }
+      .pt th, .pt td { padding: 18px 24px; text-align: start; vertical-align: top; border-top: 1px solid var(--line); }
+      .pt thead th { border-top: 0; background: rgba(255, 255, 255, .03); color: var(--muted); font-size: .875rem; font-weight: 600; }
+      .pt tbody th { width: 24%; color: var(--muted); font-size: .9375rem; font-weight: 500; }
+      .pt td { font-size: 1.125rem; font-weight: 600; font-stretch: 105%; font-variant-numeric: tabular-nums; letter-spacing: -.01em; }
+      .pt thead th:last-child, .pt td:last-child { background: rgba(227, 25, 55, .08); }
+      .pt-h { display: none; }
+      .pt-note { margin: 16px 0 0; color: var(--muted); font-size: .875rem; line-height: 1.6; max-width: 80ch; }
+      .pt-note a, .slip-src a { color: var(--silver); text-underline-offset: 3px; }
+      .pt-note a:hover, .slip-src a:hover { color: var(--red-bright); }
+      @media (max-width: 700px) {
+        .pt, .pt tbody, .pt tr { display: block; }
+        .pt thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+        .pt tr { padding: 14px 18px; border-top: 1px solid var(--line); }
+        .pt tbody tr:first-child { border-top: 0; }
+        .pt tbody th { display: block; width: auto; padding: 0 0 6px; border: 0; }
+        .pt td { display: grid; grid-template-columns: 116px 1fr; gap: 12px; padding: 7px 0; border: 0; background: none !important; font-size: 1rem; }
+        .pt-h { display: block; color: var(--muted); font-size: .8125rem; font-weight: 500; font-stretch: 100%; letter-spacing: 0; }
+      }
+      .slip { margin-top: clamp(40px, 6vw, 64px); padding: clamp(24px, 4vw, 40px); border-radius: var(--radius); background: linear-gradient(160deg, var(--panel-2), var(--panel)); box-shadow: inset 0 0 0 1px var(--line); }
+      .slip-head h3 { font-size: clamp(1.375rem, 2.4vw, 1.75rem); }
+      .slip-head p { margin: 8px 0 0; color: var(--muted); font-size: .9375rem; max-width: 62ch; }
+      .slip-list { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 16px; }
+      .slip-list li, .slip-axis { display: grid; grid-template-columns: 112px 1fr 104px; gap: 18px; align-items: center; }
+      .slip-when { color: var(--silver); font-size: .9375rem; font-weight: 500; }
+      .slip-track { position: relative; height: 24px; margin: 0 8px; background: linear-gradient(90deg, rgba(255, 255, 255, .09) 1px, transparent 1px) 0 0 / calc(100% / 11) 100%; border-right: 1px solid rgba(255, 255, 255, .09); }
+      .slip-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: var(--line); }
+      .slip-bar { position: absolute; top: 50%; height: 4px; margin-top: -2px; left: calc(var(--a) / 11 * 100%); width: calc((var(--t) - var(--a)) / 11 * 100%); border-radius: 4px; background: linear-gradient(90deg, rgba(255, 255, 255, .35), var(--red)); }
+      .slip-bar::before, .slip-bar::after { content: ""; position: absolute; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; }
+      .slip-bar::before { left: -6px; background: var(--panel); box-shadow: inset 0 0 0 2px var(--silver); }
+      .slip-bar::after { right: -6px; background: var(--red); box-shadow: 0 0 0 4px rgba(227, 25, 55, .25), 0 0 14px var(--red); }
+      .js .slip-bar { width: 0; transition: width 1.3s var(--ease); transition-delay: var(--dd, 0s); }
+      .js .slip.in .slip-bar { width: calc((var(--t) - var(--a)) / 11 * 100%); }
+      .slip-goal { text-align: end; font-variant-numeric: tabular-nums; }
+      .slip-goal small { margin-inline-end: 6px; color: var(--muted); font-size: .8125rem; }
+      .slip-goal b { font-size: 1.25rem; font-weight: 650; }
+      .slip-axis { margin-top: 12px; color: var(--muted); font-size: .75rem; font-variant-numeric: tabular-nums; }
+      .slip-axis div { position: relative; height: 1.2em; margin: 0 8px; }
+      .slip-axis div span { position: absolute; top: 0; transform: translateX(-50%); }
+      .slip-src { margin: 22px 0 0; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .875rem; line-height: 1.6; }
+      @media (max-width: 640px) {
+        .slip-list li { grid-template-columns: 1fr auto; gap: 6px 12px; }
+        .slip-track { grid-column: 1 / -1; grid-row: 2; }
+        .slip-axis { grid-template-columns: 1fr; margin-top: 8px; }
+        .slip-axis > :first-child, .slip-axis > :last-child { display: none; }
+      }
+
+      /* Bilgi yarışması */
+      .quiz { background: var(--panel); }
+      .quiz-card { max-width: 760px; margin-inline: auto; padding: clamp(24px, 4vw, 40px); }
+      .quiz-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 12px; color: var(--muted); font-size: .9375rem; font-variant-numeric: tabular-nums; }
+      .quiz-bar { height: 4px; margin-bottom: 28px; border-radius: 4px; background: var(--line); overflow: hidden; }
+      .quiz-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--red-deep), var(--red), var(--red-bright)); transition: width .5s var(--ease); }
+      .quiz-q h3 { font-size: clamp(1.25rem, 2.4vw, 1.625rem); line-height: 1.3; }
+      .quiz-opts { display: grid; gap: 10px; margin-top: 22px; }
+      .quiz-opts button { position: relative; min-height: 50px; padding: 13px 48px 13px 18px; border: 0; border-radius: 14px; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px var(--line-strong); color: var(--text); font: inherit; font-size: 1rem; font-weight: 500; text-align: start; cursor: pointer; transition: background-color .25s, box-shadow .25s, opacity .25s; }
+      .quiz-opts button:hover:not(:disabled) { background: rgba(255, 255, 255, .1); }
+      .quiz-opts button:disabled { cursor: default; }
+      .quiz-opts button:disabled:not(.correct):not(.wrong) { opacity: .55; }
+      .quiz-opts button.correct { background: rgba(70, 190, 120, .16); box-shadow: inset 0 0 0 1px rgba(110, 220, 150, .75); }
+      .quiz-opts button.wrong { background: rgba(227, 25, 55, .16); box-shadow: inset 0 0 0 1px rgba(227, 25, 55, .75); }
+      .quiz-opts button.correct::after, .quiz-opts button.wrong::after { position: absolute; inset-inline-end: 18px; top: 50%; transform: translateY(-50%); font-weight: 700; }
+      .quiz-opts button.correct::after { content: "✓"; color: #7BE0A3; }
+      .quiz-opts button.wrong::after { content: "✕"; color: var(--red-bright); }
+      .quiz-exp { margin: 18px 0 0; padding: 14px 16px; border-radius: 14px; background: rgba(255, 255, 255, .04); box-shadow: inset 0 0 0 1px var(--line); color: var(--silver); line-height: 1.6; }
+      .quiz-exp b { color: #fff; }
+      .quiz-actions { display: flex; justify-content: flex-end; margin-top: 22px; }
+      .quiz-result { padding: 8px 0 0; text-align: center; }
+      .quiz-score { margin: 0; font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 650; font-stretch: 105%; letter-spacing: -.02em; line-height: 1.2; }
+      .quiz-msg { margin: 12px auto 24px; max-width: 46ch; color: var(--muted); }
+      .quiz-score small { font-size: .5em; font-weight: 500; letter-spacing: 0; color: var(--muted); }
+      .quiz-count b { color: var(--text); }
+      .quiz-verdict .v-no, .quiz-next .n-last { display: none; }
+      .quiz-q.is-ok .quiz-verdict .v-ok { color: #7BE0A3; }
+      .quiz-q.is-no .quiz-verdict .v-ok { display: none; }
+      .quiz-q.is-no .quiz-verdict .v-no { display: inline; color: var(--red-bright); }
+      .quiz-card.is-last .quiz-next .n-next { display: none; }
+      .quiz-card.is-last .quiz-next .n-last { display: inline; }
+      .copy .c-done { display: none; }
+      .copy.is-done .c-def { display: none; }
+      .copy.is-done .c-done { display: inline; }
+      [hidden] { display: none !important; }
+
+      /* Sık sorulan sorular */
+      .faq-list { display: grid; gap: 12px; max-width: 880px; }
+      .faq { border-radius: 18px; background: linear-gradient(160deg, var(--panel-2), var(--panel)); box-shadow: inset 0 0 0 1px var(--line); transition: box-shadow .3s; }
+      .faq[open] { box-shadow: inset 0 0 0 1px rgba(227, 25, 55, .45); }
+      .faq summary { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 24px; list-style: none; cursor: pointer; font-size: 1.0625rem; font-weight: 600; font-stretch: 104%; line-height: 1.35; }
+      .faq summary::-webkit-details-marker { display: none; }
+      .faq summary::after { content: ""; flex: none; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(var(--red-bright), var(--red-bright)) center / 10px 2px no-repeat, linear-gradient(var(--red-bright), var(--red-bright)) center / 2px 10px no-repeat; box-shadow: inset 0 0 0 1px rgba(227, 25, 55, .6); transition: transform .3s var(--ease); }
+      .faq[open] summary::after { transform: rotate(45deg); }
+      .faq p { margin: 0; padding: 0 24px 22px; max-width: 72ch; color: var(--muted); line-height: 1.7; }
+
+      /* Kaynaklar */
+      .sources { background: var(--panel); }
+      .updated { display: inline-flex; align-items: center; gap: 10px; margin: 22px 0 0; padding: 7px 16px; border-radius: 99px; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px var(--line); color: var(--silver); font-size: .875rem; }
+      .updated::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--red-bright); box-shadow: 0 0 10px var(--red-bright); }
+      .src-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .src { padding: 26px 26px 28px; }
+      .src h3 { font-size: 1.125rem; }
+      .src ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 14px; }
+      .src li { color: var(--muted); font-size: .9375rem; line-height: 1.5; }
+      .src li a { color: #fff; text-underline-offset: 3px; overflow-wrap: anywhere; }
+      .src li a:hover { color: var(--red-bright); }
+      .src li small { display: block; margin-top: 2px; color: var(--muted); font-size: .8125rem; font-variant-numeric: tabular-nums; }
+      @media (max-width: 980px) { .src-grid { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 640px) { .src-grid { grid-template-columns: 1fr; } }
+
+      /* Paylaşım ve alt bilgi bağlantıları */
+      .share { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; padding-top: 22px; border-top: 1px solid var(--line); }
+      .share > span { margin-inline-end: 6px; color: var(--muted); font-size: .9375rem; }
+      .share .btn { min-width: 0; min-height: 44px; padding: 10px 20px; font-size: .875rem; }
+      .footer-links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+      .footer-links a { color: var(--silver); font-size: .9375rem; text-underline-offset: 4px; }
+      .footer-links a:hover { color: var(--red-bright); }
+
+      /* Yazdırma / PDF: açık zeminde, tüm içerik görünür, etkileşimli parçalar gizli */
+      @media print {
+        @page { margin: 14mm; }
+        html, body { background: #fff !important; color: #111 !important; }
+        body { font-size: 11pt; line-height: 1.5; }
+        *, *::before, *::after { animation: none !important; transition: none !important; text-shadow: none !important; box-shadow: none !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+        .nav, .menu, .progress, .skip-link, .hero-media, .hero::before, .hero::after, .hero-actions, .video, .unit-bar, .race, .quiz, .share, .footer-links, .btn, .lang-menu, .photo-frame::before { display: none !important; }
+        .js .reveal, .reveal { opacity: 1 !important; transform: none !important; }
+        .hero { min-height: 0; display: block; padding: 0 0 16px; }
+        .hero-top { padding-top: 0; text-align: left; }
+        .hero h1, .hero h1 span { color: #111 !important; background: none !important; -webkit-text-fill-color: #111; font-size: 34pt; }
+        .hero-sub, .pill { color: #333 !important; background: none !important; }
+        .hero-stats li { background: none !important; border: 1px solid #bbb; color: #111; }
+        .hero-stats b, .hero-stats span { color: #111 !important; }
+        .section { padding: 22px 0 !important; background: #fff !important; break-inside: auto; }
+        .packages, .intro, .history, .specs, .gen2, .flight, .compare, .academic, .promise, .quiz, .faqs, .sources { background: #fff !important; }
+        h1, h2, h3, dt, dd, b, strong, em, td, th, summary, .year, .time, .bar-time, .kicker, .lead, .body, p, li, small, span, div { color: #111 !important; }
+        .kicker::before { background: #111 !important; }
+        .lead, .muted, small, dt, .pt tbody th, .pt thead th, .src li, .src li small, .faq p, .updated { color: #333 !important; }
+        a { color: #0b3d91 !important; text-decoration: underline; }
+        .card, .pkg, .spec, .gen-card, .faq, .src, .pt, .slip, .bars, .facts div, .pkg-meta div, .milestone, .paper-cite { background: #fff !important; border: 1px solid #bbb !important; border-radius: 10px; }
+        .pt thead th, .pt td:last-child, .pt thead th:last-child { background: #f1f1f1 !important; }
+        .spec::before, .milestone::before, .timeline::before, .timeline::after { display: none !important; }
+        .timeline { padding-left: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .milestone { padding: 12px; }
+        .milestone .tag { background: #eee !important; }
+        .bar-track, .race-track, .slip-track { background: #e3e3e3 !important; }
+        .bar-fill, .slip-bar { background: #111 !important; transform: none !important; }
+        .js .slip-bar { width: calc((var(--t) - var(--a)) / 11 * 100%) !important; }
+        .bar-row.rocket .bar-fill { background: #555 !important; }
+        .card, .pkg, .gen-card, .faq, .milestone, .pt tr, .slip, .bars, .src { break-inside: avoid; }
+        h2, h3 { break-after: avoid; }
+        .split { display: block; }
+        .photo-frame img { max-height: 70mm; width: auto; box-shadow: none; }
+        .faq > summary::after { display: none; }
+        .sources a[href^="http"]::after { content: " (" attr(href) ")"; color: #555; font-size: 9pt; word-break: break-all; }
+        .footer { background: #fff !important; box-shadow: none; padding: 16px 0 0; }
+        .footer .wrap { display: block; }
+        .footer p, .footer .legal { color: #444 !important; opacity: 1; }
+        .footer .legal.credit { margin-top: 6px !important; }
+        .brand { color: #111; }
+        .emblem { box-shadow: none; border: 1px solid #111; background: none; }
+        .emblem b, .wordmark { color: #111 !important; }
+      }
       @media (prefers-reduced-motion: reduce) {
         html { scroll-behavior: auto; }
         *, *::before, *::after { animation-duration: .001ms !important; animation-delay: 0s !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
@@ -515,7 +730,7 @@
     <nav class="nav" aria-label="Ana menü">
       <div class="wrap">
         <a class="brand" href="#baslangic" aria-label="Tesla Roadster bilgi sitesi, başa dön">
-          <span class="emblem"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tesla%20Motors.svg" alt="" /></span>
+          <span class="emblem" aria-hidden="true"><b>R</b></span>
           <span class="wordmark">ROADSTER</span>
         </a>
         <ul class="nav-links">
@@ -615,13 +830,21 @@
             <p class="kicker reveal">Teknik özet</p>
             <h2 class="reveal" style="--d:.05s">İlk neslin teknik özellikleri.</h2>
             <p class="lead reveal" style="--d:.1s">Motor, batarya, menzil ve üretim verileri.</p>
+            <div class="unit-bar reveal" style="--d:.15s" data-units>
+              <span id="unit-label">Birimler</span>
+              <div class="seg" role="group" aria-labelledby="unit-label">
+                <button type="button" data-mode="def" aria-pressed="true">Varsayılan</button>
+                <button type="button" data-mode="metric" aria-pressed="false">Metrik</button>
+                <button type="button" data-mode="imperial" aria-pressed="false">Mil ve hp</button>
+              </div>
+            </div>
           </div>
           <div class="spec-grid">
-            <article class="card spec reveal"><small>Motor gücü (Sport)</small><strong><span data-count="215">215</span><em>kW</em></strong><p>288 hp; standart modelde 185 kW (248 hp).</p></article>
+            <article class="card spec reveal"><small>Motor gücü (Sport)</small><strong><span data-count="215" data-v-def="215" data-v-metric="215" data-v-imperial="288">215</span><em data-unit="kW" data-unit-metric="kW" data-unit-imperial="hp">kW</em></strong><p>288 hp; standart modelde 185 kW (248 hp).</p></article>
             <article class="card spec reveal" style="--d:.08s"><small>Batarya hücresi</small><strong><span data-count="6831">6.831</span></strong><p>Lityum iyon pil paketindeki hücre sayısı.</p></article>
             <article class="card spec reveal" style="--d:.16s"><small>0–60 mph</small><strong><span data-count="3.7" data-dec="1">3,7</span><em>sn</em></strong><p>Roadster Sport modeli; standart Roadster 3,9 saniye.</p></article>
-            <article class="card spec reveal"><small>EPA menzili</small><strong><span data-count="244">244</span><em>mil</em></strong><p>EPA kombine döngüsü; yaklaşık 393 km.</p></article>
-            <article class="card spec reveal" style="--d:.08s"><small>Azami hız</small><strong><span data-count="201">201</span><em>km/sa</em></strong><p>Tesla’ya göre 125 mph (201 km/sa) ile elektronik olarak sınırlı.</p></article>
+            <article class="card spec reveal"><small>EPA menzili</small><strong><span data-count="244" data-v-def="244" data-v-metric="393" data-v-imperial="244">244</span><em data-unit="mil" data-unit-metric="km" data-unit-imperial="mil">mil</em></strong><p>EPA kombine döngüsü; yaklaşık 393 km.</p></article>
+            <article class="card spec reveal" style="--d:.08s"><small>Azami hız</small><strong><span data-count="201" data-v-def="201" data-v-metric="201" data-v-imperial="125">201</span><em data-unit="km/sa" data-unit-metric="km/sa" data-unit-imperial="mph">km/sa</em></strong><p>Tesla’ya göre 125 mph (201 km/sa) ile elektronik olarak sınırlı.</p></article>
             <article class="card spec reveal" style="--d:.16s"><small>Üretim</small><strong>≈ <span data-count="2450">2.450</span></strong><p>2008–2012 arasında üretilen toplam Roadster.</p></article>
           </div>
         </div>
@@ -676,6 +899,26 @@
             <div class="bar-row"><span class="bar-name">Thrust<small>2026</small></span><div class="bar-track"><div class="bar-fill" style="--w:24.3%; --dd:.4s"></div></div><span class="bar-time">&lt;0,9 sn</span></div>
             <div class="bar-row rocket"><span class="bar-name">Rocket<small>2026</small></span><div class="bar-track"><div class="bar-fill" style="--w:15.9%; --dd:.55s"></div></div><span class="bar-time">&lt;0,59 sn</span></div>
             <p class="bars-note">Rocket için belirtilen süre, 2009 Roadster Sport’un 3,7 saniyesinden altı kattan daha kısa.</p>
+          </div>
+
+          <div class="race reveal" data-race>
+            <div class="race-head">
+              <div>
+                <h3>Kalkış yarışı</h3>
+                <p>Dört aracı 0–60 mph’e birlikte çıkar; her biri kendi açıklanan süresiyle ilerler.</p>
+              </div>
+              <div class="race-ctrl">
+                <label class="race-slow"><input type="checkbox" /> Yavaş çekim (×4)</label>
+                <span class="race-clock" aria-hidden="true"><b>0,00</b> <span>sn</span></span>
+                <button class="btn race-go" type="button"><span class="s-start">Yarışı başlat</span><span class="s-again">Yeniden başlat</span></button>
+              </div>
+            </div>
+            <div class="race-lane" data-t="3.7"><span class="race-name">Roadster Sport<small>İlk nesil, 2009</small></span><div class="race-track"><div class="race-fill"></div></div><span class="race-val"><span class="race-live"><span class="race-mph">0</span><small>mph</small></span><span class="race-t">3,7 sn</span></span></div>
+            <div class="race-lane" data-t="1.6"><span class="race-name">Performance<small>2026</small></span><div class="race-track"><div class="race-fill"></div></div><span class="race-val"><span class="race-live"><span class="race-mph">0</span><small>mph</small></span><span class="race-t">&lt;1,6 sn</span></span></div>
+            <div class="race-lane" data-t="0.9"><span class="race-name">Thrust<small>2026</small></span><div class="race-track"><div class="race-fill"></div></div><span class="race-val"><span class="race-live"><span class="race-mph">0</span><small>mph</small></span><span class="race-t">&lt;0,9 sn</span></span></div>
+            <div class="race-lane rocket" data-t="0.59"><span class="race-name">Rocket<small>2026</small></span><div class="race-track"><div class="race-fill"></div></div><span class="race-val"><span class="race-live"><span class="race-mph">0</span><small>mph</small></span><span class="race-t">&lt;0,59 sn</span></span></div>
+            <p class="race-note">Süreler Tesla’nın açıkladığı değerlerdir; yarış bu değerlerle çizilmiş bir canlandırmadır, gerçek bir ölçüm değildir.</p>
+            <p class="sr-only" role="status" data-race-status></p>
           </div>
         </div>
       </section>
@@ -742,6 +985,46 @@
         </div>
       </section>
 
+      <section class="section promise" id="soz-gercek">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="kicker reveal">Hedefler nasıl değişti?</p>
+            <h2 class="reveal" style="--d:.05s">2017’de açıklananlar, 2026’da açıklananlar.</h2>
+            <p class="lead reveal" style="--d:.1s">İkinci nesil Roadster için Tesla’nın 2017’de ve Ekim 2026’da açıkladığı hedefler yan yana. Tüm değerler Tesla’nın beyanıdır; araç henüz üretimde değildir.</p>
+          </div>
+          <table class="pt reveal" role="table">
+            <caption class="sr-only">İkinci nesil Roadster için 2017 ve 2026 duyurularının karşılaştırması</caption>
+            <thead role="rowgroup">
+              <tr role="row"><th role="columnheader" scope="col">Ölçüt</th><th role="columnheader" scope="col">2017 duyurusu</th><th role="columnheader" scope="col">2026 duyurusu</th></tr>
+            </thead>
+            <tbody role="rowgroup">
+              <tr role="row"><th role="rowheader" scope="row">0–60 mph</th><td role="cell"><span class="pt-h">2017 duyurusu</span><span>1,9 sn</span></td><td role="cell"><span class="pt-h">2026 duyurusu</span><span>&lt;1,6 sn, &lt;0,9 sn ve &lt;0,59 sn</span></td></tr>
+              <tr role="row"><th role="rowheader" scope="row">Azami hız</th><td role="cell"><span class="pt-h">2017 duyurusu</span><span>250+ mph</span></td><td role="cell"><span class="pt-h">2026 duyurusu</span><span>&gt; 230 mph</span></td></tr>
+              <tr role="row"><th role="rowheader" scope="row">Menzil</th><td role="cell"><span class="pt-h">2017 duyurusu</span><span>&gt; 620 mil</span></td><td role="cell"><span class="pt-h">2026 duyurusu</span><span>&gt; 300 mil</span></td></tr>
+              <tr role="row"><th role="rowheader" scope="row">Üretim başlangıcı</th><td role="cell"><span class="pt-h">2017 duyurusu</span><span>2020</span></td><td role="cell"><span class="pt-h">2026 duyurusu</span><span>2028 (planlanan)</span></td></tr>
+              <tr role="row"><th role="rowheader" scope="row">Ön ödeme</th><td role="cell"><span class="pt-h">2017 duyurusu</span><span>$50.000; Founders Series’te $250.000 (tam ödeme)</span></td><td role="cell"><span class="pt-h">2026 duyurusu</span><span>$50.000 (Performance) / $250.000 (Thrust)</span></td></tr>
+            </tbody>
+          </table>
+          <p class="pt-note reveal">Nihai fiyat henüz açıklanmadı. Dayanak olan kaynaklar bu sayfanın “Kaynaklar” bölümünde listelenmiştir.</p>
+
+          <div class="slip reveal">
+            <div class="slip-head">
+              <h3>Üretim hedefi nasıl kaydı?</h3>
+              <p>Her satır, o tarihte açıklanan üretim başlangıç yılını gösterir.</p>
+            </div>
+            <ol class="slip-list">
+              <li><span class="slip-when">Kasım 2017</span><span class="slip-track" aria-hidden="true"><i class="slip-bar" style="--a:0; --t:3; --dd:.1s"></i></span><span class="slip-goal"><small>Hedef</small><b>2020</b></span></li>
+              <li><span class="slip-when">Ocak 2021</span><span class="slip-track" aria-hidden="true"><i class="slip-bar" style="--a:4; --t:5; --dd:.3s"></i></span><span class="slip-goal"><small>Hedef</small><b>2022</b></span></li>
+              <li><span class="slip-when">Eylül 2021</span><span class="slip-track" aria-hidden="true"><i class="slip-bar" style="--a:4; --t:6; --dd:.5s"></i></span><span class="slip-goal"><small>Hedef</small><b>2023</b></span></li>
+              <li><span class="slip-when">Mayıs 2023</span><span class="slip-track" aria-hidden="true"><i class="slip-bar" style="--a:6; --t:7; --dd:.7s"></i></span><span class="slip-goal"><small>Hedef</small><b>2024</b></span></li>
+              <li><span class="slip-when">Ekim 2026</span><span class="slip-track" aria-hidden="true"><i class="slip-bar" style="--a:9; --t:11; --dd:.9s"></i></span><span class="slip-goal"><small>Hedef</small><b>2028</b></span></li>
+            </ol>
+            <div class="slip-axis" aria-hidden="true"><span></span><div><span style="left:0%">2017</span><span style="left:27.27%">2020</span><span style="left:54.55%">2023</span><span style="left:81.82%">2026</span><span style="left:100%">2028</span></div><span></span></div>
+            <p class="slip-src">Eylül 2021 ve Mayıs 2023’teki açıklamalar kesin söz değil, koşullu ya da temenni niteliğindeydi.</p>
+          </div>
+        </div>
+      </section>
+
       <section class="section academic" id="akademik">
         <div class="wrap">
           <div class="section-head">
@@ -776,17 +1059,185 @@
           </article>
         </div>
       </section>
+
+      <section class="section quiz" id="bilgi-yarismasi">
+        <div class="wrap">
+          <div class="section-head center">
+            <p class="kicker reveal">Bilgi yarışması</p>
+            <h2 class="reveal" style="--d:.05s">Roadster’ı ne kadar tanıyorsun?</h2>
+            <p class="lead reveal" style="--d:.1s">Bu sayfadaki bilgilerden beş soru. Bir cevap seçince açıklaması görünür.</p>
+          </div>
+          <div class="card quiz-card reveal" data-quiz>
+            <div class="quiz-head">
+              <div class="quiz-top"><span class="quiz-count"><span>Soru</span> <b class="q-cur">1</b> / 5</span></div>
+              <div class="quiz-bar" aria-hidden="true"><i></i></div>
+            </div>
+              <div class="quiz-q" data-answer="1" hidden>
+                <h3 tabindex="-1">İlk nesil Roadster hangi spor otomobilin şasisini temel aldı?</h3>
+                <div class="quiz-opts" role="group" aria-label="Cevap seçenekleri">
+                  <button type="button">Lotus Elise</button>
+                  <button type="button">Porsche Boxster</button>
+                  <button type="button">Mazda MX-5</button>
+                  <button type="button">Chevrolet Corvette</button>
+                </div>
+                <p class="quiz-exp" hidden><b class="quiz-verdict"><span class="v-ok">Doğru!</span><span class="v-no">Yanlış.</span></b> <span>Roadster, Lotus Elise temelli bir şasiyle üretildi; Lotus’tan alınan gövde ve şasi stoğu bitince üretim sona erdi.</span></p>
+              </div>
+              <div class="quiz-q" data-answer="2" hidden>
+                <h3 tabindex="-1">Roadster Sport’un 0–60 mph süresi kaç saniyedir?</h3>
+                <div class="quiz-opts" role="group" aria-label="Cevap seçenekleri">
+                  <button type="button">1,9 sn</button>
+                  <button type="button">3,7 sn</button>
+                  <button type="button">5,2 sn</button>
+                  <button type="button">0,59 sn</button>
+                </div>
+                <p class="quiz-exp" hidden><b class="quiz-verdict"><span class="v-ok">Doğru!</span><span class="v-no">Yanlış.</span></b> <span>Roadster Sport 3,7 saniyede 60 mph’e ulaştı; standart Roadster’da bu süre 3,9 saniyeydi.</span></p>
+              </div>
+              <div class="quiz-q" data-answer="3" hidden>
+                <h3 tabindex="-1">İlk nesil Roadster’dan yaklaşık kaç adet üretildi?</h3>
+                <div class="quiz-opts" role="group" aria-label="Cevap seçenekleri">
+                  <button type="button">≈ 245</button>
+                  <button type="button">≈ 2.450</button>
+                  <button type="button">≈ 24.500</button>
+                  <button type="button">≈ 245.000</button>
+                </div>
+                <p class="quiz-exp" hidden><b class="quiz-verdict"><span class="v-ok">Doğru!</span><span class="v-no">Yanlış.</span></b> <span>Yaklaşık 2.450 adet üretildi ve araçlar 30’dan fazla ülkede satıldı.</span></p>
+              </div>
+              <div class="quiz-q" data-answer="3" hidden>
+                <h3 tabindex="-1">Tesla, 2017’de ikinci nesil Roadster’ın üretimi için hangi yılı hedef olarak açıklamıştı?</h3>
+                <div class="quiz-opts" role="group" aria-label="Cevap seçenekleri">
+                  <button type="button">2018</button>
+                  <button type="button">2019</button>
+                  <button type="button">2020</button>
+                  <button type="button">2022</button>
+                </div>
+                <p class="quiz-exp" hidden><b class="quiz-verdict"><span class="v-ok">Doğru!</span><span class="v-no">Yanlış.</span></b> <span>Tesla 2017’de üretimin 2020’de başlayacağını söylemişti; tarih sonradan defalarca ertelendi ve son plan 2028.</span></p>
+              </div>
+              <div class="quiz-q" data-answer="3" hidden>
+                <h3 tabindex="-1">Rocket yapısında kaç soğuk gaz iticisi bulunuyor?</h3>
+                <div class="quiz-opts" role="group" aria-label="Cevap seçenekleri">
+                  <button type="button">4</button>
+                  <button type="button">6</button>
+                  <button type="button">10</button>
+                  <button type="button">16</button>
+                </div>
+                <p class="quiz-exp" hidden><b class="quiz-verdict"><span class="v-ok">Doğru!</span><span class="v-no">Yanlış.</span></b> <span>Mühendislik Başkan Yardımcısı Lars Moravy’ye göre 600 litre sıkıştırılmış hava, Rocket’in 10 soğuk gaz iticisini besliyor.</span></p>
+              </div>
+            <div class="quiz-actions"><button class="btn btn-red quiz-next" type="button" hidden><span class="n-next">Sonraki soru</span><span class="n-last">Sonucu gör</span></button></div>
+            <div class="quiz-result" hidden>
+              <p class="quiz-score"><b class="q-n">0</b> / 5 <small>doğru cevap</small></p>
+              <p class="quiz-msg" data-tier="high" hidden>Mükemmel! Roadster konusunda tam bir uzmansın.</p>
+              <p class="quiz-msg" data-tier="mid" hidden>Çok iyi! Kalan ayrıntılar için yukarıdaki bölümlere göz atabilirsin.</p>
+              <p class="quiz-msg" data-tier="low" hidden>Fena değil. Sayfayı biraz daha gezip tekrar denemeye ne dersin?</p>
+              <button class="btn btn-glass quiz-again" type="button">Tekrar dene</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section faqs" id="sss">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="kicker reveal">Sık sorulan sorular</p>
+            <h2 class="reveal" style="--d:.05s">Merak edilenler.</h2>
+            <p class="lead reveal" style="--d:.1s">Bu sayfadaki bilgilerden derlenmiş kısa yanıtlar.</p>
+          </div>
+          <div class="faq-list reveal" style="--d:.1s">
+              <details class="faq"><summary>Yeni Roadster ne zaman üretilecek?</summary><p>Tesla’ya göre üretimin 2028’de başlaması planlanıyor. 2017’de üretimin 2020’de başlayacağı söylenmişti; tarih sonradan defalarca ertelendi. Ayrıntılar “Hedefler nasıl değişti?” bölümünde.</p></details>
+              <details class="faq"><summary>Rocket gerçekten uçabilir mi?</summary><p>Haberlere göre Tesla’nın Ekim 2026’daki gösteriminde araç iticilerle rampadan havalandı, havada döndü ve yeniden indi. Rocket yalnızca davetle sunulan, tek koltuklu ve “uçuşa hazır” olarak tanımlanan bir yapı; kamu yollarında kullanımı onaylanmamış. Fortune’a göre ABD Federal Havacılık İdaresi (FAA) aracın uçak tanımına girmediğini bildirdi.</p></details>
+              <details class="faq"><summary>İlk nesil Roadster’dan kaç tane üretildi?</summary><p>Yaklaşık 2.450 adet; araçlar 30’dan fazla ülkede satıldı. Üretim 2008’de başladı ve Lotus’la yapılan şasi sözleşmesi bitince 2012’de sona erdi.</p></details>
+              <details class="faq"><summary>İlk nesil Roadster bir Lotus mu?</summary><p>Tam olarak değil. Roadster, Lotus Elise şasisini temel aldı; şasiyi Lotus üretti, elektrikli aktarmayı ve son montajı Tesla yaptı.</p></details>
+              <details class="faq"><summary>Yeni Roadster’ın fiyatı ne kadar?</summary><p>Nihai fiyat açıklanmadı. Performance için 50.000 $, Thrust için 250.000 $ rezervasyon bedeli isteniyor; Rocket yalnızca davetle sunuluyor.</p></details>
+              <details class="faq"><summary>Açıklanan 0–60 mph süreleri kesin mi?</summary><p>Hayır. Performance için 1,6, Thrust için 0,9 ve Rocket için 0,59 saniyenin altı Tesla’nın beyanlarıdır; bu sayfanın kaynaklarında üretim araçlarıyla yapılmış bağımsız bir ölçüm yok. 3,7 saniye ise üretilmiş Roadster Sport için bilinen değerdir.</p></details>
+              <details class="faq"><summary>Bu site resmî bir Tesla sitesi mi?</summary><p>Hayır. Bağımsız bir bilgi projesidir; Tesla, Inc. ile bağlantılı değildir ve onaylanmamıştır.</p></details>
+          </div>
+        </div>
+      </section>
+
+      <section class="section sources" id="kaynaklar">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="kicker reveal">Kaynaklar</p>
+            <h2 class="reveal" style="--d:.05s">Bilgiler nereden geliyor?</h2>
+            <p class="lead reveal" style="--d:.1s">Bu sayfadaki bilgiler aşağıdaki kaynaklardan derlendi. Rakamların çoğu üreticinin beyanıdır; bağımsız ölçüm değildir.</p>
+            <p class="updated reveal" style="--d:.15s"><span>Son güncelleme</span> <time datetime="2026-11-07">7 Kasım 2026</time></p>
+          </div>
+          <div class="src-grid">
+            <article class="card src reveal">
+              <h3>Tesla</h3>
+              <ul>
+                <li><a href="https://www.tesla.com/roadster" target="_blank" rel="noopener">tesla.com/roadster</a><small>Roadster resmî sayfası</small></li>
+                <li><a href="https://www.youtube.com/watch?v=7p5LxFdc-Qg" target="_blank" rel="noopener">The Ramp | Roadster</a><small>Tesla’nın Roadster etkinliği videosu</small></li>
+              </ul>
+            </article>
+            <article class="card src reveal">
+              <h3>İlk nesil (2008–2012)</h3>
+              <ul>
+                <li><a href="https://en.wikipedia.org/wiki/Tesla_Roadster_(first_generation)" target="_blank" rel="noopener">Tesla Roadster (first generation)</a><small>Wikipedia</small></li>
+              </ul>
+            </article>
+            <article class="card src reveal">
+              <h3>2017 duyurusu</h3>
+              <ul>
+                <li><a href="https://electrek.co/2017/11/17/tesla-next-generation-roadster/" target="_blank" rel="noopener">Tesla unveils next-generation Roadster</a><small>Electrek · 2017-11-17</small></li>
+                <li><a href="https://en.wikipedia.org/wiki/Tesla_Roadster_(second_generation)" target="_blank" rel="noopener">Tesla Roadster (second generation)</a><small>Wikipedia</small></li>
+              </ul>
+            </article>
+            <article class="card src reveal">
+              <h3>Üretim tarihindeki değişiklikler</h3>
+              <ul>
+                <li><a href="https://thenextweb.com/shift/2021/01/29/a-frustrating-timeline-of-tesla-roadster-delays/" target="_blank" rel="noopener">A frustrating timeline of Tesla Roadster delays</a><small>The Next Web · 2021-01-29</small></li>
+                <li><a href="https://techcrunch.com/2021/09/02/elon-musk-warns-the-tesla-roadster-might-not-ship-until-at-least-2023" target="_blank" rel="noopener">Elon Musk warns the Tesla Roadster might not ship until at least 2023</a><small>TechCrunch · 2021-09-02</small></li>
+                <li><a href="https://electrek.co/2023/05/16/tesla-roadster-production-delayed-again-to-2024-four-years-late/" target="_blank" rel="noopener">Tesla Roadster production delayed again to 2024, four years late</a><small>Electrek · 2023-05-16</small></li>
+              </ul>
+            </article>
+            <article class="card src reveal">
+              <h3>2026 duyurusu</h3>
+              <ul>
+                <li><a href="https://fortune.com/2026/10/17/tesla-flying-roadster-spacex-thrusters-2028-production-price/" target="_blank" rel="noopener">Tesla is taking $250,000 deposits for a Roadster with SpaceX thrusters</a><small>Fortune · 2026-10-17</small></li>
+                <li><a href="https://www.teslarati.com/tesla-roadster-specs-configurations/" target="_blank" rel="noopener">Tesla Roadster: Three configs, one can fly</a><small>Teslarati · 2026-10-15</small></li>
+                <li><a href="https://www.notateslaapp.com/news/4840/new-tesla-roadster-specs-battery-range-speed-trims-and-more" target="_blank" rel="noopener">New Tesla Roadster Specs: Battery, Range, Speed, Trims, and More</a><small>Not a Tesla App · 2026-10</small></li>
+              </ul>
+            </article>
+            <article class="card src reveal">
+              <h3>Akademik makaleler</h3>
+              <ul>
+                <li><a href="https://doi.org/10.3390/su12093581" target="_blank" rel="noopener">Postorino &amp; Sarné (2020)</a><small>DOI 10.3390/su12093581</small></li>
+                <li><a href="https://doi.org/10.1016/j.commtr.2025.100213" target="_blank" rel="noopener">Lv, Wang, Chen &amp; Qu (2025)</a><small>DOI 10.1016/j.commtr.2025.100213</small></li>
+              </ul>
+            </article>
+            <article class="card src reveal">
+              <h3>Fotoğraflar</h3>
+              <ul>
+                <li><a href="https://commons.wikimedia.org/wiki/Category:Tesla_Roadster" target="_blank" rel="noopener">Wikimedia Commons</a><small>Yazar ve lisans bilgileri sayfanın altında verilmiştir.</small></li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="footer">
       <div class="wrap">
         <div>
-          <a class="brand" href="#baslangic"><span class="emblem"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Tesla%20Motors.svg" alt="" /></span><span class="wordmark">ROADSTER</span></a>
+          <a class="brand" href="#baslangic"><span class="emblem" aria-hidden="true"><b>R</b></span><span class="wordmark">ROADSTER</span></a>
           <p>Tesla Roadster bilgi platformu. Bağımsız bir bilgi projesidir; Tesla, Inc. ile bağlantılı değildir.</p>
         </div>
         <a class="btn btn-glass" href="#baslangic">Başa dön</a>
+        <div class="share">
+          <span>Bu sayfayı paylaş</span>
+          <a class="btn btn-red" data-share-li href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Femre029.github.io%2Ftesla-roadster-info%2F" target="_blank" rel="noopener">LinkedIn’da paylaş</a>
+          <button class="btn btn-glass copy" type="button" data-copy><span class="c-def">Bağlantıyı kopyala</span><span class="c-done">Kopyalandı</span></button>
+          <button class="btn btn-glass" type="button" data-print>Yazdır / PDF</button>
+        </div>
+        <nav class="footer-links" aria-label="Sayfa içi bağlantılar">
+          <a href="#soz-gercek">Hedefler</a>
+          <a href="#bilgi-yarismasi">Bilgi yarışması</a>
+          <a href="#sss">Sorular</a>
+          <a href="#kaynaklar">Kaynaklar</a>
+        </nav>
         <p class="legal">Bu site resmî bir Tesla sitesi değildir ve Tesla, Inc. tarafından onaylanmamıştır. Tesla adı ve logosu Tesla, Inc.’in ticari markalarıdır; burada yalnızca bilgi vermek amacıyla kullanılmıştır.</p>
         <p class="legal credit">Fotoğraflar: <a class="link" href="https://commons.wikimedia.org/wiki/File:2008_Tesla_Roadster_front.jpg" target="_blank" rel="noopener">2008 Roadster</a>, Rutger van der Maar, <a class="link" href="https://creativecommons.org/licenses/by/2.0/" target="_blank" rel="noopener">CC BY 2.0</a>; <a class="link" href="https://commons.wikimedia.org/wiki/File:2017_Tesla_Roadster_2.0_Petersen_Automotive_Museum.jpg" target="_blank" rel="noopener">2017 Roadster</a>, TaurusEmerald, <a class="link" href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">CC BY-SA 4.0</a>. Kaynak: Wikimedia Commons.</p>
+        <p class="legal credit">Hazırlayan: Emre. Kaynak kodu: <a class="link" href="https://github.com/Emre029/tesla-roadster-info" target="_blank" rel="noopener">GitHub</a></p>
         <p class="legal credit mt-note">Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.</p>
       </div>
     </footer>
@@ -932,6 +1383,110 @@
   "Diller": "Languages",
   "İçeriğe geç": "Skip to content",
   "Bu çeviri yapay zekâ desteğiyle hazırlanmıştır ve ana dili konuşan biri tarafından kontrol edilmemiştir; Türkçe sürüm esastır.": "This translation was prepared with AI assistance and has not been checked by a native speaker; the Turkish version is authoritative."
+,
+  "Birimler": "Units",
+  "Varsayılan": "Default",
+  "Metrik": "Metric",
+  "Mil ve hp": "Miles & hp",
+  "Kalkış yarışı": "Launch race",
+  "Dört aracı 0–60 mph’e birlikte çıkar; her biri kendi açıklanan süresiyle ilerler.": "Race all four to 0–60 mph together; each one runs at its own announced time.",
+  "Yavaş çekim (×4)": "Slow motion (×4)",
+  "Yarışı başlat": "Start the race",
+  "Yeniden başlat": "Restart",
+  "mph": "mph",
+  "Süreler Tesla’nın açıkladığı değerlerdir; yarış bu değerlerle çizilmiş bir canlandırmadır, gerçek bir ölçüm değildir.": "The times are the figures Tesla has announced; the race is an animation drawn from them, not a real measurement.",
+  "Hedefler nasıl değişti?": "How the targets changed",
+  "2017’de açıklananlar, 2026’da açıklananlar.": "What was announced in 2017, and what was announced in 2026.",
+  "İkinci nesil Roadster için Tesla’nın 2017’de ve Ekim 2026’da açıkladığı hedefler yan yana. Tüm değerler Tesla’nın beyanıdır; araç henüz üretimde değildir.": "The targets Tesla announced for the second-generation Roadster in 2017 and in October 2026, side by side. All figures are Tesla’s own claims; the car is not yet in production.",
+  "İkinci nesil Roadster için 2017 ve 2026 duyurularının karşılaştırması": "Comparison of the 2017 and 2026 announcements for the second-generation Roadster",
+  "Ölçüt": "Measure",
+  "2017 duyurusu": "2017 announcement",
+  "2026 duyurusu": "2026 announcement",
+  "1,9 sn": "1.9 s",
+  "> 620 mil": "> 620 mi",
+  "Üretim başlangıcı": "Production start",
+  "2028 (planlanan)": "2028 (planned)",
+  "Ön ödeme": "Deposit",
+  "$50.000; Founders Series’te $250.000 (tam ödeme)": "$50,000; $250,000 for the Founders Series (full payment)",
+  "$50.000 (Performance) / $250.000 (Thrust)": "$50,000 (Performance) / $250,000 (Thrust)",
+  "Nihai fiyat henüz açıklanmadı. Dayanak olan kaynaklar bu sayfanın “Kaynaklar” bölümünde listelenmiştir.": "The final price has not been announced yet. The sources behind these figures are listed in the “Sources” section of this page.",
+  "Üretim hedefi nasıl kaydı?": "How did the production target slip?",
+  "Her satır, o tarihte açıklanan üretim başlangıç yılını gösterir.": "Each row shows the production start year announced at that date.",
+  "Kasım 2017": "November 2017",
+  "Hedef": "Target",
+  "Ocak 2021": "January 2021",
+  "Eylül 2021": "September 2021",
+  "Mayıs 2023": "May 2023",
+  "Ekim 2026": "October 2026",
+  "Eylül 2021 ve Mayıs 2023’teki açıklamalar kesin söz değil, koşullu ya da temenni niteliğindeydi.": "The statements in September 2021 and May 2023 were conditional or aspirational rather than firm promises.",
+  "Bilgi yarışması": "Quiz",
+  "Roadster’ı ne kadar tanıyorsun?": "How well do you know the Roadster?",
+  "Bu sayfadaki bilgilerden beş soru. Bir cevap seçince açıklaması görünür.": "Five questions based on this page. Pick an answer and the explanation appears.",
+  "Soru": "Question",
+  "İlk nesil Roadster hangi spor otomobilin şasisini temel aldı?": "Which sports car’s chassis was the first-generation Roadster based on?",
+  "Doğru!": "Correct!",
+  "Yanlış.": "Wrong.",
+  "Roadster, Lotus Elise temelli bir şasiyle üretildi; Lotus’tan alınan gövde ve şasi stoğu bitince üretim sona erdi.": "The Roadster was built on a Lotus Elise–based chassis; production ended when the supply of bodies and chassis from Lotus ran out.",
+  "Roadster Sport’un 0–60 mph süresi kaç saniyedir?": "What is the Roadster Sport’s 0–60 mph time?",
+  "5,2 sn": "5.2 s",
+  "0,59 sn": "0.59 s",
+  "Roadster Sport 3,7 saniyede 60 mph’e ulaştı; standart Roadster’da bu süre 3,9 saniyeydi.": "The Roadster Sport reached 60 mph in 3.7 seconds; the standard Roadster took 3.9 seconds.",
+  "İlk nesil Roadster’dan yaklaşık kaç adet üretildi?": "Roughly how many first-generation Roadsters were built?",
+  "≈ 245": "≈ 245",
+  "≈ 24.500": "≈ 24,500",
+  "≈ 245.000": "≈ 245,000",
+  "Yaklaşık 2.450 adet üretildi ve araçlar 30’dan fazla ülkede satıldı.": "About 2,450 were built and sold in more than 30 countries.",
+  "Tesla, 2017’de ikinci nesil Roadster’ın üretimi için hangi yılı hedef olarak açıklamıştı?": "Which year did Tesla announce in 2017 as the production target for the second-generation Roadster?",
+  "Tesla 2017’de üretimin 2020’de başlayacağını söylemişti; tarih sonradan defalarca ertelendi ve son plan 2028.": "In 2017 Tesla said production would start in 2020; the date was pushed back repeatedly and the latest plan is 2028.",
+  "Rocket yapısında kaç soğuk gaz iticisi bulunuyor?": "How many cold-gas thrusters does the Rocket configuration have?",
+  "Mühendislik Başkan Yardımcısı Lars Moravy’ye göre 600 litre sıkıştırılmış hava, Rocket’in 10 soğuk gaz iticisini besliyor.": "According to Vice President of Engineering Lars Moravy, 600 liters of compressed air feed the Rocket’s 10 cold-gas thrusters.",
+  "Sonraki soru": "Next question",
+  "Sonucu gör": "See result",
+  "doğru cevap": "correct answers",
+  "Mükemmel! Roadster konusunda tam bir uzmansın.": "Perfect! You’re a true Roadster expert.",
+  "Çok iyi! Kalan ayrıntılar için yukarıdaki bölümlere göz atabilirsin.": "Very good! Check the sections above for the remaining details.",
+  "Fena değil. Sayfayı biraz daha gezip tekrar denemeye ne dersin?": "Not bad. How about browsing the page a bit more and trying again?",
+  "Tekrar dene": "Try again",
+  "Sık sorulan sorular": "Frequently asked questions",
+  "Merak edilenler.": "Questions people ask.",
+  "Bu sayfadaki bilgilerden derlenmiş kısa yanıtlar.": "Short answers compiled from the information on this page.",
+  "Yeni Roadster ne zaman üretilecek?": "When will the new Roadster be produced?",
+  "Tesla’ya göre üretimin 2028’de başlaması planlanıyor. 2017’de üretimin 2020’de başlayacağı söylenmişti; tarih sonradan defalarca ertelendi. Ayrıntılar “Hedefler nasıl değişti?” bölümünde.": "According to Tesla, production is planned to start in 2028. In 2017 it was said production would start in 2020; the date has been pushed back repeatedly. See “How the targets changed” for details.",
+  "Rocket gerçekten uçabilir mi?": "Can the Rocket really fly?",
+  "Haberlere göre Tesla’nın Ekim 2026’daki gösteriminde araç iticilerle rampadan havalandı, havada döndü ve yeniden indi. Rocket yalnızca davetle sunulan, tek koltuklu ve “uçuşa hazır” olarak tanımlanan bir yapı; kamu yollarında kullanımı onaylanmamış. Fortune’a göre ABD Federal Havacılık İdaresi (FAA) aracın uçak tanımına girmediğini bildirdi.": "According to reports, at Tesla’s October 2026 demonstration the car lifted off a ramp on its thrusters, turned in the air and landed again. The Rocket is an invitation-only, single-seat configuration described as “flight-ready”; it is not approved for use on public roads. According to Fortune, the U.S. Federal Aviation Administration (FAA) said the vehicle does not fall under the definition of an aircraft.",
+  "İlk nesil Roadster’dan kaç tane üretildi?": "How many first-generation Roadsters were built?",
+  "Yaklaşık 2.450 adet; araçlar 30’dan fazla ülkede satıldı. Üretim 2008’de başladı ve Lotus’la yapılan şasi sözleşmesi bitince 2012’de sona erdi.": "About 2,450; they were sold in more than 30 countries. Production began in 2008 and ended in 2012 when the chassis agreement with Lotus came to an end.",
+  "İlk nesil Roadster bir Lotus mu?": "Is the first-generation Roadster a Lotus?",
+  "Tam olarak değil. Roadster, Lotus Elise şasisini temel aldı; şasiyi Lotus üretti, elektrikli aktarmayı ve son montajı Tesla yaptı.": "Not exactly. The Roadster was based on the Lotus Elise chassis; Lotus built the chassis, while Tesla made the electric powertrain and did the final assembly.",
+  "Yeni Roadster’ın fiyatı ne kadar?": "How much will the new Roadster cost?",
+  "Nihai fiyat açıklanmadı. Performance için 50.000 $, Thrust için 250.000 $ rezervasyon bedeli isteniyor; Rocket yalnızca davetle sunuluyor.": "The final price has not been announced. A $50,000 reservation deposit is requested for the Performance and $250,000 for the Thrust; the Rocket is offered by invitation only.",
+  "Açıklanan 0–60 mph süreleri kesin mi?": "Are the announced 0–60 mph times certain?",
+  "Hayır. Performance için 1,6, Thrust için 0,9 ve Rocket için 0,59 saniyenin altı Tesla’nın beyanlarıdır; bu sayfanın kaynaklarında üretim araçlarıyla yapılmış bağımsız bir ölçüm yok. 3,7 saniye ise üretilmiş Roadster Sport için bilinen değerdir.": "No. The sub-1.6 s for the Performance, sub-0.9 s for the Thrust and sub-0.59 s for the Rocket are Tesla’s claims; the sources on this page include no independent measurement made with production cars. The 3.7 seconds is the known figure for the production Roadster Sport.",
+  "Bu site resmî bir Tesla sitesi mi?": "Is this an official Tesla website?",
+  "Hayır. Bağımsız bir bilgi projesidir; Tesla, Inc. ile bağlantılı değildir ve onaylanmamıştır.": "No. It is an independent information project; it is not affiliated with or endorsed by Tesla, Inc.",
+  "Kaynaklar": "Sources",
+  "Bilgiler nereden geliyor?": "Where does the information come from?",
+  "Bu sayfadaki bilgiler aşağıdaki kaynaklardan derlendi. Rakamların çoğu üreticinin beyanıdır; bağımsız ölçüm değildir.": "The information on this page was compiled from the sources below. Most figures are the manufacturer’s own claims, not independent measurements.",
+  "Son güncelleme": "Last updated",
+  "7 Kasım 2026": "7 November 2026",
+  "Roadster resmî sayfası": "Official Roadster page",
+  "Tesla’nın Roadster etkinliği videosu": "Tesla’s Roadster event video",
+  "İlk nesil (2008–2012)": "First generation (2008–2012)",
+  "Üretim tarihindeki değişiklikler": "Changes to the production date",
+  "Akademik makaleler": "Academic papers",
+  "Fotoğraflar": "Photos",
+  "Yazar ve lisans bilgileri sayfanın altında verilmiştir.": "Author and license details are given at the bottom of the page.",
+  "Bu sayfayı paylaş": "Share this page",
+  "LinkedIn’da paylaş": "Share on LinkedIn",
+  "Bağlantıyı kopyala": "Copy link",
+  "Kopyalandı": "Copied",
+  "Yazdır / PDF": "Print / PDF",
+  "Hedefler": "Targets",
+  "Sorular": "Questions",
+  "Hazırlayan: Emre. Kaynak kodu:": "Prepared by Emre. Source code:",
+  "hp": "hp",
+  "km": "km",
+  "Yarış bitti.": "Race finished."
 };
         const ATTR_EN = {
   "Ana menü": "Main menu",
@@ -939,7 +1494,9 @@
   "2008 Tesla Roadster, önden üç çeyrek görünüm": "2008 Tesla Roadster, front three-quarter view",
   "Petersen Otomobil Müzesi’nde sergilenen 2017 Tesla Roadster": "2017 Tesla Roadster on display at the Petersen Automotive Museum",
   "Roadster canlı gösteri videosunu oynat": "Play the Roadster live demo video",
-  "Diğer diller": "More languages"
+  "Diğer diller": "More languages",
+  "Cevap seçenekleri": "Answer choices",
+  "Sayfa içi bağlantılar": "On-page links"
 };
         const metaDesc = document.querySelector('meta[name="description"]');
         const root = document.documentElement;
@@ -959,12 +1516,12 @@
         const CODES = [...document.querySelectorAll('.lang [data-lang]')].map((b) => b.dataset.lang);
         const RL = (window.RL = window.RL || {});
         let current = DATA.tr;
-        window.roadsterI18n = { ui: (k) => current.ui[k], locale: () => current.locale };
+        window.roadsterI18n = { ui: (k) => current.ui[k], locale: () => current.locale, t: (k) => ((current.text && has(current.text, k)) ? current.text[k] : k) };
 
         const loadLang = (code) => new Promise((resolve, reject) => {
           if (RL[code]) { resolve(RL[code]); return; }
           const el = document.createElement('script');
-          el.src = 'lang/' + code + '.js?v=1';
+          el.src = 'lang/' + code + '.js?v=2';
           el.async = true;
           el.onload = () => (RL[code] ? resolve(RL[code]) : reject(new Error('empty')));
           el.onerror = () => reject(new Error('load'));
@@ -979,7 +1536,7 @@
           while ((n = walker.nextNode())) {
             const p = n.parentNode;
             if (!p || /^(SCRIPT|STYLE)$/.test(p.nodeName)) continue;
-            if (p.closest && p.closest('.menu-btn, [data-count], [data-lang]')) continue;
+            if (p.closest && p.closest('.menu-btn, [data-count], [data-lang], [data-unit]')) continue;
             nodes.push(n);
           }
           nodes.forEach((node) => {
@@ -1050,6 +1607,7 @@
           const frame = document.querySelector('.video-frame iframe');
           if (frame) frame.title = d.ui.frame;
           markActive(lang);
+          document.dispatchEvent(new CustomEvent('roadster-lang'));
           if (persist) { try { localStorage.setItem('roadster-lang', lang); } catch (e) { /* kayıt yapılamazsa sorun değil */ } }
         };
 
@@ -1150,12 +1708,13 @@
           /* Sayılar: görününce sıfırdan yukarı sayar */
           const formatNumber = (value, dec) => value.toLocaleString(window.roadsterI18n ? window.roadsterI18n.locale() : 'tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
           const countUp = (el) => {
-            const to = parseFloat(el.dataset.count);
             const dec = parseInt(el.dataset.dec || '0', 10);
-            if (reduceMotion) { el.textContent = formatNumber(to, dec); return; }
+            if (reduceMotion) { el.textContent = formatNumber(parseFloat(el.dataset.count), dec); return; }
             const start = performance.now();
             const step = (now) => {
               const t = Math.min(1, (now - start) / 1400);
+              /* Hedef her karede okunur: birim değiştirilirse sayı yeni değere ulaşır */
+              const to = parseFloat(el.dataset.count);
               el.textContent = formatNumber(to * (1 - Math.pow(1 - t, 3)), dec);
               if (t < 1) requestAnimationFrame(step);
             };
@@ -1311,6 +1870,179 @@
           });
         } catch (error) {
           root.classList.add('reveal-all');
+          console.error(error);
+        }
+      })();
+    </script>
+    <script>
+      /* Yeni özellikler: birim seçici, kalkış yarışı, bilgi yarışması, paylaşım.
+         Ayrı bir betik olduğu için burada bir hata olsa bile sayfanın geri kalanı etkilenmez. */
+      (() => {
+        try {
+          const i18n = () => window.roadsterI18n || { t: (k) => k, locale: () => 'tr-TR' };
+          const T = (k) => i18n().t(k);
+          const fmt = (v, dec) => v.toLocaleString(i18n().locale(), { minimumFractionDigits: dec, maximumFractionDigits: dec });
+          const cap = (m) => m.charAt(0).toUpperCase() + m.slice(1);
+
+          /* 1) Birim seçici: yalnızca teknik özet kartlarındaki büyük sayıları ve birimlerini değiştirir */
+          const unitBar = document.querySelector('[data-units]');
+          if (unitBar) {
+            const buttons = [...unitBar.querySelectorAll('button[data-mode]')];
+            const nums = [...document.querySelectorAll('[data-v-def]')];
+            const units = [...document.querySelectorAll('[data-unit]')];
+            let mode = 'def';
+            const render = () => {
+              nums.forEach((el) => {
+                const v = el.dataset['v' + cap(mode)] || el.dataset.vDef;
+                el.dataset.count = v;
+                el.textContent = fmt(parseFloat(v), parseInt(el.dataset.dec || '0', 10));
+              });
+              units.forEach((el) => {
+                const key = mode === 'def' ? el.dataset.unit : (el.dataset['unit' + cap(mode)] || el.dataset.unit);
+                el.textContent = T(key);
+              });
+              buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+            };
+            buttons.forEach((b) => b.addEventListener('click', () => { mode = b.dataset.mode; render(); }));
+            document.addEventListener('roadster-lang', render);
+            render();
+          }
+
+          /* 2) Kalkış yarışı: her şerit, açıklanan 0–60 mph süresine göre gerçek zamanlı ilerler */
+          const race = document.querySelector('[data-race]');
+          if (race) {
+            const lanes = [...race.querySelectorAll('.race-lane')].map((el) => ({
+              el, T: parseFloat(el.dataset.t), fill: el.querySelector('.race-fill'), mph: el.querySelector('.race-mph'), done: false,
+            }));
+            const clock = race.querySelector('.race-clock b');
+            const go = race.querySelector('.race-go');
+            const slow = race.querySelector('.race-slow input');
+            const status = race.querySelector('[data-race-status]');
+            const longest = Math.max(...lanes.map((l) => l.T));
+            let raf = 0;
+            const reset = () => {
+              cancelAnimationFrame(raf);
+              lanes.forEach((l) => { l.done = false; l.el.classList.remove('done'); l.fill.style.transform = 'scaleX(0)'; l.mph.textContent = fmt(0, 0); });
+              clock.textContent = fmt(0, 2);
+              race.classList.remove('is-done');
+              if (status) status.textContent = '';
+            };
+            const start = () => {
+              reset();
+              const factor = slow && slow.checked ? 4 : 1;
+              go.disabled = true;
+              const t0 = performance.now();
+              const step = (now) => {
+                const t = (now - t0) / 1000 / factor;
+                let all = true;
+                lanes.forEach((l) => {
+                  const p = Math.min(1, t / l.T);
+                  l.fill.style.transform = 'scaleX(' + p.toFixed(4) + ')';
+                  l.mph.textContent = fmt(60 * p, 0);
+                  if (p >= 1 && !l.done) { l.done = true; l.el.classList.add('done'); }
+                  if (p < 1) all = false;
+                });
+                clock.textContent = fmt(Math.min(t, longest), 2);
+                if (all) {
+                  race.classList.add('is-done');
+                  go.disabled = false;
+                  if (status) status.textContent = T('Yarış bitti.');
+                } else {
+                  raf = requestAnimationFrame(step);
+                }
+              };
+              raf = requestAnimationFrame(step);
+            };
+            go.addEventListener('click', start);
+            document.addEventListener('roadster-lang', () => { if (!go.disabled) clock.textContent = fmt(race.classList.contains('is-done') ? longest : 0, 2); });
+          }
+
+          /* 3) Bilgi yarışması */
+          const quiz = document.querySelector('[data-quiz]');
+          if (quiz) {
+            const panels = [...quiz.querySelectorAll('.quiz-q')];
+            const cur = quiz.querySelector('.q-cur');
+            const bar = quiz.querySelector('.quiz-bar i');
+            const head = quiz.querySelector('.quiz-head');
+            const next = quiz.querySelector('.quiz-next');
+            const actions = quiz.querySelector('.quiz-actions');
+            const result = quiz.querySelector('.quiz-result');
+            const total = panels.length;
+            let idx = 0;
+            let score = 0;
+            let answered = false;
+            const showQuestion = (i, focus) => {
+              idx = i; answered = false;
+              panels.forEach((p, k) => {
+                p.hidden = k !== i;
+                if (k === i) {
+                  p.classList.remove('is-ok', 'is-no');
+                  p.querySelectorAll('.quiz-opts button').forEach((b) => { b.disabled = false; b.classList.remove('correct', 'wrong'); });
+                  p.querySelector('.quiz-exp').hidden = true;
+                }
+              });
+              cur.textContent = String(i + 1);
+              bar.style.width = (i / total * 100) + '%';
+              next.hidden = true;
+              quiz.classList.toggle('is-last', i === total - 1);
+              if (focus) panels[i].querySelector('h3').focus({ preventScroll: true });
+            };
+            quiz.addEventListener('click', (e) => {
+              const opt = e.target.closest('.quiz-opts button');
+              if (!opt || answered) return;
+              answered = true;
+              const panel = opt.closest('.quiz-q');
+              const opts = [...panel.querySelectorAll('.quiz-opts button')];
+              const right = parseInt(panel.dataset.answer, 10) - 1;
+              opts.forEach((o, k) => { o.disabled = true; if (k === right) o.classList.add('correct'); });
+              const ok = opts[right] === opt;
+              if (ok) score += 1; else opt.classList.add('wrong');
+              panel.classList.add(ok ? 'is-ok' : 'is-no');
+              panel.querySelector('.quiz-exp').hidden = false;
+              bar.style.width = ((idx + 1) / total * 100) + '%';
+              next.hidden = false;
+              next.focus({ preventScroll: true });
+            });
+            next.addEventListener('click', () => {
+              if (idx < total - 1) { showQuestion(idx + 1, true); return; }
+              panels.forEach((p) => { p.hidden = true; });
+              head.hidden = true; actions.hidden = true; result.hidden = false;
+              result.querySelector('.q-n').textContent = String(score);
+              const tier = score === total ? 'high' : (score >= 3 ? 'mid' : 'low');
+              result.querySelectorAll('.quiz-msg').forEach((m) => { m.hidden = m.dataset.tier !== tier; });
+              result.querySelector('.quiz-again').focus({ preventScroll: true });
+            });
+            quiz.querySelector('.quiz-again').addEventListener('click', () => {
+              score = 0; result.hidden = true; head.hidden = false; actions.hidden = false;
+              showQuestion(0, true);
+            });
+            showQuestion(0, false);
+          }
+
+          /* 4) Paylaşım, bağlantıyı kopyalama, yazdırma */
+          const canonical = ((document.querySelector('link[rel="canonical"]') || {}).href) || location.href.split('#')[0];
+          const linkedin = document.querySelector('[data-share-li]');
+          if (linkedin) linkedin.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(canonical);
+          const copyBtn = document.querySelector('[data-copy]');
+          if (copyBtn) {
+            copyBtn.addEventListener('click', async () => {
+              let ok = false;
+              try { await navigator.clipboard.writeText(canonical); ok = true; } catch (e) {
+                try {
+                  const ta = document.createElement('textarea');
+                  ta.value = canonical; ta.setAttribute('readonly', ''); ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0';
+                  document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); ta.remove();
+                } catch (e2) { /* kopyalanamadı */ }
+              }
+              if (ok) { copyBtn.classList.add('is-done'); setTimeout(() => copyBtn.classList.remove('is-done'), 2200); }
+            });
+          }
+          const printBtn = document.querySelector('[data-print]');
+          if (printBtn) printBtn.addEventListener('click', () => window.print());
+          let reopened = [];
+          window.addEventListener('beforeprint', () => { reopened = [...document.querySelectorAll('details.faq')].filter((d) => !d.open); reopened.forEach((d) => { d.open = true; }); });
+          window.addEventListener('afterprint', () => { reopened.forEach((d) => { d.open = false; }); reopened = []; });
+        } catch (error) {
           console.error(error);
         }
       })();
